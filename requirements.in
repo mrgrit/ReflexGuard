@@ -1,4 +1,8 @@
-# Phase 0: test and virtual-environment tooling only; no application yet.
+# Phase 1 runtime and validation tools, resolved for Python 3.10.
+fastapi
+httpx
+pydantic>=2,<3
+uvicorn
 pytest
 pip
 setuptools
