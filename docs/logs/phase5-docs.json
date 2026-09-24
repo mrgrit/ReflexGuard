@@ -1,0 +1,15 @@
+{
+  "application_version": "0.5.0",
+  "quality_gate": "passed",
+  "pytest_passed": 252,
+  "pytest_warnings": 1,
+  "kisa_mapped_items": 27,
+  "kisa_partial_items": 11,
+  "python_sbom_components": 32,
+  "sbom_reproducibility": "identical file hashes after two consecutive generations",
+  "sha256": {
+    "docs/sbom.json": "4a05de4d1a8523d8c1c694b306fe6d4a572cc480d8098dc2aefb7410195fa9d7",
+    "docs/sbom_provenance.json": "a711a5a9b1d841cbf51c41da8f7c43c7318f08b48cf39684b8396b505f6afcc8"
+  },
+  "scope_note": "Document and Python-environment evidence only; no new physical simulation or real MaleCNS model validation in Phase 5"
+}

@@ -2,3 +2,19 @@
 testpaths = ["tests"]
 addopts = "-ra"
 pythonpath = ["src"]
+
+[project]
+name = "reflexguard"
+version = "0.5.0"
+description = "Bio-inspired collision avoidance assistance and authenticated supervision"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi", "httpx", "pydantic>=2,<3", "uvicorn", "numpy",
+    "opencv-python-headless", "SQLAlchemy>=2,<3", "Jinja2>=3,<4", "bcrypt>=5,<6",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.urls]
+Repository = "https://github.com/mrgrit/ReflexGuard"

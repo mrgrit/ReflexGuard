@@ -43,6 +43,7 @@
 - 새 기능에는 테스트를 같이 작성한다.
 
 ## 작업 방식
+- 앱 버전 또는 Python 의존성 변경 시 `scripts/generate_sbom.sh`를 실행하고 SBOM·provenance·외부 고지를 갱신한다. 보안 매핑은 docs/security_controls.json을 편집한 뒤 scripts/render_security_docs.py로 재생성한다.
 - 버전 또는 개발 단계 완료 시 README.md, CHANGELOG.md, docs/development_plan.md와 관련 내부 문서를 같은 커밋에서 갱신한다. 변경 내용·실행 방법·검증 결과·남은 제한을 기록하고 실제 구현 상태와 일치시킨다.
 - 작업은 SSH 세션에서 한다. 화면이 필요한 명령(Webots, glxinfo)은 `xvfb-run -a`로 가상 화면에서 실행하거나, 데스크톱에 로그인된 세션이 있으면 `DISPLAY=:0`을 붙인다.
 - sudo, 패키지 설치, 파일 삭제, 네트워크 포트 개방은 실행 전에 명령을 보여주고 승인을 받는다.

@@ -1,6 +1,6 @@
 # ReflexGuard
 
-**현재 개발 버전: 0.4.1 — Phase 4 관제 서버·대시보드 구현**
+**현재 개발 버전: 0.5.0 — Phase 5 보안 문서·KISA 매핑·SBOM**
 
 MaleCNS 커넥톰을 기반으로 초파리 신경회로에서 배운 충돌 회피 기술을 전동휠체어의 생체모방 안전 보조에 적용하는 프로젝트입니다. 평소에는 사용자가 운전하고 위험 상황에서만 시스템이 개입합니다.
 이 저장소는 대회 제출용 보안판입니다. 현재 시뮬레이션은 **규칙 기반 mock**을 사용하며 실제 MaleCNS 데이터·가중치는 아직 연결하지 않았습니다.
@@ -71,8 +71,15 @@ Phase 3 복도 3종의 각 10초 시험에서 충돌 0회를 확인했습니다.
 ## 개발 기록과 다음 단계
 
 - [변경 이력](CHANGELOG.md): 버전별 변경·검증·호환성
-- [현재 계획](docs/development_plan.md): 다음 단계는 Phase 5 보안 문서·KISA 매핑·SBOM
+- [현재 계획](docs/development_plan.md): 다음 단계는 외부 GPU 장비의 Phase 6 MaleCNS 실제 모델 구현
 - [MaleCNS 기준](docs/malecns.md): v1.0 데이터 출처와 실제 모델 구현 계획
 - [개발 규칙](AGENTS.md), [외부 라이선스](THIRD_PARTY_NOTICES.md)
 
 버전 갱신 시 README·CHANGELOG·관련 내부 문서를 같은 커밋에서 갱신합니다.
+
+
+## 보안 검토 자료
+
+[위협 모델](docs/threat_model.md), [KISA 2023 가이드 매핑](docs/kisa_mapping.md), [서비스 개요서 초안](docs/service_overview.md), [SBOM](docs/sbom.json)을 제공합니다.
+KISA 관련 27개 항목은 함수·동작 테스트와 연결하고 부분 적용·잔여 위험을 명시했습니다. SBOM은 현재 Python 가상환경의 32개 패키지이며 OS/Webots/GPU 모델 전체 목록이 아닙니다.
+`scripts/generate_sbom.sh`로 SBOM과 입력 해시를, `.venv/bin/python scripts/render_security_docs.py`로 매핑 표를 다시 생성합니다. 의존성/버전 변경 후 문서 일치 검사가 통과해야 합니다. [Phase 5 범위와 검증](docs/phase5.md)을 참조하세요.

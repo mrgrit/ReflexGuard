@@ -1,0 +1,443 @@
+{
+  "schema_version": 1,
+  "application_version": "0.5.0",
+  "source": {
+    "title": "Python 시큐어코딩 가이드 (2023년 개정본)",
+    "official": "https://www.kisa.or.kr/2060204/form?postSeq=13",
+    "official_alternative": "https://www.krcert.or.kr/kr/bbs/view.do?bbsId=B0000127&menuNo=205021&nttId=71002&pageIndex=1",
+    "read_copy_page": "https://www.kdu.ac.kr/ins/sub.do?mncd=1159&mode=view&no=476661770&page=19",
+    "read_copy_url": "https://www.kdu.ac.kr/ins/board/download.do?mncd=1159&fno=28202&bid=00000482&did=00047666",
+    "read_copy_sha256": "56c33d0f4a374c4c4dc048dd9f3cbbc433a014b5f5b6b98ad2e5580b5b8d3752",
+    "read_copy_bytes": 6195860,
+    "read_copy_pages": 176,
+    "checked_on": "2026-09-24",
+    "provenance_note": "KISA 공식 게시물의 개정본 제목을 확인. 공식 첨부 오류/TLS 체인 오류로 대학 자료실의 KISA 원문 사본을 열람하고 2023 표지·목차를 확인했다. 해시는 열람 사본의 값이며 KISA가 서명·공표한 해시가 아니다. 원문 PDF는 저장소에 재배포하지 않는다."
+  },
+  "controls": [
+    {
+      "id": "K01",
+      "item": "SQL 삽입",
+      "printed_page": 8,
+      "code": [
+        "src/reflexguard/control_server/database.py:Database.login",
+        "src/reflexguard/control_server/app.py:create_app.create_user"
+      ],
+      "tests": [
+        "tests/test_control_server.py::test_sql_special_characters_and_template_escape"
+      ],
+      "approach": "사용자 문자열은 SQLAlchemy 조건/values 바인딩으로 전달한다.",
+      "limit": "",
+      "status": "implemented"
+    },
+    {
+      "id": "K02",
+      "item": "경로 조작 및 자원 삽입",
+      "printed_page": 18,
+      "code": [
+        "src/reflexguard/control_server/app.py:create_app.export",
+        "src/reflexguard/brain_client/client.py:BrainClient.step"
+      ],
+      "tests": [
+        "tests/test_control_server.py::test_guardian_scope_and_remote_roles",
+        "tests/test_brain_client.py::test_invalid_session_id_is_rejected_before_network"
+      ],
+      "approach": "내보내기는 소유권을 확인한 ID의 DB 행으로 생성한다. 세션 ID 형식도 검증한다.",
+      "limit": "운영자가 지정하는 로컬 설정·인증서 경로는 별도 신뢰 경계다.",
+      "status": "implemented"
+    },
+    {
+      "id": "K03",
+      "item": "크로스사이트 스크립트(XSS)",
+      "printed_page": 22,
+      "code": [
+        "src/reflexguard/control_server/app.py:create_app.dashboard"
+      ],
+      "tests": [
+        "tests/test_control_server.py::test_sql_special_characters_and_template_escape",
+        "tests/test_control_server.py::test_log_neuron_type_is_escaped"
+      ],
+      "approach": "Jinja2 HTML 자동 이스케이프, CSP, DOM textContent로 사용자 이름과 뉴런 정보를 표시한다.",
+      "limit": "",
+      "status": "implemented"
+    },
+    {
+      "id": "K04",
+      "item": "운영체제 명령어 삽입",
+      "printed_page": 29,
+      "code": [
+        "scripts/run_scenario.sh:(script)",
+        "src/reflexguard/simulation/runner.py:main"
+      ],
+      "tests": [
+        "tests/test_simulation.py::test_shell_launcher_rejects_before_starting_webots"
+      ],
+      "approach": "배치 실행은 월드·주행 모드 허용목록과 기간을 검증하고 인수를 따옴표 처리한다. 웹 API에는 프로세스 실행 기능이 없다.",
+      "limit": "고정된 로컬 통합 시험 subprocess 예외는 phase4.md에 기록한다.",
+      "status": "implemented"
+    },
+    {
+      "id": "K05",
+      "item": "크로스사이트 요청 위조(CSRF)",
+      "printed_page": 48,
+      "code": [
+        "src/reflexguard/control_server/app.py:create_app.principal",
+        "src/reflexguard/control_server/app.py:create_app.login"
+      ],
+      "tests": [
+        "tests/test_control_server.py::test_login_cookie_and_csrf",
+        "tests/test_control_server.py::test_login_requires_prelogin_csrf"
+      ],
+      "approach": "브라우저 변경 요청에 Origin·CSRF 토큰을 검증하며 로그인에도 사전 쿠키를 사용한다.",
+      "limit": "",
+      "status": "implemented"
+    },
+    {
+      "id": "K06",
+      "item": "서버사이드 요청 위조",
+      "printed_page": 55,
+      "code": [
+        "src/reflexguard/common/config.py:ClientSettings.https_origin_only",
+        "src/reflexguard/brain_client/client.py:BrainClient.__init__"
+      ],
+      "tests": [
+        "tests/test_brain_client.py::test_client_origin_is_https_without_ambiguous_components",
+        "tests/test_brain_client.py::test_untrusted_responses_raise_generic_error"
+      ],
+      "approach": "요청 본문에서 원격 URL을 받지 않는다. 운영 환경의 HTTPS origin만 사용하고 리디렉션·환경 프록시를 따르지 않는다.",
+      "limit": "환경변수를 수정할 수 있는 운영자까지 차단하는 목적지 IP 허용목록은 없다.",
+      "status": "partial"
+    },
+    {
+      "id": "K07",
+      "item": "보안기능 결정에 사용되는 부적절한 입력값",
+      "printed_page": 64,
+      "code": [
+        "src/reflexguard/control_server/schemas.py:RemoteRequest.action_value",
+        "src/reflexguard/common/schemas.py:StepRequest"
+      ],
+      "tests": [
+        "tests/test_control_server.py::test_remote_invalid_actions",
+        "tests/test_schemas.py::test_step_rejects_invalid_ranges_and_types"
+      ],
+      "approach": "명령 종류·숫자 범위·유한성·추가 필드를 검증하고 역할은 서버 저장 레코드에서 판단한다.",
+      "limit": "",
+      "status": "implemented"
+    },
+    {
+      "id": "K08",
+      "item": "적절한 인증 없는 중요 기능 허용",
+      "printed_page": 69,
+      "code": [
+        "src/reflexguard/control_server/app.py:create_app.principal",
+        "src/reflexguard/mock_brain/security.py:BrainBoundary._authenticate"
+      ],
+      "tests": [
+        "tests/test_control_server.py::test_unauthenticated_reads_denied",
+        "tests/test_mock_brain.py::test_all_endpoints_require_valid_bearer",
+        "tests/test_mtls_integration.py::test_missing_client_certificate_is_rejected"
+      ],
+      "approach": "관제는 세션/장치 토큰, 뇌 서버는 실행기의 mTLS와 API 토큰을 함께 요구한다.",
+      "limit": "",
+      "status": "implemented"
+    },
+    {
+      "id": "K09",
+      "item": "부적절한 인가",
+      "printed_page": 72,
+      "code": [
+        "src/reflexguard/control_server/app.py:create_app.chair_for",
+        "src/reflexguard/control_server/app.py:create_app.silence"
+      ],
+      "tests": [
+        "tests/test_control_server.py::test_guardian_scope_and_remote_roles",
+        "tests/test_control_server.py::test_admin_session_revocation_and_assignment"
+      ],
+      "approach": "보호자는 지정 휠체어만 접근하며 속도 제한·침묵·사용자 관리에 서버 측 역할을 적용한다.",
+      "limit": "",
+      "status": "implemented"
+    },
+    {
+      "id": "K10",
+      "item": "중요한 자원에 대한 잘못된 권한 설정",
+      "printed_page": 75,
+      "code": [
+        "scripts/gen_certs.sh:(script)",
+        "src/reflexguard/control_server/reset_admin.py:main"
+      ],
+      "tests": [
+        "tests/test_mtls_integration.py::test_private_keys_are_restricted_and_never_overwritten",
+        "tests/test_repository_safety.py::test_local_secrets_and_state_are_ignored"
+      ],
+      "approach": "인증서는 umask 077로 생성하고 기존 디렉터리를 덮어쓰지 않는다. 자격증명 복구 파일은 0600으로 기록한다.",
+      "limit": "인증서 테스트가 모든 배포 OS 권한·백업 경로까지 검증하지는 않는다. 로컬 운영 파일 접근 통제는 운영 책임이다.",
+      "status": "partial"
+    },
+    {
+      "id": "K11",
+      "item": "취약한 암호화 알고리즘 사용",
+      "printed_page": 77,
+      "code": [
+        "src/reflexguard/control_server/database.py:password_hash",
+        "src/reflexguard/control_server/signing.py:mac"
+      ],
+      "tests": [
+        "tests/test_security_evidence.py::test_password_hashes_use_independent_salts",
+        "tests/test_control_server.py::test_remote_forgery_and_replay"
+      ],
+      "approach": "비밀번호는 salt가 있는 bcrypt, 명령과 감사 체인은 HMAC-SHA256을 사용한다.",
+      "limit": "HMAC은 공유 키 메시지 인증으로 공개키 전자서명이나 제3자 부인방지와 다르다.",
+      "status": "implemented"
+    },
+    {
+      "id": "K12",
+      "item": "암호화되지 않은 중요정보",
+      "printed_page": 81,
+      "code": [
+        "src/reflexguard/mock_brain/__main__.py:main",
+        "src/reflexguard/control_server/__main__.py:main"
+      ],
+      "tests": [
+        "tests/test_mtls_integration.py::test_plaintext_and_forged_forwarded_proto_are_rejected",
+        "tests/test_control_server.py::test_transport_and_body_boundary"
+      ],
+      "approach": "실행 경로는 HTTPS만 사용하고 비밀번호의 DB 저장은 bcrypt 해시로 한다.",
+      "limit": "SQLite 판단 로그·환경변수 파일·초기 비밀번호 기록은 디스크 암호화되지 않는다. 파일 권한/호스트 보안과 별개로 저장 암호화는 미구현이다.",
+      "status": "partial"
+    },
+    {
+      "id": "K13",
+      "item": "하드코드된 중요정보",
+      "printed_page": 85,
+      "code": [
+        "src/reflexguard/common/config.py:MockSettings.from_env",
+        "src/reflexguard/control_server/config.py:ControlSettings.from_env"
+      ],
+      "tests": [
+        "tests/test_brain_client.py::test_missing_environment_fails_closed",
+        "tests/test_repository_safety.py::test_local_secrets_and_state_are_ignored"
+      ],
+      "approach": "인증정보를 환경에서 주입하고 필수 값 누락 시 실패한다. 로컬 비밀 파일은 Git에서 제외한다.",
+      "limit": "Git 제외 검사와 코드 스캔은 비밀 탐지의 완전성을 증명하지 않는다. 이미 외부에 공유한 자격증명은 별도 폐기가 필요하다.",
+      "status": "partial"
+    },
+    {
+      "id": "K14",
+      "item": "취약한 패스워드 허용",
+      "printed_page": 94,
+      "code": [
+        "src/reflexguard/control_server/schemas.py:Login.password_length"
+      ],
+      "tests": [
+        "tests/test_control_server.py::test_admin_recovery_rejects_short_password",
+        "tests/test_security_evidence.py::test_password_byte_boundaries"
+      ],
+      "approach": "서버가 UTF-8 12..72바이트를 검사하고 초기/복구 비밀번호는 secrets로 생성한다.",
+      "limit": "직접 지정한 비밀번호의 반복 패턴·유출 목록·MFA는 검사하지 않는다. 길이 조건만으로 강도를 보증하지 않는다.",
+      "status": "partial"
+    },
+    {
+      "id": "K15",
+      "item": "부적절한 인증서 유효성 검증",
+      "printed_page": 102,
+      "code": [
+        "src/reflexguard/brain_client/client.py:BrainClient.__init__"
+      ],
+      "tests": [
+        "tests/test_mtls_integration.py::test_foreign_server_ca_is_rejected",
+        "tests/test_mtls_integration.py::test_hostname_verification_is_enabled",
+        "tests/test_mtls_integration.py::test_foreign_client_certificate_is_rejected"
+      ],
+      "approach": "신뢰 CA와 호스트 이름 검증을 유지하고 뇌 서버에서 클라이언트 인증서를 요구한다.",
+      "limit": "개발 CA는 수동 배포한다. 인증서 자동 갱신·폐기 조회 체계는 미구현이다.",
+      "status": "partial"
+    },
+    {
+      "id": "K16",
+      "item": "사용자 하드디스크에 저장되는 쿠키를 통한 정보 노출",
+      "printed_page": 106,
+      "code": [
+        "src/reflexguard/control_server/app.py:create_app.login"
+      ],
+      "tests": [
+        "tests/test_control_server.py::test_login_cookie_and_csrf",
+        "tests/test_security_evidence.py::test_session_cookie_is_opaque_and_database_contains_only_digest"
+      ],
+      "approach": "쿠키에는 무작위 세션 토큰만 저장하고 서버에는 digest를 저장한다. Secure/HttpOnly/SameSite=Strict와 30분 만료를 사용한다.",
+      "limit": "로컬 디스크·브라우저 자체가 침해되면 bearer 세션 탈취 위험은 남는다.",
+      "status": "implemented"
+    },
+    {
+      "id": "K17",
+      "item": "솔트 없이 일방향 해시 함수 사용",
+      "printed_page": 111,
+      "code": [
+        "src/reflexguard/control_server/database.py:password_hash"
+      ],
+      "tests": [
+        "tests/test_security_evidence.py::test_password_hashes_use_independent_salts"
+      ],
+      "approach": "동일 비밀번호도 별도 bcrypt salt를 생성하고 검증한다. 세션 토큰 digest는 고엔트로피 토큰 식별자이며 비밀번호 해시와 구분한다.",
+      "limit": "",
+      "status": "implemented"
+    },
+    {
+      "id": "K18",
+      "item": "무결성 검사없는 코드 다운로드",
+      "printed_page": 113,
+      "code": [
+        "scripts/bootstrap.sh:(script)",
+        "scripts/security_check.sh:(script)"
+      ],
+      "tests": [
+        "tests/test_security_docs.py::test_sbom_matches_locked_and_installed_packages",
+        "tests/test_bootstrap.py::test_dry_run_preserves_missing_destination"
+      ],
+      "approach": "Python 의존성을 버전/SHA-256으로 잠그고 require-hashes 설치 및 취약점 감사를 수행한다.",
+      "limit": "SBOM 일치 검사는 악성 패키지/공급자 신뢰 검증이 아니다. 실데이터 자산 서명 검증은 Phase 6에 남아 있다.",
+      "status": "partial"
+    },
+    {
+      "id": "K19",
+      "item": "반복된 인증시도 제한 기능 부재",
+      "printed_page": 116,
+      "code": [
+        "src/reflexguard/control_server/database.py:Database.login"
+      ],
+      "tests": [
+        "tests/test_control_server.py::test_login_lock_and_unknown_user"
+      ],
+      "approach": "5회 실패 시 계정 잠금과 출발지별 로그인 한도를 DB에 보관한다.",
+      "limit": "대규모 분산 공격·잠금 유발 DoS와 부하 시험은 남아 있다.",
+      "status": "partial"
+    },
+    {
+      "id": "K20",
+      "item": "경쟁조건: 검사시점과 사용시점(TOCTOU)",
+      "printed_page": 119,
+      "code": [
+        "src/reflexguard/control_server/database.py:Database.tx",
+        "src/reflexguard/control_server/database.py:Database.append"
+      ],
+      "tests": [
+        "tests/test_control_server.py::test_concurrent_audit_append",
+        "tests/test_control_server.py::test_device_token_binding_and_sequence"
+      ],
+      "approach": "SQLite 즉시 트랜잭션 안에서 상태 검사와 로그 추가·sequence 갱신을 직렬화한다.",
+      "limit": "증거 범위는 DB 갱신이다. 전체 파일시스템 TOCTOU 안전성을 뜻하지 않는다.",
+      "status": "partial"
+    },
+    {
+      "id": "K21",
+      "item": "종료되지 않는 반복문 또는 재귀 함수",
+      "printed_page": 122,
+      "code": [
+        "src/reflexguard/brain_client/client.py:BrainClient._request",
+        "src/reflexguard/mock_brain/security.py:BrainBoundary.__call__"
+      ],
+      "tests": [
+        "tests/test_brain_client.py::test_total_deadline_stops_slow_drip_response",
+        "tests/test_mock_brain.py::test_session_capacity_and_expiry"
+      ],
+      "approach": "뇌 HTTP 응답 전체 200ms 제한, 요청 본문 1초·크기 제한, 세션 수/수명 한도를 둔다.",
+      "limit": "관제 본문 수신에는 전체 시간 제한이 없고 SQLite 로그/내보내기 크기도 무제한이다. threat_model.md의 D 잔여 위험을 참조한다.",
+      "status": "partial"
+    },
+    {
+      "id": "K22",
+      "item": "오류 메시지 정보노출",
+      "printed_page": 125,
+      "code": [
+        "src/reflexguard/mock_brain/app.py:create_app.unexpected_error",
+        "src/reflexguard/control_server/app.py:create_app.invalid"
+      ],
+      "tests": [
+        "tests/test_mock_brain.py::test_unexpected_errors_are_generic_but_logged",
+        "tests/test_mock_brain.py::test_errors_do_not_echo_input_and_requests_are_bounded",
+        "tests/test_control_server.py::test_transport_and_body_boundary"
+      ],
+      "approach": "외부에는 일반 오류를 반환하고 입력과 인증정보를 응답에 되비추지 않는다. 내부 진단은 로그로 분리한다.",
+      "limit": "",
+      "status": "implemented"
+    },
+    {
+      "id": "K23",
+      "item": "오류상황 대응 부재",
+      "printed_page": 129,
+      "code": [
+        "src/reflexguard/control/pipeline.py:Pipeline.fail",
+        "src/reflexguard/control_server/device_client.py:DeviceClient.fail"
+      ],
+      "tests": [
+        "tests/test_pipeline_tls.py::test_real_mtls_disconnect_causes_latched_gradual_stop",
+        "tests/test_control_device.py::test_poll_failure_stops_and_latches"
+      ],
+      "approach": "뇌 연결 오류는 감속 후 정지 고정, 관제 연결 오류는 모터 정지 고정으로 처리한다.",
+      "limit": "실제 하드웨어 실시간성·제동 거리는 검증 전이다.",
+      "status": "implemented"
+    },
+    {
+      "id": "K24",
+      "item": "부적절한 자원 해제",
+      "printed_page": 137,
+      "code": [
+        "src/reflexguard/brain_client/client.py:BrainClient.aclose",
+        "src/reflexguard/brain_client/client.py:BrainClient._exchange"
+      ],
+      "tests": [
+        "tests/test_brain_client.py::test_total_deadline_stops_slow_drip_response"
+      ],
+      "approach": "응답 스트림 context manager와 client close를 사용한다. 시간 초과 시 실제 스트림 종료 여부를 시험한다.",
+      "limit": "전체 프로세스/장치 드라이버 자원 누수 부하 시험은 별도다.",
+      "status": "partial"
+    },
+    {
+      "id": "K25",
+      "item": "신뢰할 수 없는 데이터의 역직렬화",
+      "printed_page": 140,
+      "code": [
+        "src/reflexguard/brain_client/client.py:BrainClient._exchange",
+        "src/reflexguard/common/schemas.py:ContractModel"
+      ],
+      "tests": [
+        "tests/test_brain_client.py::test_untrusted_responses_raise_generic_error",
+        "tests/test_schemas.py::test_unknown_fields_are_rejected"
+      ],
+      "approach": "외부 메시지는 길이 제한된 JSON과 엄격한 Pydantic 모델로만 읽는다. 모델 객체 역직렬화 API를 제공하지 않는다.",
+      "limit": "실제 모델 로더는 아직 없다. 이 결과를 npz/safetensors 로더 검증 완료로 보지 않는다.",
+      "status": "implemented"
+    },
+    {
+      "id": "K26",
+      "item": "잘못된 세션에 의한 데이터 정보 노출",
+      "printed_page": 143,
+      "code": [
+        "src/reflexguard/mock_brain/store.py:SessionStore._owned",
+        "src/reflexguard/control_server/app.py:create_app.principal"
+      ],
+      "tests": [
+        "tests/test_mock_brain.py::test_sessions_are_owned_and_missing_sessions_are_indistinguishable",
+        "tests/test_control_server.py::test_session_expiry_and_offline_command",
+        "tests/test_control_server.py::test_admin_session_revocation_and_assignment"
+      ],
+      "approach": "뇌 세션 소유자·관제 세션 만료·활성 상태를 검증하고 계정 변경 때 세션을 폐기한다.",
+      "limit": "",
+      "status": "implemented"
+    },
+    {
+      "id": "K27",
+      "item": "제거되지 않고 남은 디버그 코드",
+      "printed_page": 146,
+      "code": [
+        "src/reflexguard/mock_brain/app.py:create_app",
+        "src/reflexguard/control_server/app.py:create_app"
+      ],
+      "tests": [
+        "tests/test_security_evidence.py::test_service_debug_and_api_documentation_are_disabled",
+        "tests/test_mock_brain.py::test_unexpected_errors_are_generic_but_logged"
+      ],
+      "approach": "두 서비스의 debug와 공개 API 문서 엔드포인트를 비활성화한다. 예외 응답에서 traceback을 제거한다.",
+      "limit": "",
+      "status": "implemented"
+    }
+  ]
+}

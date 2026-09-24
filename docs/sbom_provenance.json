@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "application_version": "0.5.0",
+  "scope": "Project Python virtual environment including test/build dependencies; excludes OS, Webots, pipx tool environments and planned MaleCNS assets",
+  "format": "CycloneDX 1.6 JSON",
+  "generator": "cyclonedx-py 7.4.0",
+  "command": "scripts/generate_sbom.sh",
+  "component_count": 32,
+  "inputs_sha256": {
+    "requirements.in": "ee84b6c853ff1d8c8b1210cc5d1fe1a2538b3aef37c9b314be2c604762b69f87",
+    "requirements.txt": "57befccde0c762bd98362aa2dcb462575c4110a153c23488d3b310c5f627a146",
+    "pyproject.toml": "1dd9dda88182d923e97fd7d650ab7daddf485af246a9116984d0b2c577130c28"
+  },
+  "sbom_sha256": "4a05de4d1a8523d8c1c694b306fe6d4a572cc480d8098dc2aefb7410195fa9d7",
+  "hash_scope": "Input manifests and SBOM file only. requirements.txt contains allowed artifact hashes; installed package files are not attested."
+}
