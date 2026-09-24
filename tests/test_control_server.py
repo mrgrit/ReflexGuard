@@ -252,3 +252,36 @@ def test_session_expiry_and_offline_command(control):
     assert client.post("/remote",json={"chair_id":"seat-a","action":"stop"}).status_code==409
     with db.tx() as conn:conn.execute(update(sessions).values(expires=time.time()-1))
     assert client.get("/api/chairs").status_code==401
+
+
+def test_admin_recovery_updates_hash_unlocks_and_revokes(control):
+    import bcrypt
+    from reflexguard.control_server.reset_admin import reset_account
+    from reflexguard.control_server.schemas import Login
+    client,db,settings,password=control
+    login(client,password)
+    with db.tx() as conn:
+        conn.execute(update(users).where(users.c.username=="admin").values(failures=5,locked_until=time.time()+900))
+    replacement=secrets.token_urlsafe(24)
+    reset_account(db,Login(username="admin",password=replacement))
+    assert client.get("/").status_code==401
+    with db.tx() as conn:
+        user=conn.execute(select(users).where(users.c.username=="admin")).mappings().one()
+        assert user["failures"]==0 and user["locked_until"]==0
+        assert bcrypt.checkpw(replacement.encode(),user["password_hash"].encode())
+        assert not bcrypt.checkpw(password.encode(),user["password_hash"].encode())
+    assert login(client,replacement).status_code==200
+
+
+def test_admin_recovery_cannot_promote_guardian(control):
+    from reflexguard.control_server.reset_admin import reset_account
+    from reflexguard.control_server.schemas import Login
+    client,db,settings,password=control
+    with pytest.raises(ValueError):reset_account(db,Login(username="guardian",password=password))
+    assert login(client,password,"guardian").status_code==200
+
+
+def test_admin_recovery_rejects_short_password(control):
+    from pydantic import ValidationError
+    from reflexguard.control_server.schemas import Login
+    with pytest.raises(ValidationError):Login(username="admin",password=secrets.token_hex(1))

@@ -53,3 +53,12 @@ Bandit의 통합 시험용 subprocess import/호출 5곳은 고정 실행 파일
 - [SQLAlchemy SQLite 트랜잭션](https://docs.sqlalchemy.org/en/20/dialects/sqlite.html)
 - [Starlette 템플릿 자동 이스케이프](https://starlette.dev/templates/)
 - [bcrypt 패키지·사용법](https://pypi.org/project/bcrypt/)
+
+
+## 0.4.1 로그인 복구
+
+`.env.admin`은 최초 계정/복구 자격증명을 기록한 파일이다. 서버가 로그인할 때 읽는 설정 파일이 아니며 비밀번호 검증은 SQLite의 bcrypt 해시를 사용한다. 파일 편집만으로 비밀번호를 변경할 수 없다.
+
+프로젝트 루트에서 `scripts/reset_admin.sh`를 실행하면 새 무작위 비밀번호를 생성해 DB와 `.env.admin`(권한 0600)을 함께 갱신하고, admin 계정 잠금·기존 세션·로컬 접속 주소의 로그인 제한을 해제한다. 일반 사용자를 관리자로 승격시키지 않는다. 다른 휠체어 설정과 판단 로그는 유지한다. 실행 중인 서버 재시작은 필요하지 않다.
+새 비밀번호는 이 파일의 `REFLEXGUARD_ADMIN_PASSWORD=` 뒤 값만 복사한다. `https://localhost:8444/login`을 새로 열어 CSRF 쿠키를 갱신한 다음 로그인한다.
+직접 고른 비밀번호는 `REFLEXGUARD_ADMIN_PASSWORD` 환경변수로 전달할 수 있으며 UTF-8 12..72바이트를 검증한다. 명령행 인자나 로그에 비밀번호를 넣지 않는다. 로그인 화면에도 길이 조건을 표시한다.
