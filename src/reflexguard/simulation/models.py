@@ -21,6 +21,9 @@ class Telemetry(BaseModel):
     left_rad_s: float = Field(allow_inf_nan=False)
     right_rad_s: float = Field(allow_inf_nan=False)
 
+    remote_stop_steps: int = Field(default=0, ge=0)
+    remote_interventions: int = Field(default=0, ge=0)
+    control_failures: int = Field(default=0, ge=0)
     brain_steps: int = Field(default=0, ge=0)
     interventions: int = Field(default=0, ge=0)
     stop_steps: int = Field(default=0, ge=0)
@@ -43,6 +46,9 @@ class Result(BaseModel):
     camera_width: int = Field(ge=160)
     camera_height: int = Field(ge=120)
 
+    remote_stop_steps: int = Field(default=0, ge=0)
+    remote_interventions: int = Field(default=0, ge=0)
+    control_failures: int = Field(default=0, ge=0)
     brain_steps: int = Field(default=0, ge=0)
     interventions: int = Field(default=0, ge=0)
     stop_steps: int = Field(default=0, ge=0)

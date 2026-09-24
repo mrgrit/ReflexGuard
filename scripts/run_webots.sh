@@ -9,6 +9,7 @@ if [[ -f .env ]]; then
   source .env
   set +a
 fi
+if [[ -f .env.control ]]; then set -a; source .env.control; set +a; fi
 unset REFLEXGUARD_SCENARIO
 .venv/bin/python scripts/configure_webots.py
 exec webots "$PWD/webots/worlds/$world.wbt"

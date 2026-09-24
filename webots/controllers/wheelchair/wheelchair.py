@@ -9,6 +9,7 @@ from pydantic import TypeAdapter, Field
 from reflexguard.control.arbiter import Command
 from reflexguard.control.config import Calibration
 from reflexguard.control.pipeline import Pipeline
+from reflexguard.control_server.device_client import DeviceClient, DeviceSettings
 from reflexguard.simulation.drive import CameraFrame, FrameSink, wheel_speeds
 from reflexguard.simulation.models import Settings, Telemetry
 
@@ -30,13 +31,18 @@ async def main():
     keyboard.enable(dt)
     sink = FrameSink()
     pipeline = Pipeline(Calibration.load())
+    device = DeviceClient(DeviceSettings.from_env()) if os.environ.get("REFLEXGUARD_CONTROL_URL") else None
     presets = {"idle": (0.0, 0.0), "forward": (max_speed, 0.0),
                "reverse": (-max_speed, 0.0), "left": (0.0, 0.8), "right": (0.0, -0.8)}
     maximum = 0.0
+    remote_stops = 0
+    remote_interventions = 0
     last_reason = None
     next_log_ms = 0
     try:
         await pipeline.start()
+        if device is not None:
+            await device.start()
         while robot.step(dt) != -1:
             if settings.drive == "keyboard":
                 keys = set()
@@ -57,6 +63,16 @@ async def main():
                 sink.consume(frame)
             result = await pipeline.step(frame, Command(forward=forward, turn=turn), dt)
             command = result.decision.command
+            reason = result.decision.reason
+            if device is not None:
+                await device.poll(pipeline)
+                command = device.guard.apply(command)
+                if device.guard.stopped:
+                    reason = "control_failure" if device.failed else "remote_stop"
+                elif command != result.decision.command:
+                    reason = "remote_speed_limit"
+            remote_stops += int(device is not None and device.guard.stopped)
+            remote_interventions += int(command != result.decision.command)
             lv, rv = wheel_speeds(command.forward, command.turn, max_speed)
             left.setVelocity(lv)
             right.setVelocity(rv)
@@ -64,23 +80,31 @@ async def main():
             robot.setCustomData(Telemetry(
                 frames=sink.frames, width=camera.getWidth(), height=camera.getHeight(),
                 pixel_range=sink.pixel_range, left_rad_s=lv, right_rad_s=rv,
-                brain_steps=pipeline.brain_steps, interventions=pipeline.interventions,
+                remote_stop_steps=remote_stops, remote_interventions=remote_interventions,
+                control_failures=int(device is not None and device.failed), brain_steps=pipeline.brain_steps, interventions=pipeline.interventions,
                 stop_steps=pipeline.stop_steps, brain_failures=pipeline.failures,
                 max_looming=maximum, final_forward=command.forward).model_dump_json())
-            reason = result.decision.reason
             if now_ms >= next_log_ms or reason != last_reason:
+                if device is not None:
+                    await device.report(t_ms=now_ms, result=result, command=command, reason=reason,
+                                        top_neurons=pipeline.top_neurons, model_version=pipeline.model_version)
+                    if device.failed:
+                        left.setVelocity(0.0)
+                        right.setVelocity(0.0)
                 print("REFLEXGUARD_DECISION=" + json.dumps({
                     "t_ms": now_ms, "left": result.looming.left, "right": result.looming.right,
                     "left_area": result.looming.left_area, "right_area": result.looming.right_area,
                     "escape": result.escape, "signal": result.signal.value,
                     "reason": reason, "user_forward": forward, "forward": command.forward,
-                    "turn": command.turn, "intervened": result.decision.intervened}), flush=True)
+                    "turn": command.turn, "intervened": command != Command(forward=forward, turn=turn)}), flush=True)
                 next_log_ms = now_ms + 500
                 last_reason = reason
     finally:
         left.setVelocity(0.0)
         right.setVelocity(0.0)
         await pipeline.close()
+        if device is not None:
+            await device.close()
 
 
 if __name__ == "__main__":

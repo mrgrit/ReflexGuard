@@ -54,7 +54,8 @@ def main():
                             yaw_change_rad=math.atan2(math.sin(yaw), math.cos(yaw)),
                             camera_frames=telemetry.frames, camera_pixel_range=telemetry.pixel_range,
                             camera_width=telemetry.width, camera_height=telemetry.height,
-                            brain_steps=telemetry.brain_steps, interventions=telemetry.interventions,
+                            remote_stop_steps=telemetry.remote_stop_steps, remote_interventions=telemetry.remote_interventions,
+                            control_failures=telemetry.control_failures, brain_steps=telemetry.brain_steps, interventions=telemetry.interventions,
                             stop_steps=telemetry.stop_steps, brain_failures=telemetry.brain_failures,
                             max_looming=telemetry.max_looming, final_forward=telemetry.final_forward)
             print("REFLEXGUARD_RESULT=" + result.model_dump_json(), flush=True)

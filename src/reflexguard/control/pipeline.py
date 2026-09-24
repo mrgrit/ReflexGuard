@@ -34,6 +34,8 @@ class Pipeline:
         self.stop_steps = 0
         self.failures = 0
         self.last = Looming(0.0, 0.0, 0.0, 0.0)
+        self.top_neurons = []
+        self.model_version = "unavailable"
 
     async def start(self):
         try:
@@ -49,6 +51,8 @@ class Pipeline:
             LOGGER.warning("Safety stop latched; restart required after correcting the fault")
             self.failures += 1
         self.failed = True
+        self.top_neurons = []
+        self.model_version = "unavailable"
 
     async def step(self, frame: CameraFrame | None, user: Command, dt_ms: int) -> PipelineStep:
         escape = 0.0
@@ -62,6 +66,8 @@ class Pipeline:
                     t_ms=frame.t_ms, dt_ms=dt_ms, left_looming=self.last.left, right_looming=self.last.right))
                 signal = self.decoder.update(response)
                 escape = response.escape
+                self.top_neurons = response.top_neurons
+                self.model_version = response.model_version
                 self.brain_steps += 1
             except (BrainClientError, ValueError):
                 self.fail()

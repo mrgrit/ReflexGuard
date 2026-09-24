@@ -10,3 +10,8 @@ setuptools
 # Phase 3 camera encoding (headless wheels for SSH/Webots).
 numpy
 opencv-python-headless
+
+# Phase 4 authenticated control dashboard.
+SQLAlchemy>=2,<3
+Jinja2>=3,<4
+bcrypt>=5,<6

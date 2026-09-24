@@ -38,3 +38,11 @@ Phase 5에서 서비스 의존성과 SBOM을 포함해 고지를 확장합니다
 ## MaleCNS 데이터(도입 예정, 현재 미포함)
 
 MaleCNS v1.0의 공식 배포자는 FlyEM(HHMI Janelia), University of Cambridge, MRC Laboratory of Molecular Biology 및 Google Research 공동 프로젝트입니다. [공식 다운로드](https://male-cns.janelia.org/download/)에서 연결하는 데이터 라이선스는 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)입니다. 도입 시 출처와 릴리스, 변경·변환 내역을 표기합니다. 데이터 라이선스는 시뮬레이터 코드의 라이선스와 구분합니다.
+
+## Phase 4 관제 의존성
+
+- SQLAlchemy 2.0.54: MIT — https://github.com/sqlalchemy/sqlalchemy
+- Jinja2 3.1.6: BSD-3-Clause — https://github.com/pallets/jinja
+- MarkupSafe 3.0.3: BSD-3-Clause (Jinja2의 이스케이프 의존성; 애플리케이션에서 Markup 사용 금지) — https://github.com/pallets/markupsafe
+- bcrypt 5.0.0: Apache-2.0 — https://github.com/pyca/bcrypt
+- greenlet 3.5.6: MIT AND PSF-2.0 — https://github.com/python-greenlet/greenlet
