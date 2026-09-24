@@ -1,12 +1,13 @@
 # Third-party notices
 
-Phase 0·1에서는 아래 개발 도구와 Python 라이브러리를 설치해 사용합니다. 프로그램 바이너리나 데이터셋은 이 저장소에 복사하지 않습니다.
+Phase 0–2에서는 아래 개발 도구와 Python 라이브러리를 설치해 사용합니다. 프로그램 바이너리나 데이터셋은 이 저장소에 복사하지 않습니다.
 버전과 라이선스는 설치 패키지 메타데이터 및 아래 공식 프로젝트의 라이선스를 기준으로 기록했습니다.
 
 | 구성요소 | 라이선스 | 출처 |
 |---|---|---|
 | Webots R2025a 및 console 샘플 코드 | Apache-2.0 | https://github.com/cyberbotics/webots |
-| Webots 일부 모델·자산 | 자산별 고지 확인; CC-BY-4.0 등 | https://github.com/cyberbotics/webots |
+| Webots Pedestrian 및 종속 모델 | Cyberbotics Webots assets license: Webots 사용에 한정. Apache-2.0으로 간주하지 않음 | https://cyberbotics.com/webots_assets_license ; https://github.com/cyberbotics/webots/blob/R2025a/projects/humans/pedestrian/protos/Pedestrian.proto |
+| 기본 pedestrian.py 컨트롤러(설치본 참조) | Apache-2.0 | https://github.com/cyberbotics/webots/blob/R2025a/projects/humans/pedestrian/controllers/pedestrian/pedestrian.py |
 | Docker Engine·CLI·Compose·Buildx | Apache-2.0 | https://github.com/moby/moby ; https://github.com/docker/compose |
 | Python 3.10 | PSF-2.0 및 배포판 고지 | https://docs.python.org/3/license.html |
 | pip / pipx / pytest / setuptools | MIT | https://github.com/pypa/pip ; https://github.com/pypa/pipx ; https://github.com/pytest-dev/pytest ; https://github.com/pypa/setuptools |

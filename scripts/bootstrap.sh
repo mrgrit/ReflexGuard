@@ -141,6 +141,7 @@ if [[ ! -x .venv/bin/python ]]; then
 fi
 .venv/bin/python -c 'import sys; sys.exit(0 if sys.version_info[:2] == (3, 10) and sys.prefix != sys.base_prefix else 1)'
 .venv/bin/python -m pip install --require-hashes -r requirements.txt
+.venv/bin/python scripts/configure_webots.py
 pre-commit install
 
 # Do not restart the desktop's input daemon or log the user out automatically.

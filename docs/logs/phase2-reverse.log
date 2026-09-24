@@ -1,0 +1,7 @@
+INFO: wheelchair: Starting controller: /home/rg/work/reflexguard/.venv/bin/python -u wheelchair.py
+INFO: scenario: Starting controller: /home/rg/work/reflexguard/.venv/bin/python -u scenario.py
+REFLEXGUARD: camera and wheel controller ready
+REFLEXGUARD_RESULT={"world":"corridor_static","drive":"reverse","duration_s":2.016,"collision":false,"collision_events":0,"min_clearance_estimate_m":0.07018094013972331,"displacement_m":1.1498190598602767,"yaw_change_rad":-1.2551256319360433e-9,"camera_frames":63,"camera_pixel_range":187,"camera_width":160,"camera_height":120}
+INFO: wheelchair: Terminating.
+INFO: scenario: Terminating.
+{"world":"corridor_static","drive":"reverse","duration_s":2.016,"collision":false,"collision_events":0,"min_clearance_estimate_m":0.07018094013972331,"displacement_m":1.1498190598602767,"yaw_change_rad":-1.2551256319360433e-9,"camera_frames":63,"camera_pixel_range":187,"camera_width":160,"camera_height":120}

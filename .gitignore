@@ -17,3 +17,7 @@ htmlcov/
 *.egg-info/
 build/
 dist/
+
+# Generated absolute interpreter paths and local Webots UI state
+webots/controllers/*/runtime.ini
+webots/worlds/.*.wbproj

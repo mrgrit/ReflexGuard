@@ -4,7 +4,7 @@ trap 'exit 1' ERR
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
 export PATH="$HOME/.local/bin:$PWD/.venv/bin:$PATH"
 targets=(scripts)
-for directory in src brain_server; do
+for directory in src brain_server webots/controllers; do
   if [[ -d "$directory" ]]; then
     targets+=("$directory")
   fi

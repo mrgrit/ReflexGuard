@@ -1,0 +1,4 @@
+[python]
+COMMAND = @PYTHON@
+[environment variables with paths]
+PYTHONPATH = ../../../src

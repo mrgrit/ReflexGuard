@@ -1,0 +1,94 @@
+#VRML_SIM R2025a utf8
+# template language: javascript
+PROTO Wheelchair [
+  field SFVec3f translation -4 0 0.26
+  field SFRotation rotation 0 0 1 0
+  field SFFloat maxSpeed 0.6
+  field SFString controller "wheelchair"
+] {
+%< const speed = fields.maxSpeed.value;
+   if (!Number.isFinite(speed) || speed <= 0 || speed > 1.2) throw new Error('maxSpeed must be in (0, 1.2]'); >%
+Robot {
+  translation IS translation
+  rotation IS rotation
+  name "ReflexGuard wheelchair"
+  controller IS controller
+  customData "%<= speed >%"
+  children [
+    Pose { translation 0.08 0 0.22 children [ Shape {
+      appearance DEF BLUE PBRAppearance { baseColor 0.03 0.3 0.5 roughness 0.7 metalness 0 }
+      geometry Box { size 0.65 0.5 0.12 }
+    } ] }
+    Pose { translation -0.22 0 0.48 children [ Shape {
+      appearance USE BLUE geometry Box { size 0.1 0.5 0.5 }
+    } ] }
+    Pose { translation 0.43 0 -0.05 children [ Shape {
+      appearance USE BLUE geometry Box { size 0.25 0.48 0.06 }
+    } ] }
+    Camera { translation 0.36 0 0.5
+      name "front camera" width 160 height 120 fieldOfView 1.2 near 0.03 far 20 }
+    HingeJoint {
+      jointParameters HingeJointParameters { axis 0 1 0 anchor -0.16 0.32 0 }
+      device [ RotationalMotor { name "left wheel motor" maxVelocity %<= speed / 0.24 >% maxTorque 40 } ]
+      endPoint Solid { translation -0.16 0.32 0 rotation 1 0 0 1.57079632679
+        name "left rear wheel"
+        children [ Shape { appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 1 metalness 0 }
+          geometry Cylinder { radius 0.24 height 0.08 } } ]
+        boundingObject Cylinder { radius 0.24 height 0.08 }
+        physics Physics { density -1 mass 2 }
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters { axis 0 1 0 anchor -0.16 -0.32 0 }
+      device [ RotationalMotor { name "right wheel motor" maxVelocity %<= speed / 0.24 >% maxTorque 40 } ]
+      endPoint Solid { translation -0.16 -0.32 0 rotation 1 0 0 1.57079632679
+        name "right rear wheel"
+        children [ Shape { appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 1 metalness 0 }
+          geometry Cylinder { radius 0.24 height 0.08 } } ]
+        boundingObject Cylinder { radius 0.24 height 0.08 }
+        physics Physics { density -1 mass 2 }
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters { axis 0 0 1 anchor 0.34 0.23 -0.07 dampingConstant 0.02 }
+      endPoint Solid { translation 0.34 0.23 -0.07 name "left caster fork"
+        children [
+          Shape { appearance USE BLUE geometry Box { size 0.03 0.03 0.08 } }
+          HingeJoint { jointParameters HingeJointParameters { axis 0 1 0 anchor -0.04 0 -0.09 }
+            endPoint Solid { translation -0.04 0 -0.09 rotation 1 0 0 1.57079632679 name "left caster wheel"
+              children [ Shape { appearance USE BLUE geometry Cylinder { radius 0.08 height 0.04 } } ]
+              boundingObject Cylinder { radius 0.08 height 0.04 }
+              physics Physics { density -1 mass 0.2 }
+            }
+          }
+        ]
+        boundingObject Box { size 0.03 0.03 0.08 }
+        physics Physics { density -1 mass 0.1 }
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters { axis 0 0 1 anchor 0.34 -0.23 -0.07 dampingConstant 0.02 }
+      endPoint Solid { translation 0.34 -0.23 -0.07 name "right caster fork"
+        children [
+          Shape { appearance USE BLUE geometry Box { size 0.03 0.03 0.08 } }
+          HingeJoint { jointParameters HingeJointParameters { axis 0 1 0 anchor -0.04 0 -0.09 }
+            endPoint Solid { translation -0.04 0 -0.09 rotation 1 0 0 1.57079632679 name "right caster wheel"
+              children [ Shape { appearance USE BLUE geometry Cylinder { radius 0.08 height 0.04 } } ]
+              boundingObject Cylinder { radius 0.08 height 0.04 }
+              physics Physics { density -1 mass 0.2 }
+            }
+          }
+        ]
+        boundingObject Box { size 0.03 0.03 0.08 }
+        physics Physics { density -1 mass 0.1 }
+      }
+    }
+  ]
+  boundingObject Group { children [
+    Pose { translation 0.08 0 0.15 children [ Box { size 0.65 0.5 0.25 } ] }
+    Pose { translation -0.22 0 0.48 children [ Box { size 0.1 0.5 0.5 } ] }
+    Pose { translation 0.43 0 -0.05 children [ Box { size 0.25 0.48 0.06 } ] }
+  ] }
+  physics Physics { density -1 mass 65 centerOfMass [ 0.03 0 0.1 ] }
+}
+}

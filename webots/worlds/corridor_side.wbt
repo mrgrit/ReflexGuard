@@ -1,0 +1,37 @@
+#VRML_SIM R2025a utf8
+EXTERNPROTO "../protos/Wheelchair.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/humans/pedestrian/protos/Pedestrian.proto"
+WorldInfo { basicTimeStep 32 }
+Viewpoint { orientation -0.2083586969674776 0.6250760909024328 0.7522410079091331 0.8342362755414127 position -8 -6 6 }
+Background { skyColor [ 0.75 0.83 0.9 ] }
+DirectionalLight { direction 0.3 0.2 -1 intensity 1 ambientIntensity 0.5 castShadows FALSE }
+DEF FLOOR Solid { translation 0 0 -0.1 name "FLOOR"
+  children [ Shape { appearance PBRAppearance { baseColor 0.68 0.7 0.68 roughness 1 metalness 0 } geometry Box { size 12 7 0.2 } } ]
+  boundingObject Box { size 12 7 0.2 }
+}
+DEF WALL_SOUTH Solid { translation 0 -1.6 1 name "WALL_SOUTH"
+  children [ Shape { appearance PBRAppearance { baseColor 0.82 0.9 0.92 roughness 1 metalness 0 } geometry Box { size 12 0.2 2 } } ]
+  boundingObject Box { size 12 0.2 2 }
+}
+DEF WALL_NW Solid { translation -4.25 1.6 1 name "WALL_NW"
+  children [ Shape { appearance PBRAppearance { baseColor 0.82 0.9 0.92 roughness 1 metalness 0 } geometry Box { size 3.5 0.2 2 } } ]
+  boundingObject Box { size 3.5 0.2 2 }
+}
+DEF WALL_NE Solid { translation 2.75 1.6 1 name "WALL_NE"
+  children [ Shape { appearance PBRAppearance { baseColor 0.82 0.9 0.92 roughness 1 metalness 0 } geometry Box { size 6.5 0.2 2 } } ]
+  boundingObject Box { size 6.5 0.2 2 }
+}
+DEF WALL_WEST Solid { translation -6 0 1 name "WALL_WEST"
+  children [ Shape { appearance PBRAppearance { baseColor 0.82 0.9 0.92 roughness 1 metalness 0 } geometry Box { size 0.2 3.2 2 } } ]
+  boundingObject Box { size 0.2 3.2 2 }
+}
+DEF WALL_EAST Solid { translation 6 0 1 name "WALL_EAST"
+  children [ Shape { appearance PBRAppearance { baseColor 0.82 0.9 0.92 roughness 1 metalness 0 } geometry Box { size 0.2 3.2 2 } } ]
+  boundingObject Box { size 0.2 3.2 2 }
+}
+DEF CHAIR Wheelchair {}
+DEF OBSTACLE Pedestrian { translation -1.5 2.2 1.27 enableBoundingObject TRUE
+  controllerArgs [ "--trajectory=-1.5 2.2, -1.5 -1.2" "--speed=0.5" ]
+  shirtColor 0.8 0.18 0.12
+}
+Robot { name "scenario observer" controller "scenario" supervisor TRUE customData "corridor_side" }
