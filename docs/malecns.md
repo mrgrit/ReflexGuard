@@ -29,7 +29,7 @@
 
 neuPrint 토큰이 필요한 경우 `REFLEXGUARD_NEUPRINT_TOKEN` 환경변수를 사용한다.
 뇌 API의 mTLS 인증서·Bearer 토큰과 용도를 구분하고 로그·저장소에 기록하지 않는다.
-현재는 추가 토큰, 데이터 다운로드, Arrow/PyTorch 설치 없이 mock 기반 개발을 진행한다.
+0.5.1부터 외부 GPU에서 공식 원본 다운로드·Arrow 스키마 점검과 PyTorch 환경을 준비한다. 증거는 [GPU 환경](gpu_environment.md)에 기록한다. mock 기반 기능과 실제 모델 구현 상태는 계속 구분한다.
 
 ## 버전과 API
 

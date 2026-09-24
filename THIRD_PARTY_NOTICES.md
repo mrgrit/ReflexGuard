@@ -91,3 +91,9 @@ MaleCNS v1.0의 공식 배포자는 FlyEM(HHMI Janelia), University of Cambridge
 KISA Python 시큐어코딩 가이드(2023년 개정본)는 보안 항목의 참고 문서이며 프로그램 의존성이나 SBOM 구성요소가 아니다. 원문 PDF·예제 코드는 저장소에 포함하지 않는다. 공식 게시물은 인용 시 출처 표시와 비영리 사용 조건을 고지한다. [공식 사용 고지](https://www.krcert.or.kr/kr/bbs/view.do?bbsId=B0000127&menuNo=205021&nttId=71002&pageIndex=1), 열람 사본 출처·해시는 docs/security_controls.json에 기록한다.
 
 이 목록은 외부 구성요소의 고지다. ReflexGuard 자체 코드에 새 오픈소스 라이선스를 부여하지 않는다.
+
+## 외부 GPU 준비 환경
+
+- NVIDIA PyTorch NGC 25.08 ARM64 컨테이너: [NVIDIA Deep Learning Container License](https://developer.download.nvidia.com/licenses/NVIDIA_Deep_Learning_Container_License.pdf) 및 각 포함 구성요소의 라이선스. 이미지 다이제스트·실행 범위는 [GPU 환경](docs/gpu_environment.md)에 기록한다. 컨테이너 자체를 이 저장소에 재배포하지 않는다. CUDA/JetPack 등 NVIDIA 구성요소를 MIT/Apache 라이선스로 간주하지 않는다.
+- 외부 GPU에서 받은 MaleCNS v1.0 원본: [공식 다운로드](https://male-cns.janelia.org/download/), CC-BY-4.0. 파일은 저장소 밖에 보관하고, 연구자/프로젝트 출처를 유지한다. 데이터 확인은 모델의 생리학적 타당성 검증을 의미하지 않는다.
+- 로컬 VPN 호환 접속 도구 OpenConnect 8.20-1은 Ubuntu 패키지로 설치한 운영 도구이며 애플리케이션에 번들하지 않는다. 라이선스는 호스트 `/usr/share/doc/openconnect/copyright`를 따른다.

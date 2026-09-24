@@ -1,6 +1,6 @@
 # ReflexGuard
 
-**현재 개발 버전: 0.5.0 — Phase 5 보안 문서·KISA 매핑·SBOM**
+**현재 개발 버전: 0.5.1 — 외부 GPU 환경 준비 (Phase 6 진행 중)**
 
 MaleCNS 커넥톰을 기반으로 초파리 신경회로에서 배운 충돌 회피 기술을 전동휠체어의 생체모방 안전 보조에 적용하는 프로젝트입니다. 평소에는 사용자가 운전하고 위험 상황에서만 시스템이 개입합니다.
 이 저장소는 대회 제출용 보안판입니다. 현재 시뮬레이션은 **규칙 기반 mock**을 사용하며 실제 MaleCNS 데이터·가중치는 아직 연결하지 않았습니다.
@@ -29,6 +29,8 @@ scripts/security_check.sh
 보안 도구와 pip-tools는 pipx로 설치합니다. 잠금 갱신은 `pip-compile --generate-hashes --allow-unsafe requirements.in`을 사용합니다.
 핵심 의존성은 FastAPI·HTTPX·Pydantic·Uvicorn·NumPy·OpenCV·SQLAlchemy·Jinja2·bcrypt입니다.
 Semgrep 규칙 및 취약점 데이터 조회는 네트워크가 필요합니다. 설치·그래픽 확인 결과는 [환경 보고서](docs/environment.md)에 있습니다.
+
+Jetson Thor의 구성·GPU 연산 점검은 [GPU 환경 준비](docs/gpu_environment.md)와 `bash scripts/bootstrap_gpu.sh`를 사용합니다. 실제 MaleCNS 뇌 API 구현은 아직 진행 중입니다.
 
 ## 실행
 

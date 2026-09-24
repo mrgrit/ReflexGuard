@@ -3,6 +3,13 @@
 프로젝트 버전은 `src/reflexguard/__init__.py`의 `__version__`으로 관리한다.
 여기서 버전은 ReflexGuard 애플리케이션 버전이며 MaleCNS 데이터 릴리스나 mock 모델 버전과 별개다.
 
+## 0.5.1 — 2026-09-25
+
+- 외부 Jetson Thor의 OS·JetPack·CUDA·메모리를 확인하고, 공식 NVIDIA PyTorch ARM64 이미지 다이제스트를 고정한 GPU 부트스트랩 추가.
+- 읽기 전용·비특권 사용자·네트워크 차단 컨테이너에서 dense/sparse GPU 연산을 검증하는 스크립트와 CPU-only 실패 회귀 테스트 추가.
+- MaleCNS 원본 다운로드와 스키마/해시 점검은 GPU 준비 기록으로 분리. 실제 뇌 API·서명 자산·LIF 모델 완료로 표시하지 않음.
+- README·개발 계획·GPU 환경 문서·외부 고지·애플리케이션 버전/SBOM 동기화. 검증과 한계는 [GPU 환경 준비](docs/gpu_environment.md) 참고.
+
 ## 0.5.0 — 2026-09-24
 
 - 구성요소별 STRIDE 위협 모델과 현재 구현·잔여 위험을 기록한 서비스 개요서 초안 추가.

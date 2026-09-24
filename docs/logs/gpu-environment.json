@@ -1,0 +1,30 @@
+{
+  "status": "ok",
+  "scope": "environment_smoke_only_not_brain_model",
+  "python": "3.12.3",
+  "architecture": "aarch64",
+  "pytorch": "2.8.0a0+34c6371d24.nv25.08",
+  "pytorch_cuda": "13.0",
+  "gpu": "NVIDIA Thor",
+  "compute_capability": [
+    11,
+    0
+  ],
+  "cuda_memory_free_bytes": 2318356480,
+  "cuda_memory_total_bytes": 131881111552,
+  "dense_arithmetic": "passed",
+  "sparse_arithmetic": "passed",
+  "tiny_sparse_mean_ms": 0.08296210435219109,
+  "bundled_packages": {
+    "numpy": "1.26.4",
+    "pyarrow": "19.0.1",
+    "safetensors": "0.6.2",
+    "cryptography": null,
+    "fastapi": null,
+    "uvicorn": null,
+    "httpx": "0.28.1",
+    "pydantic": "2.11.7"
+  },
+  "image": "nvcr.io/nvidia/pytorch@sha256:d724ba5b68075cd3b96eefbc510a45d36e60dd16fd70b217708625f1f4b37bc1",
+  "recorded_date_kst": "2026-09-25"
+}
