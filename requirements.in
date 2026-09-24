@@ -6,3 +6,7 @@ uvicorn
 pytest
 pip
 setuptools
+
+# Phase 3 camera encoding (headless wheels for SSH/Webots).
+numpy
+opencv-python-headless

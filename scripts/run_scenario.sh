@@ -10,6 +10,12 @@ seconds=${2:-10}
 drive=${3:-forward}
 [[ "$seconds" =~ ^([1-9]|[1-5][0-9]|60)$ ]] || { printf 'Invalid duration\n' >&2; exit 2; }
 case "$drive" in forward|idle|reverse|left|right) ;; *) printf 'Unknown drive input\n' >&2; exit 2 ;; esac
+# Only the locally maintained, Git-ignored environment file is loaded.
+if [[ -f .env ]]; then
+  set -a
+  source .env
+  set +a
+fi
 .venv/bin/python scripts/configure_webots.py
 export PYTHONPATH="$PWD/src"
 REFLEXGUARD_SCENARIO=$(.venv/bin/python -m reflexguard.simulation.runner settings "$world" "$seconds" "$drive")

@@ -1,0 +1,41 @@
+INFO: wheelchair: Starting controller: /home/rg/work/reflexguard/.venv/bin/python -u wheelchair.py
+INFO: pedestrian: Starting controller: python3 -u pedestrian.py "--trajectory=-1.5 2.2, -1.5 -1.2" --speed=0.5
+INFO: scenario: Starting controller: /home/rg/work/reflexguard/.venv/bin/python -u scenario.py
+REFLEXGUARD_DECISION={"t_ms": 32, "left": 0.0, "right": 0.0, "left_area": 0.09440104166666667, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "user", "user_forward": 0.6, "forward": 0.6, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 320, "left": 0.38159709105242123, "right": 0.0, "left_area": 0.10703125, "right_area": 0.0, "escape": 0.048610909311417316, "signal": "RIGHT", "reason": "avoid_turn", "user_forward": 0.6, "forward": 0.6, "turn": -0.3, "intervened": true}
+REFLEXGUARD_DECISION={"t_ms": 544, "left": 0.30270443522961893, "right": 0.0, "left_area": 0.094921875, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "user", "user_forward": 0.6, "forward": 0.6, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 1056, "left": 0.035655084402353925, "right": 0.0, "left_area": 0.08111979166666666, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "user", "user_forward": 0.6, "forward": 0.6, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 1376, "left": 0.3659831179935165, "right": 0.0, "left_area": 0.09466145833333334, "right_area": 0.0, "escape": 0.02458941229771775, "signal": "RIGHT", "reason": "avoid_turn", "user_forward": 0.6, "forward": 0.6, "turn": -0.3, "intervened": true}
+REFLEXGUARD_DECISION={"t_ms": 1472, "left": 0.30755087385020735, "right": 0.0, "left_area": 0.09283854166666666, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "user", "user_forward": 0.6, "forward": 0.6, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 1696, "left": 0.39106360821240466, "right": 0.0, "left_area": 0.10559895833333334, "right_area": 0.0, "escape": 0.06317478186523796, "signal": "RIGHT", "reason": "avoid_turn", "user_forward": 0.6, "forward": 0.6, "turn": -0.3, "intervened": true}
+REFLEXGUARD_DECISION={"t_ms": 1824, "left": 0.28648997572680157, "right": 0.0, "left_area": 0.079296875, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "user", "user_forward": 0.6, "forward": 0.6, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 2336, "left": 0.009434471981713911, "right": 0.0, "left_area": 0.012760416666666666, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "user", "user_forward": 0.6, "forward": 0.6, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 2848, "left": 0.0003106889214812337, "right": 0.0, "left_area": 0.0, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "user", "user_forward": 0.6, "forward": 0.6, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 3360, "left": 1.0231373426966979e-05, "right": 0.0, "left_area": 0.0, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "user", "user_forward": 0.6, "forward": 0.6, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 3872, "left": 3.369318793311689e-07, "right": 0.0, "left_area": 0.0, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "user", "user_forward": 0.6, "forward": 0.6, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 4384, "left": 1.1095586738181105e-08, "right": 0.0, "left_area": 0.0, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "user", "user_forward": 0.6, "forward": 0.6, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 4896, "left": 3.6539150082469393e-10, "right": 0.0, "left_area": 0.0, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "user", "user_forward": 0.6, "forward": 0.6, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 5248, "left": 3.4963432062228815e-11, "right": 0.47270757595695145, "left_area": 0.0, "right_area": 0.2942708333333333, "escape": 0.18878088608761764, "signal": "LEFT", "reason": "avoid_turn", "user_forward": 0.6, "forward": 0.6, "turn": 0.3, "intervened": true}
+REFLEXGUARD_DECISION={"t_ms": 5312, "left": 2.2819970470588925e-11, "right": 0.6558462131345876, "left_area": 0.0, "right_area": 0.18567708333333333, "escape": 0.4705326355916732, "signal": "STOP", "reason": "hazard_stop", "user_forward": 0.6, "forward": 0.536, "turn": 0.172, "intervened": true}
+REFLEXGUARD_DECISION={"t_ms": 5824, "left": 7.514900704016816e-13, "right": 0.02478690432484628, "left_area": 0.0, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "hazard_stop", "user_forward": 0.6, "forward": 0.0, "turn": 0.0, "intervened": true}
+REFLEXGUARD_DECISION={"t_ms": 6336, "left": 2.474750467535332e-14, "right": 0.0008162636538082141, "left_area": 0.0, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "hazard_stop", "user_forward": 0.6, "forward": 0.0, "turn": 0.0, "intervened": true}
+REFLEXGUARD_DECISION={"t_ms": 6848, "left": 8.149661742426986e-16, "right": 2.6880579510707742e-05, "left_area": 0.0, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "hazard_stop", "user_forward": 0.6, "forward": 0.0, "turn": 0.0, "intervened": true}
+REFLEXGUARD_DECISION={"t_ms": 7360, "left": 2.6837851891437125e-17, "right": 8.852109872348325e-07, "left_area": 0.0, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "hazard_stop", "user_forward": 0.6, "forward": 0.0, "turn": 0.0, "intervened": true}
+REFLEXGUARD_DECISION={"t_ms": 7872, "left": 8.838039134765582e-19, "right": 2.915110113638453e-08, "left_area": 0.0, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "hazard_stop", "user_forward": 0.6, "forward": 0.0, "turn": 0.0, "intervened": true}
+REFLEXGUARD_DECISION={"t_ms": 8384, "left": 2.91047644437482e-20, "right": 9.59982094345926e-10, "left_area": 0.0, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "hazard_stop", "user_forward": 0.6, "forward": 0.0, "turn": 0.0, "intervened": true}
+REFLEXGUARD_DECISION={"t_ms": 8896, "left": 9.584561693033706e-22, "right": 3.161340688824105e-11, "left_area": 0.0, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "hazard_stop", "user_forward": 0.6, "forward": 0.0, "turn": 0.0, "intervened": true}
+REFLEXGUARD_DECISION={"t_ms": 9408, "left": 3.156315627467713e-23, "right": 1.0410688917718023e-12, "left_area": 0.0, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "hazard_stop", "user_forward": 0.6, "forward": 0.0, "turn": 0.0, "intervened": true}
+REFLEXGUARD_DECISION={"t_ms": 9920, "left": 1.0394140764347907e-24, "right": 3.428369619403813e-14, "left_area": 0.0, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "hazard_stop", "user_forward": 0.6, "forward": 0.0, "turn": 0.0, "intervened": true}
+REFLEXGUARD_RESULT={"world":"corridor_side","drive":"forward","duration_s":10.016,"collision":true,"collision_events":2,"min_clearance_estimate_m":0.0,"displacement_m":2.3387368022647435,"yaw_change_rad":-0.5017416317079195,"camera_frames":312,"camera_pixel_range":190,"camera_width":160,"camera_height":120,"brain_steps":312,"interventions":163,"stop_steps":147,"brain_failures":0,"max_looming":0.6558462131345876,"final_forward":0.0}
+INFO: wheelchair: Terminating.
+INFO: pedestrian: Terminating.
+INFO: scenario: Terminating.
+{"world":"corridor_side","drive":"forward","duration_s":10.016,"collision":true,"collision_events":2,"min_clearance_estimate_m":0.0,"displacement_m":2.3387368022647435,"yaw_change_rad":-0.5017416317079195,"camera_frames":312,"camera_pixel_range":190,"camera_width":160,"camera_height":120,"brain_steps":312,"interventions":163,"stop_steps":147,"brain_failures":0,"max_looming":0.6558462131345876,"final_forward":0.0}
+INFO:     Started server process [23961]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on https://127.0.0.1:8443 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [23961]

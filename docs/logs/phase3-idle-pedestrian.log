@@ -1,0 +1,26 @@
+INFO: wheelchair: Starting controller: /home/rg/work/reflexguard/.venv/bin/python -u wheelchair.py
+INFO: pedestrian: Starting controller: python3 -u pedestrian.py "--trajectory=-1.5 2.2, -1.5 -1.2" --speed=0.5
+INFO: scenario: Starting controller: /home/rg/work/reflexguard/.venv/bin/python -u scenario.py
+REFLEXGUARD_DECISION={"t_ms": 32, "left": 0.0, "right": 0.0, "left_area": 0.09440104166666667, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "idle", "user_forward": 0.0, "forward": 0.0, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 544, "left": 0.006164639011233633, "right": 0.0, "left_area": 0.08385416666666666, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "idle", "user_forward": 0.0, "forward": 0.0, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 1056, "left": 0.00020300924624436456, "right": 0.0, "left_area": 0.073828125, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "idle", "user_forward": 0.0, "forward": 0.0, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 1568, "left": 6.685347509498011e-06, "right": 0.0, "left_area": 0.06744791666666666, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "idle", "user_forward": 0.0, "forward": 0.0, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 2080, "left": 2.2015682610314565e-07, "right": 0.0, "left_area": 0.047526041666666664, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "idle", "user_forward": 0.0, "forward": 0.0, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 2592, "left": 0.41932857896432996, "right": 0.0, "left_area": 0.06158854166666667, "right_area": 0.0, "escape": 0.10665935225281535, "signal": "RIGHT", "reason": "idle", "user_forward": 0.0, "forward": 0.0, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 3104, "left": 0.047010918427044565, "right": 0.0, "left_area": 0.06041666666666667, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "idle", "user_forward": 0.0, "forward": 0.0, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 3616, "left": 0.00208268474656154, "right": 0.0, "left_area": 0.04895833333333333, "right_area": 0.0, "escape": 0.0, "signal": "NONE", "reason": "idle", "user_forward": 0.0, "forward": 0.0, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 4128, "left": 6.858540456199146e-05, "right": 0.8547190498911391, "left_area": 0.035416666666666666, "right_area": 0.005598958333333333, "escape": 0.7764908459863679, "signal": "STOP", "reason": "idle", "user_forward": 0.0, "forward": 0.0, "turn": 0.0, "intervened": false}
+REFLEXGUARD_DECISION={"t_ms": 4640, "left": 2.258602857056573e-06, "right": 0.9952157172347773, "left_area": 0.016015625, "right_area": 0.03502604166666667, "escape": 0.9926395649765805, "signal": "STOP", "reason": "idle", "user_forward": 0.0, "forward": 0.0, "turn": 0.0, "intervened": false}
+REFLEXGUARD_RESULT={"world":"corridor_side","drive":"idle","duration_s":5.024,"collision":false,"collision_events":0,"min_clearance_estimate_m":0.8199999999999751,"displacement_m":0.0030705288334562653,"yaw_change_rad":1.1793007659602669e-15,"camera_frames":156,"camera_pixel_range":190,"camera_width":160,"camera_height":120,"brain_steps":156,"interventions":0,"stop_steps":0,"brain_failures":0,"max_looming":0.9986697909353528,"final_forward":0.0}
+INFO: wheelchair: Terminating.
+INFO: pedestrian: Terminating.
+INFO: scenario: Terminating.
+{"world":"corridor_side","drive":"idle","duration_s":5.024,"collision":false,"collision_events":0,"min_clearance_estimate_m":0.8199999999999751,"displacement_m":0.0030705288334562653,"yaw_change_rad":1.1793007659602669e-15,"camera_frames":156,"camera_pixel_range":190,"camera_width":160,"camera_height":120,"brain_steps":156,"interventions":0,"stop_steps":0,"brain_failures":0,"max_looming":0.9986697909353528,"final_forward":0.0}
+INFO:     Started server process [25671]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on https://127.0.0.1:8443 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [25671]

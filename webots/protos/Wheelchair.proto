@@ -4,6 +4,7 @@ PROTO Wheelchair [
   field SFVec3f translation -4 0 0.26
   field SFRotation rotation 0 0 1 0
   field SFFloat maxSpeed 0.6
+  field SFFloat cameraFieldOfView 1.8
   field SFString controller "wheelchair"
 ] {
 %< const speed = fields.maxSpeed.value;
@@ -26,7 +27,7 @@ Robot {
       appearance USE BLUE geometry Box { size 0.25 0.48 0.06 }
     } ] }
     Camera { translation 0.36 0 0.5
-      name "front camera" width 160 height 120 fieldOfView 1.2 near 0.03 far 20 }
+      name "front camera" width 160 height 120 fieldOfView IS cameraFieldOfView near 0.03 far 20 }
     HingeJoint {
       jointParameters HingeJointParameters { axis 0 1 0 anchor -0.16 0.32 0 }
       device [ RotationalMotor { name "left wheel motor" maxVelocity %<= speed / 0.24 >% maxTorque 40 } ]

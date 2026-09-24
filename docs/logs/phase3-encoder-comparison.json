@@ -1,0 +1,30 @@
+{
+  "opencv": "5.0.0",
+  "numpy": "2.2.6",
+  "scenarios": {
+    "stationary": {
+      "area_peak": 0.0,
+      "flow_peak": 0.0,
+      "area_mean_ms": 0.11082112496296759,
+      "flow_mean_ms": 3.4532891266372885
+    },
+    "expansion": {
+      "area_peak": 0.9592943828034973,
+      "flow_peak": 0.02285112999379635,
+      "area_mean_ms": 0.08391592493808275,
+      "flow_mean_ms": 3.5860208988162436
+    },
+    "translation": {
+      "area_peak": 0.7219626995468058,
+      "flow_peak": 0.00438315887004137,
+      "area_mean_ms": 0.0991303124692422,
+      "flow_mean_ms": 4.16269630394582
+    },
+    "illumination": {
+      "area_peak": 0.8500834052177499,
+      "flow_peak": 1.0,
+      "area_mean_ms": 0.12564302496684832,
+      "flow_mean_ms": 3.383684961936294
+    }
+  }
+}

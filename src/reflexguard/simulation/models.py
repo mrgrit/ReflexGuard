@@ -21,6 +21,13 @@ class Telemetry(BaseModel):
     left_rad_s: float = Field(allow_inf_nan=False)
     right_rad_s: float = Field(allow_inf_nan=False)
 
+    brain_steps: int = Field(default=0, ge=0)
+    interventions: int = Field(default=0, ge=0)
+    stop_steps: int = Field(default=0, ge=0)
+    brain_failures: int = Field(default=0, ge=0)
+    max_looming: float = Field(default=0.0, ge=0, le=1, allow_inf_nan=False)
+    final_forward: float = Field(default=0.0, ge=-1.2, le=1.2, allow_inf_nan=False)
+
 class Result(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
     world: World
@@ -35,3 +42,10 @@ class Result(BaseModel):
     camera_pixel_range: int = Field(gt=0, le=255)
     camera_width: int = Field(ge=160)
     camera_height: int = Field(ge=120)
+
+    brain_steps: int = Field(default=0, ge=0)
+    interventions: int = Field(default=0, ge=0)
+    stop_steps: int = Field(default=0, ge=0)
+    brain_failures: int = Field(default=0, ge=0)
+    max_looming: float = Field(default=0.0, ge=0, le=1, allow_inf_nan=False)
+    final_forward: float = Field(default=0.0, ge=-1.2, le=1.2, allow_inf_nan=False)

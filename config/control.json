@@ -1,0 +1,15 @@
+{
+  "dark_threshold": 140,
+  "area_floor": 0.008,
+  "area_tau_s": 0.12,
+  "looming_tau_s": 0.15,
+  "expansion_scale": 1.0,
+  "stop_on": 0.25,
+  "stop_off": 0.12,
+  "turn_on": 0.35,
+  "turn_off": 0.1,
+  "turn_gain": 0.3,
+  "max_turn": 1.2,
+  "deceleration": 2.0,
+  "release_ms": 500
+}

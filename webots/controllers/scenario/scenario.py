@@ -53,7 +53,10 @@ def main():
                             min_clearance_estimate_m=minimum, displacement_m=math.hypot(x-start[0], y-start[1]),
                             yaw_change_rad=math.atan2(math.sin(yaw), math.cos(yaw)),
                             camera_frames=telemetry.frames, camera_pixel_range=telemetry.pixel_range,
-                            camera_width=telemetry.width, camera_height=telemetry.height)
+                            camera_width=telemetry.width, camera_height=telemetry.height,
+                            brain_steps=telemetry.brain_steps, interventions=telemetry.interventions,
+                            stop_steps=telemetry.stop_steps, brain_failures=telemetry.brain_failures,
+                            max_looming=telemetry.max_looming, final_forward=telemetry.final_forward)
             print("REFLEXGUARD_RESULT=" + result.model_dump_json(), flush=True)
             sim.step(dt)  # let Webots drain controller stdout before shutdown
             sim.simulationQuit(0)

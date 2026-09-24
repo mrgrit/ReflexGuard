@@ -1,9 +1,9 @@
 # ReflexGuard
 
-초파리 신경회로에서 배운 충돌 회피 기술을 전동휠체어의 생체모방 안전 보조에 적용하는 프로젝트입니다.
+MaleCNS 커넥톰을 기반으로 초파리 신경회로에서 배운 충돌 회피 기술을 전동휠체어의 생체모방 안전 보조에 적용하는 프로젝트입니다.
 
-이 저장소는 대회 제출용 보안판입니다. **Phase 2: Webots 휠체어와 복도 월드**를 구현했습니다.
-실제 뇌 시뮬레이션, 자동 회피와 관제 기능은 이후 단계에서 구현합니다.
+이 저장소는 대회 제출용 보안판입니다. **Phase 3: 영상 인코더·mock 뇌 연결·공유 제어**를 구현했습니다.
+실제 뇌 시뮬레이션과 관제 기능은 이후 단계에서 구현합니다.
 
 ## 개발 시작
 
@@ -44,4 +44,6 @@ scripts/run_mock_brain.sh
 별도 터미널에서 동일한 환경변수를 읽고 `scripts/smoke_brain.sh`로 health → session → step을 호출합니다.
 서버는 `127.0.0.1:8443`에 바인딩하며 모든 요청에 mTLS와 Bearer 토큰을 요구합니다.
 
-개발 규칙은 [AGENTS.md](AGENTS.md)를 따릅니다. 화면 조종과 SSH 실행은 [Phase 2 안내](docs/phase2.md)를 따릅니다. 다음 구현은 Phase 3의 인코더·디코더·공유 제어입니다.
+개발 규칙은 [AGENTS.md](AGENTS.md)를 따릅니다. 현재 화면 조종과 SSH 실행은 [Phase 3 안내](docs/phase3.md)를 따릅니다. `scripts/check_pipeline.sh`로 mock 뇌와 복도 3종을 검증합니다. 다음 단계는 Phase 4의 관제 서버입니다.
+
+커넥톰 기준은 **MaleCNS v1.0**입니다. [데이터 기준](docs/malecns.md)과 [현재 개발 계획](docs/development_plan.md)을 따릅니다. 실제 데이터/가중치는 아직 다운로드·연결하지 않았으며 현재 시뮬레이션은 mock 뇌를 사용합니다.

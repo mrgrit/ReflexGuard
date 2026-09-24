@@ -1,6 +1,6 @@
 # Third-party notices
 
-Phase 0–2에서는 아래 개발 도구와 Python 라이브러리를 설치해 사용합니다. 프로그램 바이너리나 데이터셋은 이 저장소에 복사하지 않습니다.
+Phase 0–3에서는 아래 개발 도구와 Python 라이브러리를 설치해 사용합니다. 프로그램 바이너리나 데이터셋은 이 저장소에 복사하지 않습니다.
 버전과 라이선스는 설치 패키지 메타데이터 및 아래 공식 프로젝트의 라이선스를 기준으로 기록했습니다.
 
 | 구성요소 | 라이선스 | 출처 |
@@ -26,4 +26,15 @@ Phase 0–2에서는 아래 개발 도구와 Python 라이브러리를 설치해
 
 Ubuntu 시스템 패키지(예: Git, GCC, Xvfb, IBus)의 세부 고지는 설치 장비의 `/usr/share/doc/<package>/copyright`에 있습니다.
 전이 Python 의존성 목록은 `requirements.txt`, `tools/locks/*.txt`에 고정합니다.
-Phase 5에서 서비스 의존성과 SBOM을 포함해 고지를 확장합니다. FlyWire 데이터나 뇌 모델은 아직 포함하지 않았습니다.
+Phase 5에서 서비스 의존성과 SBOM을 포함해 고지를 확장합니다. MaleCNS 데이터나 실제 뇌 모델은 아직 포함하지 않았습니다.
+
+| Phase 3 추가 구성요소 | 라이선스 | 출처 |
+|---|---|---|
+| NumPy 2.2.6 | BSD-3-Clause, wheel 내 OpenBLAS 등 별도 고지 포함 | https://numpy.org/doc/stable/license.html |
+| OpenCV 5.0.0 / opencv-python-headless 5.0.0.93 | OpenCV Apache-2.0, Python 패키징 MIT; FFmpeg 등 번들 라이선스 별도 | https://github.com/opencv/opencv/blob/5.0.0/LICENSE ; https://github.com/opencv/opencv-python/blob/master/LICENSE.txt |
+
+설치 wheel의 `opencv_python_headless-5.0.0.93.dist-info/LICENSE.txt`, `LICENSE-3RD-PARTY.txt` 및 NumPy의 라이선스 파일을 함께 확인한다. 설치 바이너리를 이 저장소에 재배포하지 않는다.
+
+## MaleCNS 데이터(도입 예정, 현재 미포함)
+
+MaleCNS v1.0의 공식 배포자는 FlyEM(HHMI Janelia), University of Cambridge, MRC Laboratory of Molecular Biology 및 Google Research 공동 프로젝트입니다. [공식 다운로드](https://male-cns.janelia.org/download/)에서 연결하는 데이터 라이선스는 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)입니다. 도입 시 출처와 릴리스, 변경·변환 내역을 표기합니다. 데이터 라이선스는 시뮬레이터 코드의 라이선스와 구분합니다.

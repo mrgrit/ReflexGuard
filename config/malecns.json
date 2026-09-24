@@ -1,0 +1,13 @@
+{
+  "source": "MaleCNS",
+  "release": "v1.0",
+  "neuprint_dataset": "male-cns:v1.0",
+  "neuprint_server": "https://neuprint.janelia.org",
+  "documentation": "https://male-cns.janelia.org/download/",
+  "bucket": "gs://flyem-male-cns/v1.0/connectome-data/flat-connectome/",
+  "annotations": "body-annotations-male-cns-v1.0-minconf-0.5.feather",
+  "neurotransmitters": "body-neurotransmitters-male-cns-v1.0.feather",
+  "connectivity": "connectome-weights-male-cns-v1.0-minconf-0.5.feather",
+  "license": "CC-BY-4.0",
+  "state": "planned_not_downloaded"
+}
