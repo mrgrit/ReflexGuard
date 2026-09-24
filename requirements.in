@@ -1,0 +1,4 @@
+# Phase 0: test and virtual-environment tooling only; no application yet.
+pytest
+pip
+setuptools

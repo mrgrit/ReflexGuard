@@ -1,0 +1,64 @@
+WARNING: System below the minimal requirements.
+
+Webots has detected that your GPU vendor is 'Mesa'. A recent NVIDIA or AMD graphics adapter is highly recommended to run Webots smoothly. Webots has detected that your computer uses a slow 3D software rendering system. It is strongly recommended to install the latest graphics drivers provided by your GPU manufacturer. Webots will run much faster after the installation of the correct driver.
+
+ - Shadows have been deactivated.
+ - Anti-aliasing has been deactivated.
+ - Main 3D view global ambient occlusion has been de-activated.
+ - Texture quality has been reduced.
+
+You can try to re-activate some OpenGL features from the Webots preferences.
+WARNING: System below the minimal requirements.
+
+Webots has detected that your GPU vendor is 'Mesa'. A recent NVIDIA or AMD graphics adapter is highly recommended to run Webots smoothly. Webots has detected that your computer uses a slow 3D software rendering system. It is strongly recommended to install the latest graphics drivers provided by your GPU manufacturer. Webots will run much faster after the installation of the correct driver.
+
+ - Shadows have been deactivated.
+ - Anti-aliasing has been deactivated.
+ - Main 3D view global ambient occlusion has been de-activated.
+ - Texture quality has been reduced.
+
+You can try to re-activate some OpenGL features from the Webots preferences.
+WARNING: WARNING: System below the minimal requirements.
+
+Webots has detected that your GPU vendor is 'Mesa'. A recent NVIDIA or AMD graphics adapter is highly recommended to run Webots smoothly. Webots has detected that your computer uses a slow 3D software rendering system. It is strongly recommended to install the latest graphics drivers provided by your GPU manufacturer. Webots will run much faster after the installation of the correct driver.
+
+ - Shadows have been deactivated.
+ - Anti-aliasing has been deactivated.
+ - Main 3D view global ambient occlusion has been de-activated.
+ - Texture quality has been reduced.
+
+You can try to re-activate some OpenGL features from the Webots preferences.
+INFO: console: Starting controller: /usr/local/webots/projects/samples/howto/console/controllers/console/console
+This text will disappear in about 4 seconds because we are going to clear the console...
+
+Red text!
+Green text!
+Yellow text!
+Cyan text!
+Blue text!
+Magenta text!
+White text!
+Black text!
+Blue background only specified text
+
+Red background only
+Green background only
+Yellow background only
+Cyan background only
+Blue background only
+Mangenta background only
+White background only
+
+Blue text on Red background
+Yellow text on Green background
+Magenta text on Yellow background
+Red text on Cyan background
+White text on Blue background
+Green text on Magenta background
+Black text on White background
+White text on Black background
+
+Green Bold style text
+Green Underlined style text
+INFO: 'console' controller exited successfully.
+Warning: The X11 connection broke (error 1). Did the X11 server die?
