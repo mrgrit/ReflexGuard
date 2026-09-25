@@ -1,6 +1,6 @@
-# 외부 GPU 환경 — Phase 6 준비
+# 외부 GPU 환경 — 0.7.0
 
-2026-09-25 점검. GPU 환경과 데이터 준비 기록이며, 실제 뇌 API 구현 완료 보고서가 아니다.
+2026-09-25 점검. 초기 환경 준비와 최종 배포를 함께 기록한다. 실제 모델/API 설치는 [Phase 6](phase6.md), 선정은 [neurons.md](neurons.md), 통합 결과는 [test_report.md](test_report.md)를 참조한다.
 
 | 항목 | 확인 결과 |
 |---|---|
@@ -44,12 +44,11 @@ nvcr.io/nvidia/pytorch@sha256:d724ba5b68075cd3b96eefbc510a45d36e60dd16fd70b21770
 
 MaleCNS 원본은 GPU 서버의 `~/work/reflexguard-data/malecns-v1.0/`에 별도로 보관한다. 원본·모델·접속 정보·인증서는 Git에 넣지 않는다.
 원본 SHA-256과 Arrow 스키마 점검은 [데이터 점검 결과](logs/malecns-source-inspection.json)에 기록한다. 이 해시는 내려받은 내용의 식별값이며 원본 공급자가 공개한 서명/해시라고 주장하지 않는다.
-`config/malecns.json`은 다운로드 계획 스키마로 유지한다. 실제 모델용 `assets.lock`과 서명된 가중치는 아직 생성하지 않았다.
+`config/malecns.json`은 다운로드 계획 스키마로 유지한다. 실제 배포의 서명된 모델 manifest와 가중치는 생성·검증했고 `brain_server/assets.lock`에 manifest 사본을 보관한다.
 
-다음 작업은 전체 참조 무결성·결측/전달물질 검증, 후보 회로 선정의 생리학적 근거, 서명된 가중치·허용목록, 세션별 LIF, mTLS API, GPU 자원/시간 제한, 50ms 성능, 실제 서버로 Webots 복도 3종 검증이다.
-현 대시보드와 시뮬레이션은 계속 규칙 기반 mock을 사용한다.
+0.7.0은 선택 회로의 참조/결측/전달물질 검사, 서명 로더, 세션별 LIF, mTLS API, 시간/자원 제한과 실제 Webots 3종 검증을 마쳤다. raw segment 전체가 curated 주석에 대응하지 않는 한계는 neurons.md에 기록했다. 기본 프로필은 mock이고 실제 모델은 real 프로필로 선택한다.
 
-현재 보안 게이트와 `docs/sbom.json`은 개발 VM의 애플리케이션 Python 환경을 검사한다. NVIDIA 컨테이너 전체 OS/Python 패키지 취약점 검사와 GPU 전용 SBOM은 아직 수행하지 않았으며, 이 이미지를 외부에 노출하는 서비스로 배포하지 않았다. 실제 서비스 이미지 생성 시 별도 잠금·SBOM·취약점 검사가 필요하다.
+보안 게이트는 개발 VM과 GPU 애플리케이션 잠금을 모두 감사한다. VM SBOM, GPU 잠금 SBOM 및 실제 GPU 설치 목록을 분리한다. NVIDIA 기본 이미지 전체 OS/vendor torch 감사는 범위 밖이며 외부 포트는 공개하지 않았다. clean venv에서 NVIDIA torch만 연결하고 NumPy 1.26.4를 고정해 C ABI를 맞췄다.
 
 VPN은 사용자 지정 서버의 인증서를 지문으로 고정해 접속했고, SSH는 최초 연결 호스트 키를 저장해 이후 변경을 검증한다. 서버 주소·계정·비밀번호는 이 문서와 스크립트에 포함하지 않는다.
 
@@ -58,5 +57,5 @@ VPN은 사용자 지정 서버의 인증서를 지문으로 고정해 접속했�
 - CUDA 사용 가능, PyTorch `2.8.0a0+34c6371d24.nv25.08`, CUDA 13.0, compute capability 11.0. dense/sparse 기준값 비교 모두 통과.
 - CUDA가 보고한 순간 free 메모리는 약 2.16GiB였다. Linux의 reclaim 가능한 available 약 71GiB와 같지 않으므로 모델 메모리 예산은 별도 실측해야 한다.
 - 주석 211,577행, 전달물질 1,835,518행, 연결 가중치 151,856,684행의 Arrow 스키마를 확인했다. 원본 파일 3개는 실제 SHA-256 계산을 완료했다.
-- 주석의 `type` 열에서 LPLC2를 포함하는 185개 행을 확인했다. `bodyId`가 MaleCNS 식별자다. `flywireType` 등 원문 비교용 열의 이름은 스키마 기록에만 보존하며 외부 데이터셋 ID·가중치를 가져오지 않는다. 기능·회피 출력 매핑은 아직 검증하지 않았다.
+- 주석의 `type` 열에서 LPLC2를 포함하는 185개 행을 확인했다. `bodyId`가 MaleCNS 식별자다. `flywireType` 등 원문 비교용 열의 이름은 스키마 기록에만 보존하며 외부 데이터셋 ID·가중치를 가져오지 않는다. 최종 LPLC2→DNp01 기능 가정과 한계는 neurons.md에 기록했다.
 - 개발 VM의 Bandit·Semgrep·pip-audit와 전체 253개 pytest 통과. [검사 원문](logs/v0.5.1-security.log). GPU 이미지 전체 취약점 통과를 뜻하지 않는다.

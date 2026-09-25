@@ -14,6 +14,8 @@ def check_gpu(torch):
     cpu = torch.arange(64, dtype=torch.float32).reshape(8, 8) / 64
     gpu = cpu.to(device)
     result = gpu @ gpu.T
+    if result.cpu().numpy().shape != (8, 8):
+        raise RuntimeError("NumPy bridge mismatch")
     if not torch.allclose(result.cpu(), cpu @ cpu.T, atol=1e-5, rtol=1e-5):
         raise RuntimeError("CUDA dense arithmetic mismatch")
     indices = torch.tensor([[0, 1, 2, 2], [1, 2, 0, 1]], device=device)

@@ -21,3 +21,6 @@ dist/
 # Generated absolute interpreter paths and local Webots UI state
 webots/controllers/*/runtime.ini
 webots/worlds/.*.wbproj
+
+# Local signed model assets are distributed separately.
+.local-models/

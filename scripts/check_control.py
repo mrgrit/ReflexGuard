@@ -13,6 +13,7 @@ import tempfile
 import time
 import httpx
 from sqlalchemy import insert, update
+from reflexguard.common.config import ClientSettings
 from reflexguard.control_server.config import ControlSettings
 from reflexguard.control_server.database import Database, users, chairs, password_hash
 from reflexguard.simulation.models import Result, Settings
@@ -25,6 +26,9 @@ def free_port():
         return sock.getsockname()[1]
 
 def main():
+    profile=os.environ.get("REFLEXGUARD_BRAIN_PROFILE","mock")
+    if profile not in ("mock","real"): raise ValueError("Unknown brain profile")
+    external_brain=ClientSettings.from_env() if profile=="real" else None
     processes=[]
     with tempfile.TemporaryDirectory(prefix="reflexguard-control-") as temporary:
         directory=Path(temporary)
@@ -48,6 +52,13 @@ def main():
                 "REFLEXGUARD_SCENARIO":Settings(world="corridor_static",duration_s=6,drive="forward",batch=True).model_dump_json()})
             for var,file in [("CA","ca.crt"),("SERVER_CERT","server.crt"),("SERVER_KEY","server.key"),("CLIENT_CERT","client.crt"),("CLIENT_KEY","client.key")]:
                 env["REFLEXGUARD_TLS_"+var]=str(certs/file)
+            env["REFLEXGUARD_CONTROL_TLS_CA"]=str(certs/"ca.crt")
+            if external_brain is not None:
+                token=external_brain.token.get_secret_value()
+                env.update({"REFLEXGUARD_BRAIN_URL":str(external_brain.base_url).rstrip("/"),
+                    "REFLEXGUARD_BRAIN_TOKEN":token,"REFLEXGUARD_TLS_CA":str(external_brain.ca_cert),
+                    "REFLEXGUARD_TLS_CLIENT_CERT":str(external_brain.client_cert),
+                    "REFLEXGUARD_TLS_CLIENT_KEY":str(external_brain.client_key)})
             settings=ControlSettings(origin=env["REFLEXGUARD_CONTROL_URL"],database=directory/"control.db",
                 devices=json.loads(env["REFLEXGUARD_CONTROL_DEVICES"]),audit_key=env["REFLEXGUARD_AUDIT_KEY"])
             db=Database(settings)
@@ -56,13 +67,14 @@ def main():
                 conn.execute(update(chairs).where(chairs.c.id=="seat-a").values(guardian_id=uid))
             db.engine.dispose()
             handles=[]
-            for name in ("mock_brain","control_server"):
+            modules=("control_server",) if external_brain is not None else ("mock_brain","control_server")
+            for name in modules:
                 handle=(directory/(name+".log")).open("w")
                 handles.append(handle)
                 processes.append(subprocess.Popen([sys.executable,"-m","reflexguard."+name],cwd=ROOT,env=env,stdout=handle,stderr=subprocess.STDOUT))  # nosec B603 - module names from literal tuple; current venv interpreter
             context=ssl.create_default_context(cafile=str(certs/"ca.crt"))
-            brain_context=ssl.create_default_context(cafile=str(certs/"ca.crt"))
-            brain_context.load_cert_chain(str(certs/"client.crt"),str(certs/"client.key"))
+            brain_context=ssl.create_default_context(cafile=env["REFLEXGUARD_TLS_CA"])
+            brain_context.load_cert_chain(env["REFLEXGUARD_TLS_CLIENT_CERT"],env["REFLEXGUARD_TLS_CLIENT_KEY"])
             with httpx.Client(base_url=settings.origin,verify=context,trust_env=False,timeout=2) as browser, httpx.Client(verify=brain_context,trust_env=False,timeout=2) as brain:
                 deadline=time.monotonic()+20
                 ready=False
@@ -103,13 +115,19 @@ def main():
                 exported=browser.get("/exports/seat-a")
                 exported.raise_for_status()
                 records=[json.loads(json.loads(line)["payload"]) for line in exported.text.splitlines()]
+                decisions=[row for row in records if row['event']=='decision']
+                expected_prefix='malecns-' if profile=='real' else 'mock-'
+                if not decisions or any(not row['model_version'].startswith(expected_prefix) for row in decisions):
+                    raise RuntimeError('Unexpected model identity in audit records')
+                if result.brain_failures or result.control_failures:
+                    raise RuntimeError('Communication failed during remote control test')
                 stopped=[row for row in records if row["event"]=="decision" and row["reason"]=="remote_stop"]
                 applied=[row for row in records if row["event"]=="remote_applied"]
                 verification=browser.get("/logs/seat-a/verify").json()
                 if not stopped or not applied or not verification["valid"] or result.final_forward!=0 or result.collision or result.displacement_m<0.1:
                     raise RuntimeError("Remote stop or audit verification failed")
                 if any(row["forward"]!=0 or row["turn"]!=0 for row in stopped):raise RuntimeError("Nonzero motor command after stop")
-                print(json.dumps({"dashboard_remote_stop":True,"signed_command_acknowledged":True,"audit":verification,
+                print(json.dumps({"brain_profile":profile,"dashboard_remote_stop":True,"signed_command_acknowledged":True,"audit":verification,
                     "remote_stop_records":len(stopped),"world":result.model_dump()},ensure_ascii=False))
                 # Keep evidence free of cookies, tokens, session IDs and private keys.
                 print(raw,file=sys.stderr)

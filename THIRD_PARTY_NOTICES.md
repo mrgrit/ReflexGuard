@@ -26,7 +26,7 @@
 
 Ubuntu 시스템 패키지(예: Git, GCC, Xvfb, IBus)의 세부 고지는 설치 장비의 `/usr/share/doc/<package>/copyright`에 있습니다.
 전이 Python 의존성 목록은 `requirements.txt`, `tools/locks/*.txt`에 고정합니다.
-아래 Python 환경 전체 목록과 docs/sbom.json에 전이 의존성까지 기록합니다. MaleCNS 데이터나 실제 뇌 모델은 아직 포함하지 않았습니다.
+아래 Python 환경 전체 목록과 docs/sbom.json에 전이 의존성까지 기록합니다. MaleCNS 원본/가중치 파일은 별도로 배포하며 저장소에는 모델 코드·출처·manifest를 기록합니다.
 
 | Phase 3 추가 구성요소 | 라이선스 | 출처 |
 |---|---|---|
@@ -35,9 +35,9 @@ Ubuntu 시스템 패키지(예: Git, GCC, Xvfb, IBus)의 세부 고지는 설치
 
 설치 wheel의 `opencv_python_headless-5.0.0.93.dist-info/LICENSE.txt`, `LICENSE-3RD-PARTY.txt` 및 NumPy의 라이선스 파일을 함께 확인한다. 설치 바이너리를 이 저장소에 재배포하지 않는다.
 
-## MaleCNS 데이터(도입 예정, 현재 미포함)
+## MaleCNS 데이터(0.7.0 실제 모델에서 사용)
 
-MaleCNS v1.0의 공식 배포자는 FlyEM(HHMI Janelia), University of Cambridge, MRC Laboratory of Molecular Biology 및 Google Research 공동 프로젝트입니다. [공식 다운로드](https://male-cns.janelia.org/download/)에서 연결하는 데이터 라이선스는 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)입니다. 도입 시 출처와 릴리스, 변경·변환 내역을 표기합니다. 데이터 라이선스는 시뮬레이터 코드의 라이선스와 구분합니다.
+MaleCNS v1.0의 공식 배포자는 FlyEM(HHMI Janelia), University of Cambridge, MRC Laboratory of Molecular Biology 및 Google Research 공동 프로젝트입니다. [공식 다운로드](https://male-cns.janelia.org/download/)에서 연결하는 데이터 라이선스는 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)입니다. v1.0에서 LPLC2→DNp01 187뉴런·185간선을 선택하고 연결 수를 출력별 정규화한 LIF로 변환했습니다. 세부 변경은 docs/neurons.md, 원본/파생 SHA-256은 brain_server/assets.lock에 기록합니다. 데이터 라이선스는 시뮬레이터 코드의 라이선스와 구분합니다.
 
 ## Phase 4 관제 의존성
 
@@ -47,9 +47,9 @@ MaleCNS v1.0의 공식 배포자는 FlyEM(HHMI Janelia), University of Cambridge
 - bcrypt 5.0.0: Apache-2.0 — https://github.com/pyca/bcrypt
 - greenlet 3.5.6: MIT AND PSF-2.0 — https://github.com/python-greenlet/greenlet
 
-## Phase 5 Python 환경 전체 목록
+## 개발 VM Python 환경 전체 목록
 
-현재 `.venv`의 32개 패키지다. 버전·라이선스 메타데이터와 설치 LICENSE/NOTICE 파일을 근거로 작성했다. 분류자만 모호하게 제공된 Jinja2·NumPy·OpenCV는 실제 설치 고지로 보완했다. 아래 경로는 `.venv/lib/python3.10/site-packages/` 기준이다. 저장소에는 의존성 바이너리를 복제하지 않는다. 배포물에 wheel/바이너리를 포함할 때는 해당 전체 고지와 번들 라이브러리 조건도 함께 확인한다.
+현재 `.venv`의 35개 패키지다. 버전·라이선스 메타데이터와 설치 LICENSE/NOTICE 파일을 근거로 작성했다. 분류자만 모호하게 제공된 Jinja2·NumPy·OpenCV는 실제 설치 고지로 보완했다. 아래 경로는 `.venv/lib/python3.10/site-packages/` 기준이다. 저장소에는 의존성 바이너리를 복제하지 않는다. 배포물에 wheel/바이너리를 포함할 때는 해당 전체 고지와 번들 라이브러리 조건도 함께 확인한다.
 
 | 패키지 | 버전 | 라이선스 | 출처 | 설치 고지 파일 |
 |---|---|---|---|---|
@@ -97,3 +97,28 @@ KISA Python 시큐어코딩 가이드(2023년 개정본)는 보안 항목의 참
 - NVIDIA PyTorch NGC 25.08 ARM64 컨테이너: [NVIDIA Deep Learning Container License](https://developer.download.nvidia.com/licenses/NVIDIA_Deep_Learning_Container_License.pdf) 및 각 포함 구성요소의 라이선스. 이미지 다이제스트·실행 범위는 [GPU 환경](docs/gpu_environment.md)에 기록한다. 컨테이너 자체를 이 저장소에 재배포하지 않는다. CUDA/JetPack 등 NVIDIA 구성요소를 MIT/Apache 라이선스로 간주하지 않는다.
 - 외부 GPU에서 받은 MaleCNS v1.0 원본: [공식 다운로드](https://male-cns.janelia.org/download/), CC-BY-4.0. 파일은 저장소 밖에 보관하고, 연구자/프로젝트 출처를 유지한다. 데이터 확인은 모델의 생리학적 타당성 검증을 의미하지 않는다.
 - 로컬 VPN 호환 접속 도구 OpenConnect 8.20-1은 Ubuntu 패키지로 설치한 운영 도구이며 애플리케이션에 번들하지 않는다. 라이선스는 호스트 `/usr/share/doc/openconnect/copyright`를 따른다.
+
+## 0.7.0 서명 검증 의존성 (VM/GPU 공통)
+
+| 패키지 | 버전 | 라이선스 | 출처 |
+|---|---|---|---|
+| cryptography | 50.0.1 | Apache-2.0 OR BSD-3-Clause | https://github.com/pyca/cryptography |
+| cffi | 2.1.1 | MIT-0 | https://github.com/python-cffi/cffi |
+| pycparser | 3.0 | BSD-3-Clause | https://github.com/eliben/pycparser |
+
+설치 dist-info/licenses의 LICENSE 파일과 License-Expression을 확인했다. cryptography wheel의 OpenSSL/Rust 번들 고지도 배포물에 별도 유지해야 한다.
+
+## GPU 추가/상이한 구성요소
+
+| 패키지 | 버전 | 라이선스 | 근거 |
+|---|---|---|---|
+| torch | 2.8.0a0+34c6371d24.nv25.8 | BSD-3-Clause 및 NVIDIA 컨테이너/번들 별도 고지 | 설치 torch dist-info/LICENSE, NGC 고정 이미지 |
+| numpy | 1.26.4 | BSD-3-Clause 및 wheel 번들 고지 | 설치 numpy dist-info/LICENSE.txt |
+| pyarrow | 25.0.1 | Apache-2.0 | 설치 메타데이터, https://github.com/apache/arrow |
+| filelock | 4.0.3 | MIT | 설치 메타데이터, https://github.com/tox-dev/filelock |
+| fsspec | 2026.9.0 | BSD-3-Clause | 설치 메타데이터, https://github.com/fsspec/filesystem_spec |
+| networkx | 3.4.2 | BSD-3-Clause | 설치 LICENSE.txt, https://github.com/networkx/networkx |
+| sympy | 1.14.0 | BSD-3-Clause | 설치 LICENSE, https://github.com/sympy/sympy |
+| mpmath | 1.3.0 | BSD-3-Clause | 설치 LICENSE, https://github.com/mpmath/mpmath |
+
+전체 실제 설치 파일 경로는 docs/logs/gpu-python-inventory.json, 해시 잠금 목록은 docs/sbom-gpu.json에 분리했다. NVIDIA vendor torch는 PyPI 해시 잠금 대신 컨테이너 manifest 다이제스트로 출처를 고정한다. 모델 구현은 이 저장소에서 작성했고 원안에 있던 타 데이터셋 모델 코드를 복사하지 않았다. 문헌은 docs/neurons.md에서 인용한다.

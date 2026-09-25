@@ -8,7 +8,7 @@ ROOT=Path(__file__).resolve().parents[1]
 def main():
     bom=json.loads((ROOT/"docs/sbom.json").read_text())
     result={"schema_version":1,"application_version":bom["metadata"]["component"]["version"],
-        "scope":"Project Python virtual environment including test/build dependencies; excludes OS, Webots, pipx tool environments and planned MaleCNS assets",
+        "scope":"Project Python virtual environment including test/build dependencies; excludes OS, Webots, pipx tools, GPU environment and MaleCNS assets (separate inventories)",
         "format":"CycloneDX 1.6 JSON","generator":next(tool["name"]+" "+tool["version"] for tool in bom["metadata"]["tools"]["components"] if tool["name"]=="cyclonedx-py"),
         "command":"scripts/generate_sbom.sh","component_count":len(bom["components"]),
         "inputs_sha256":{name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in ("requirements.in","requirements.txt","pyproject.toml")},

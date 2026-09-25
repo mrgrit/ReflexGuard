@@ -1,0 +1,10 @@
+{
+  "source_rows": 151856684,
+  "edges_outside_curated_annotations": 125828298,
+  "selected_neurons": 187,
+  "selected_edges": 185,
+  "selected_synapses": 4862,
+  "minimum_selected_nt_confidence": 0.5004955542656235,
+  "weight_normalization": "Each output receives synaptic_gain times its input spike weighted mean",
+  "interpretation": "Reduced circuit; no full-brain or measured physiological parameter claim"
+}

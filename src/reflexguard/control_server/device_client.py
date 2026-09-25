@@ -33,7 +33,7 @@ class DeviceSettings(BaseModel):
     def from_env(cls):
         return cls(url=os.environ["REFLEXGUARD_CONTROL_URL"],chair_id=os.environ["REFLEXGUARD_CHAIR_ID"],
                    token=os.environ["REFLEXGUARD_DEVICE_TOKEN"],hmac_key=os.environ["REFLEXGUARD_REMOTE_KEY"],
-                   ca_cert=os.environ["REFLEXGUARD_TLS_CA"])
+                   ca_cert=os.environ.get("REFLEXGUARD_CONTROL_TLS_CA") or os.environ["REFLEXGUARD_TLS_CA"])
 
 class DeviceClient:
     def __init__(self, settings):

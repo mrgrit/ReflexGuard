@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "application_version": "0.5.1",
+  "application_version": "0.7.0",
   "source": {
     "title": "Python 시큐어코딩 가이드 (2023년 개정본)",
     "official": "https://www.kisa.or.kr/2060204/form?postSeq=13",
@@ -129,12 +129,14 @@
       "printed_page": 69,
       "code": [
         "src/reflexguard/control_server/app.py:create_app.principal",
-        "src/reflexguard/mock_brain/security.py:BrainBoundary._authenticate"
+        "src/reflexguard/mock_brain/security.py:BrainBoundary._authenticate",
+        "brain_server/app.py:create_app"
       ],
       "tests": [
         "tests/test_control_server.py::test_unauthenticated_reads_denied",
         "tests/test_mock_brain.py::test_all_endpoints_require_valid_bearer",
-        "tests/test_mtls_integration.py::test_missing_client_certificate_is_rejected"
+        "tests/test_mtls_integration.py::test_missing_client_certificate_is_rejected",
+        "tests/test_brain_model.py::test_shared_contract_boundaries_and_owner_isolation"
       ],
       "approach": "관제는 세션/장치 토큰, 뇌 서버는 실행기의 mTLS와 API 토큰을 함께 요구한다.",
       "limit": "",
@@ -146,11 +148,13 @@
       "printed_page": 72,
       "code": [
         "src/reflexguard/control_server/app.py:create_app.chair_for",
-        "src/reflexguard/control_server/app.py:create_app.silence"
+        "src/reflexguard/control_server/app.py:create_app.silence",
+        "brain_server/service.py:SimulationService.silence"
       ],
       "tests": [
         "tests/test_control_server.py::test_guardian_scope_and_remote_roles",
-        "tests/test_control_server.py::test_admin_session_revocation_and_assignment"
+        "tests/test_control_server.py::test_admin_session_revocation_and_assignment",
+        "tests/test_brain_model.py::test_real_api_contract_auth_owner_replay_silence"
       ],
       "approach": "보호자는 지정 휠체어만 접근하며 속도 제한·침묵·사용자 관리에 서버 측 역할을 적용한다.",
       "limit": "",
@@ -240,12 +244,14 @@
       "item": "부적절한 인증서 유효성 검증",
       "printed_page": 102,
       "code": [
-        "src/reflexguard/brain_client/client.py:BrainClient.__init__"
+        "src/reflexguard/brain_client/client.py:BrainClient.__init__",
+        "src/reflexguard/control_server/device_client.py:DeviceSettings.from_env"
       ],
       "tests": [
         "tests/test_mtls_integration.py::test_foreign_server_ca_is_rejected",
         "tests/test_mtls_integration.py::test_hostname_verification_is_enabled",
-        "tests/test_mtls_integration.py::test_foreign_client_certificate_is_rejected"
+        "tests/test_mtls_integration.py::test_foreign_client_certificate_is_rejected",
+        "tests/test_brain_model.py::test_control_ca_stays_separate_from_brain_ca"
       ],
       "approach": "신뢰 CA와 호스트 이름 검증을 유지하고 뇌 서버에서 클라이언트 인증서를 요구한다.",
       "limit": "개발 CA는 수동 배포한다. 인증서 자동 갱신·폐기 조회 체계는 미구현이다.",
@@ -286,14 +292,16 @@
       "printed_page": 113,
       "code": [
         "scripts/bootstrap.sh:(script)",
-        "scripts/security_check.sh:(script)"
+        "scripts/security_check.sh:(script)",
+        "brain_server/loader.py:load_assets"
       ],
       "tests": [
         "tests/test_security_docs.py::test_sbom_matches_locked_and_installed_packages",
-        "tests/test_bootstrap.py::test_dry_run_preserves_missing_destination"
+        "tests/test_bootstrap.py::test_dry_run_preserves_missing_destination",
+        "tests/test_brain_model.py::test_asset_tampering_is_rejected_before_simulation"
       ],
-      "approach": "Python 의존성을 버전/SHA-256으로 잠그고 require-hashes 설치 및 취약점 감사를 수행한다.",
-      "limit": "SBOM 일치 검사는 악성 패키지/공급자 신뢰 검증이 아니다. 실데이터 자산 서명 검증은 Phase 6에 남아 있다.",
+      "approach": "VM/GPU Python 버전·SHA-256 잠금과 감사를 수행한다. 모델과 침묵 목록은 독립 신뢰키의 Ed25519 서명, 내용 SHA-256 검증 후 읽는다.",
+      "limit": "원본 공급자 서명·NVIDIA 기본 이미지 전체 감사는 범위 밖이다. SBOM/해시는 공급자의 악성 행위나 모델 타당성을 보증하지 않는다.",
       "status": "partial"
     },
     {
@@ -316,11 +324,13 @@
       "printed_page": 119,
       "code": [
         "src/reflexguard/control_server/database.py:Database.tx",
-        "src/reflexguard/control_server/database.py:Database.append"
+        "src/reflexguard/control_server/database.py:Database.append",
+        "brain_server/service.py:SimulationService.step"
       ],
       "tests": [
         "tests/test_control_server.py::test_concurrent_audit_append",
-        "tests/test_control_server.py::test_device_token_binding_and_sequence"
+        "tests/test_control_server.py::test_device_token_binding_and_sequence",
+        "tests/test_brain_model.py::test_simulation_timeout_disables_service_without_committing"
       ],
       "approach": "SQLite 즉시 트랜잭션 안에서 상태 검사와 로그 추가·sequence 갱신을 직렬화한다.",
       "limit": "증거 범위는 DB 갱신이다. 전체 파일시스템 TOCTOU 안전성을 뜻하지 않는다.",
@@ -332,13 +342,15 @@
       "printed_page": 122,
       "code": [
         "src/reflexguard/brain_client/client.py:BrainClient._request",
-        "src/reflexguard/mock_brain/security.py:BrainBoundary.__call__"
+        "src/reflexguard/mock_brain/security.py:BrainBoundary.__call__",
+        "brain_server/service.py:SimulationService.step"
       ],
       "tests": [
         "tests/test_brain_client.py::test_total_deadline_stops_slow_drip_response",
-        "tests/test_mock_brain.py::test_session_capacity_and_expiry"
+        "tests/test_mock_brain.py::test_session_capacity_and_expiry",
+        "tests/test_brain_model.py::test_session_expiration_and_queue_bound"
       ],
-      "approach": "뇌 HTTP 응답 전체 200ms 제한, 요청 본문 1초·크기 제한, 세션 수/수명 한도를 둔다.",
+      "approach": "뇌 HTTP 전체 200ms, 본문 1초/16KiB, 실제 모델 16세션·TTL·4요청·단일 worker·큐20ms/실행150ms를 제한한다.",
       "limit": "관제 본문 수신에는 전체 시간 제한이 없고 SQLite 로그/내보내기 크기도 무제한이다. threat_model.md의 D 잔여 위험을 참조한다.",
       "status": "partial"
     },
@@ -396,14 +408,16 @@
       "printed_page": 140,
       "code": [
         "src/reflexguard/brain_client/client.py:BrainClient._exchange",
-        "src/reflexguard/common/schemas.py:ContractModel"
+        "src/reflexguard/common/schemas.py:ContractModel",
+        "brain_server/loader.py:load_assets"
       ],
       "tests": [
         "tests/test_brain_client.py::test_untrusted_responses_raise_generic_error",
-        "tests/test_schemas.py::test_unknown_fields_are_rejected"
+        "tests/test_schemas.py::test_unknown_fields_are_rejected",
+        "tests/test_brain_model.py::test_array_header_cannot_request_unbounded_allocation"
       ],
-      "approach": "외부 메시지는 길이 제한된 JSON과 엄격한 Pydantic 모델로만 읽는다. 모델 객체 역직렬화 API를 제공하지 않는다.",
-      "limit": "실제 모델 로더는 아직 없다. 이 결과를 npz/safetensors 로더 검증 완료로 보지 않는다.",
+      "approach": "길이 제한 JSON/Pydantic, 서명·해시 검증한 numeric npz만 읽는다. NPY 헤더 크기/shape/dtype/extent와 간선 참조를 검사하고 object 배열을 거부한다.",
+      "limit": "오프라인 Feather 변환은 고정된 공식 원본 SHA-256과 신뢰된 pyarrow 실행 환경을 전제로 한다.",
       "status": "implemented"
     },
     {
@@ -412,12 +426,14 @@
       "printed_page": 143,
       "code": [
         "src/reflexguard/mock_brain/store.py:SessionStore._owned",
-        "src/reflexguard/control_server/app.py:create_app.principal"
+        "src/reflexguard/control_server/app.py:create_app.principal",
+        "brain_server/service.py:SimulationService.owned"
       ],
       "tests": [
         "tests/test_mock_brain.py::test_sessions_are_owned_and_missing_sessions_are_indistinguishable",
         "tests/test_control_server.py::test_session_expiry_and_offline_command",
-        "tests/test_control_server.py::test_admin_session_revocation_and_assignment"
+        "tests/test_control_server.py::test_admin_session_revocation_and_assignment",
+        "tests/test_brain_model.py::test_shared_contract_boundaries_and_owner_isolation"
       ],
       "approach": "뇌 세션 소유자·관제 세션 만료·활성 상태를 검증하고 계정 변경 때 세션을 폐기한다.",
       "limit": "",
@@ -429,11 +445,13 @@
       "printed_page": 146,
       "code": [
         "src/reflexguard/mock_brain/app.py:create_app",
-        "src/reflexguard/control_server/app.py:create_app"
+        "src/reflexguard/control_server/app.py:create_app",
+        "brain_server/app.py:create_app"
       ],
       "tests": [
         "tests/test_security_evidence.py::test_service_debug_and_api_documentation_are_disabled",
-        "tests/test_mock_brain.py::test_unexpected_errors_are_generic_but_logged"
+        "tests/test_mock_brain.py::test_unexpected_errors_are_generic_but_logged",
+        "tests/test_brain_model.py::test_shared_contract_boundaries_and_owner_isolation"
       ],
       "approach": "두 서비스의 debug와 공개 API 문서 엔드포인트를 비활성화한다. 예외 응답에서 traceback을 제거한다.",
       "limit": "",

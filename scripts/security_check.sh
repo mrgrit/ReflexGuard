@@ -12,4 +12,5 @@ done
 bandit -r "${targets[@]}"
 semgrep scan --config p/python --error --metrics=off .
 pip-audit --require-hashes -r requirements.txt
+pip-audit --require-hashes -r brain_server/requirements.txt
 .venv/bin/python -m pytest

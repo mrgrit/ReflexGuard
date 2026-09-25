@@ -1,0 +1,22 @@
+# Application packages use the same pins as the development VM.
+-c constraints.txt
+fastapi
+httpx
+pydantic
+uvicorn
+cryptography
+# Required by NVIDIA 25.08's NumPy C ABI, verified on the Thor image.
+numpy==1.26.4
+pytest
+pip
+setuptools
+# NVIDIA torch 25.08 is supplied by the immutable container, without exposing
+# the container's unrelated Python distributions in the application venv.
+filelock
+typing-extensions>=4.10.0
+sympy>=1.13.3
+networkx
+jinja2
+fsspec
+# Offline MaleCNS Feather conversion.
+pyarrow

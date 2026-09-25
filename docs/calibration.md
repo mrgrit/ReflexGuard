@@ -56,3 +56,13 @@ user_forward=0, forward=0, turn=0, reason=idle, intervened=false다.
 
 코드 오류나 실패 시나리오를 통과로 간주하지 않도록 `simulation.verify`가
 충돌·통신 오류·뇌 step 누락·무입력 개입·전진 무이동을 거부한다.
+
+## 0.7.0 실제 MaleCNS LIF 보정 (2026-09-25)
+
+기존 control.json의 stop_on=0.25, stop_off=0.12, turn_on=0.35, turn_off=0.10, deceleration=2.0, release_ms=500은 유지했다. 서명 manifest의 입력 gain을 10→2.5로 조정했다. 초기 gain=10은 t=64ms의 looming≈0.18에도 escape=0.46875를 내어 0.069m만 진행했고 유효 주행 기준에 실패했다. 원문은 logs/phase6-basic-initial.log다.
+
+CPU 기준 고정 루밍 10회(dt=32ms) 평균 escape는 gain=2.5에서 looming0.3→0, 0.45→0.2031, 0.5→0.2656, 0.8→0.5469였다. 낮은 영상 변화에는 발화하지 않으면서 위협 증가에 정지 신호를 내도록 보정했다. 모든 파라미터는 서명 후 GPU에 재배포했다.
+
+보정 첫 정면 시험은 1.656m 이동 후 후반에 VPN 응답 timeout이 한 번 발생해 통합 실패로 분류했다(logs/phase6-basic-timeout.log). 200ms 제한이나 오류 검사를 완화하지 않았다. 이후 전체 리허설에서 실제 모델 정면/옆문/고정 월드는 각각 1.656/0.235/0.484m, 충돌·뇌 실패 0회였다. 상세 비교와 무조작 결과는 test_report.md 및 logs/phase7-real.json에 있다.
+
+세 시험은 정지 우선 동작이며 자유로운 경로 탐색/지속 회피를 검증하지 않는다. 다음 Jev 버전에서 안전 조건을 유지하면서 진행률과 불필요 정지를 비교한다.
