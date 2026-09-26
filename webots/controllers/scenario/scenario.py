@@ -87,7 +87,8 @@ def main():
                 color = 0xC02020 if status.reason.endswith("failure") or status.reason in ("path_blocked", "remote_stop") else 0xD07000 if status.reason.startswith("avoid") else 0x126090
                 sim.setLabel(0, f"{label} | {status.final_forward:.2f} m/s | CONTACTS {events}", .02, .02, .05, color)
                 sim.setLabel(1, f"REQUEST {status.requested_forward:.2f} m/s | BRAIN + LOCAL RANGE ASSIST" if world == "corridor_demo" else f"REQUEST {status.requested_forward:.2f} m/s | REFLEX STOP", .02, .08, .035, 0x142B38)
-                model = "MaleCNS v1.0 / 187 neurons" if status.model_version == "malecns-v1.0-lplc2-gf-lif-v1" else "MOCK / virtual neurons" if status.model_version.startswith("mock-") else "BRAIN UNAVAILABLE"
+                backend = "LOCAL CPU" if os.environ.get("REFLEXGUARD_BRAIN_PROFILE") == "local" else "REMOTE GPU"
+                model = "MaleCNS v1.0 / 187 neurons / " + backend if status.model_version == "malecns-v1.0-lplc2-gf-lif-v1" else "MOCK / virtual neurons" if status.model_version.startswith("mock-") else "BRAIN UNAVAILABLE"
                 sim.setLabel(2, f"{model} | ESCAPE {status.escape:.3f}", .02, .13, .035, 0x142B38)
             next_label = sim.getTime() + .128
         if settings.batch and sim.getTime() >= settings.duration_s:

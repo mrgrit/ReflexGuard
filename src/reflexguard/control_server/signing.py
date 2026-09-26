@@ -20,7 +20,7 @@ def sign_command(request: RemoteRequest, boot_id: str, key: str, now_ms: int):
 
 class RemoteGuard:
     def __init__(self, chair_id, key, boot_id, max_speed=0.6):
-        self.max_speed=TypeAdapter(Annotated[float, Field(strict=True, gt=0, le=3.0, allow_inf_nan=False)]).validate_python(max_speed)
+        self.max_speed=TypeAdapter(Annotated[float, Field(strict=True, gt=0, le=6.0, allow_inf_nan=False)]).validate_python(max_speed)
         self.chair_id=chair_id
         self.key=key
         self.boot_id=boot_id

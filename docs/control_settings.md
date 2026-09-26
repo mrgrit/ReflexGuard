@@ -1,4 +1,4 @@
-# 0.8.0 주행 설정과 시연
+# 0.8.1 주행 설정과 시연
 
 관제 로그인 후 운영자(operator)·관리자(admin)는 **주행 설정** 링크로 `/settings/control`에 접속한다. 보호자는 접근·변경할 수 없다.
 
@@ -15,14 +15,14 @@
 ## 시연 공간과 속도
 
 ```bash
-REFLEXGUARD_BRAIN_PROFILE=real scripts/run_webots.sh
+REFLEXGUARD_BRAIN_PROFILE=local scripts/run_webots.sh
 # 동일한 명시적 월드 ID
-REFLEXGUARD_BRAIN_PROFILE=real scripts/run_webots.sh corridor_demo
+REFLEXGUARD_BRAIN_PROFILE=local scripts/run_webots.sh corridor_demo
 ```
 
 `corridor_demo`는 길이 60m, 폭 10m이며 출발 x=-26m다. 박스 3종, 보행자 2명, 폭 3m의 통로를 지난다. 전면 카메라는 루밍 입력에 사용하고 후면·상공 3개 카메라는 관람용이다. Webots 장치 창에서 해당 카메라를 선택할 수 있다. 관람 카메라는 대화형 실행에서만 켜서 배치 비용을 줄인다.
 
-기본 요청 속도는 **2.0m/s (7.2km/h)**, 설정·시연 모터 상한은 **3.0m/s (10.8km/h)**다. 장애물(측벽 포함)이 6m 이내이면 요청 속도가 3m/s여도 회피기는 2m/s 이하로 낮춘다. 따라서 10m 폭 시연 복도에서 3m/s 요청은 대부분 2m/s 이하로 실행된다. 기존 회귀 월드는 0.6m/s다. 서명된 원격 속도 제한은 최대 0.6m/s이며 항상 최종 출력에 적용한다. 모터별 상한 때문에 큰 조향 중에는 실제 전진 속도가 줄어든다.
+기본 요청 속도는 **4.0m/s (14.4km/h)**, 설정·시연 모터 상한은 **6.0m/s (21.6km/h)**다. 진행 방향 7m·좌우 3m 영역의 장애물, 8m 안의 추적 물체, 회피/복귀 조향에서는 2m/s 이하로 낮춘다. 먼 측벽만 있다는 이유로 일괄 저속 제한하지 않는다. 기본 감속도 2m/s²에서는 예측 시간에 맞춰 직진도 최대 4m/s로 제한한다. 6m/s는 설정·모터 상한이며 모든 구간에서 그 속도를 보장하지 않는다. 기존 회귀 월드는 0.6m/s다. 서명된 원격 속도 제한은 최대 0.6m/s이며 항상 최종 출력에 적용한다. 모터별 상한 때문에 큰 조향 중에는 실제 전진 속도가 줄어든다.
 
 시연 월드는 4방향·두 높이의 120° 거리 센서 8개와 IMU·바퀴 오도메트리로 3초 후보 궤적을 계산한다. 스캔의 작은 물체 군집을 추적하고 휠체어 자체 이동을 보정해 횡단 보행자의 속도와 미래 위치를 추정한다. 추정 속도 상한은 1.8m/s이며 군집 분리·급격한 움직임·센서 가림에 한계가 있다. 루밍 위험 출력이 높으면 감속하고, 장애물 옆으로 우회한 뒤 사용자 진행선으로 돌아온다. 이는 MaleCNS 위험 출력과 로컬 거리 기반 경로 선택의 결합이며, 모든 조향을 신경회로가 계산한다고 주장하지 않는다. 관찰자 지상좌표는 시험 지표에만 사용한다. Jev 행동 선택은 후속 계획이다.
 
@@ -36,4 +36,4 @@ REFLEXGUARD_BRAIN_PROFILE=real scripts/run_webots.sh corridor_demo
 
 관제 원격 명령은 벽시계 약 100ms 간격으로 조회하며 적용된 정지/속도 제한은 매 제어 step 유지한다. 일반 판단 보고는 약 500ms, 안전 정지 상태 전환은 즉시 보고한다. 불필요한 DB 쓰기를 줄이되 통신 실패 시 정지 정책은 유지한다.
 
-시연 시작 시 기본으로 겹친 카메라 창은 전후방 하단·구간별 우측 배치로 초기화하며 사용자가 옮긴 배치는 보존한다. Webots 창을 최대화하면 보기 편하다. 영상 더블클릭으로 별도 창을 열 수 있다. [공식 카메라 설명](https://github.com/cyberbotics/webots/blob/R2025a/docs/reference/camera.md).
+시연 시작 시 전후방 영상만 하단에 축소 배치하고 상공 구간 영상은 숨긴다. 카메라 장치는 유지하며 Webots에서 필요할 때 다시 표시할 수 있다. 사용자가 옮긴 배치는 보존한다. Webots를 닫은 뒤 `.venv/bin/python scripts/configure_webots.py --reset-camera-layout`으로 카메라 배치만 기본값으로 복원한다. Webots 창을 최대화하면 보기 편하다. 영상 더블클릭으로 별도 창을 열 수 있다. [공식 카메라 설명](https://github.com/cyberbotics/webots/blob/R2025a/docs/reference/camera.md).

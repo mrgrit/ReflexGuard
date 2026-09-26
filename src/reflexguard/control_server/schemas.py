@@ -64,7 +64,7 @@ class DecisionInput(ContractModel):
     top_neurons: Annotated[list[NeuronActivity], Field(max_length=64)]
     model_version: Annotated[str, Field(min_length=1, max_length=128)]
     reason: Annotated[str, Field(min_length=1, max_length=128)]
-    forward: Annotated[float, Field(ge=-3.0, le=3.0, allow_inf_nan=False)]
+    forward: Annotated[float, Field(ge=-6.0, le=6.0, allow_inf_nan=False)]
     turn: Annotated[float, Field(ge=-2, le=2, allow_inf_nan=False)]
     remote_stopped: bool
 

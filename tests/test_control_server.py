@@ -348,7 +348,7 @@ def test_calibration_partial_and_path_inputs_rejected(control):
     assert client.get("/assets/calibration.js").status_code == 200
 
 
-@pytest.mark.parametrize("speed", [3.1, 0, -1, float("nan"), True])
+@pytest.mark.parametrize("speed", [6.1, 0, -1, float("nan"), True])
 def test_remote_guard_rejects_invalid_local_speed(speed):
     with pytest.raises(ValueError):
         RemoteGuard("seat-a", secrets.token_urlsafe(32), secrets.token_urlsafe(32), max_speed=speed)

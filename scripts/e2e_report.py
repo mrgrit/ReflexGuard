@@ -11,7 +11,7 @@ from reflexguard.simulation.verify import verify
 class ReportArgs(BaseModel):
     model_config=ConfigDict(extra='forbid')
     directory: Path
-    profile: Literal['mock','real']
+    profile: Literal['mock','real','local']
 
 
 def main():
@@ -29,7 +29,7 @@ def main():
             and control['brain_profile']==args.profile and fault['fault_latched_after_reconnection']):
         raise ValueError('Integration evidence is incomplete')
     report={'status':'passed','profile':args.profile,'worlds':worlds,'disconnect':fault,'control':control}
-    if args.profile=='real':report['contract']=read('contract.json')
+    if args.profile!='mock':report['contract']=read('contract.json')
     print(json.dumps(report,ensure_ascii=False,indent=2))
 
 

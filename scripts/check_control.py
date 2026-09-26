@@ -27,8 +27,8 @@ def free_port():
 
 def main():
     profile=os.environ.get("REFLEXGUARD_BRAIN_PROFILE","mock")
-    if profile not in ("mock","real"): raise ValueError("Unknown brain profile")
-    external_brain=ClientSettings.from_env() if profile=="real" else None
+    if profile not in ("mock","real","local"): raise ValueError("Unknown brain profile")
+    external_brain=ClientSettings.from_env() if profile!="mock" else None
     processes=[]
     with tempfile.TemporaryDirectory(prefix="reflexguard-control-") as temporary:
         directory=Path(temporary)
@@ -116,7 +116,7 @@ def main():
                 exported.raise_for_status()
                 records=[json.loads(json.loads(line)["payload"]) for line in exported.text.splitlines()]
                 decisions=[row for row in records if row['event']=='decision']
-                expected_prefix='malecns-' if profile=='real' else 'mock-'
+                expected_prefix='mock-' if profile=='mock' else 'malecns-'
                 if not decisions or any(not row['model_version'].startswith(expected_prefix) for row in decisions):
                     raise RuntimeError('Unexpected model identity in audit records')
                 if result.brain_failures or result.control_failures:

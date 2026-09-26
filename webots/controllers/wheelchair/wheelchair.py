@@ -22,7 +22,7 @@ async def main():
     os.chdir(Path(__file__).resolve().parents[3])
     dt = int(robot.getBasicTimeStep())
     settings = Settings.model_validate_json(os.environ.get("REFLEXGUARD_SCENARIO", "{}"))
-    max_speed = TypeAdapter(Annotated[float, Field(gt=0, le=3.0)]).validate_json(robot.getCustomData())
+    max_speed = TypeAdapter(Annotated[float, Field(gt=0, le=6.0)]).validate_json(robot.getCustomData())
     left = robot.getDevice("left wheel motor")
     right = robot.getDevice("right wheel motor")
     for motor in (left, right):

@@ -17,7 +17,7 @@ class Telemetry(BaseModel):
     model_version: str = Field(default="unavailable", max_length=128)
     escape: float = Field(default=0.0, ge=0, le=1, allow_inf_nan=False)
     reason: str = Field(default="idle", max_length=128)
-    requested_forward: float = Field(default=0.0, ge=-3.0, le=3.0, allow_inf_nan=False)
+    requested_forward: float = Field(default=0.0, ge=-6.0, le=6.0, allow_inf_nan=False)
     frames: int = Field(ge=0)
     width: int = Field(ge=160, le=640)
     height: int = Field(ge=120, le=480)
@@ -36,7 +36,7 @@ class Telemetry(BaseModel):
     stop_steps: int = Field(default=0, ge=0)
     brain_failures: int = Field(default=0, ge=0)
     max_looming: float = Field(default=0.0, ge=0, le=1, allow_inf_nan=False)
-    final_forward: float = Field(default=0.0, ge=-3.0, le=3.0, allow_inf_nan=False)
+    final_forward: float = Field(default=0.0, ge=-6.0, le=6.0, allow_inf_nan=False)
 
 class Result(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
@@ -65,4 +65,4 @@ class Result(BaseModel):
     stop_steps: int = Field(default=0, ge=0)
     brain_failures: int = Field(default=0, ge=0)
     max_looming: float = Field(default=0.0, ge=0, le=1, allow_inf_nan=False)
-    final_forward: float = Field(default=0.0, ge=-3.0, le=3.0, allow_inf_nan=False)
+    final_forward: float = Field(default=0.0, ge=-6.0, le=6.0, allow_inf_nan=False)

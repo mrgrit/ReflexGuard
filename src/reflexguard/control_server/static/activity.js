@@ -12,7 +12,7 @@
   const nodes = new Map(), edges = [];
   let graph, latest = new Map(), selected = null;
   const states = {waiting: "수신 대기", malecns: "LIVE · MaleCNS 모델 일치", mock: "MOCK · 실제 신경회로 아님", stale: "수신 지연 · 마지막 값은 실시간 아님", unverified: "모델 또는 뉴런 데이터 확인 필요", offline: "연결 끊김 · 상태 확인 필요"};
-  const reasons = {user: "사용자 조종", idle: "입력 대기", risk_monitoring: "위험 감지 · 감속", avoid_left: "왼쪽 회피", avoid_right: "오른쪽 회피", avoid_passing: "장애물 옆 통과", control_recovering: "진행 방향 복귀", control_recovered: "사용자 조종 복귀", path_blocked: "회피 공간 없음 · 정지", brain_failure: "뇌 통신 오류 · 정지", sensor_failure: "거리 센서 오류 · 정지", control_failure: "관제 오류 · 정지", remote_stop: "원격 정지", hazard_stop: "위험 감지 · 정지"};
+  const reasons = {user: "사용자 조종", idle: "입력 대기", risk_monitoring: "위험 감지 · 감속", avoid_left: "왼쪽 회피", avoid_right: "오른쪽 회피", avoid_passing: "장애물 옆 통과", avoid_clearance_recovery: "여유 공간 확보", control_recovering: "진행 방향 복귀", control_recovered: "사용자 조종 복귀", path_blocked: "회피 공간 없음 · 정지", brain_failure: "뇌 통신 오류 · 정지", sensor_failure: "거리 센서 오류 · 정지", control_failure: "관제 오류 · 정지", remote_stop: "원격 정지", hazard_stop: "위험 감지 · 정지"};
   function detail() {
     if (!selected) return;
     const node = nodes.get(selected).node;

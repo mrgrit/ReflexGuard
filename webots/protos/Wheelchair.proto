@@ -9,7 +9,7 @@ PROTO Wheelchair [
   field SFString controller "wheelchair"
 ] {
 %< const speed = fields.maxSpeed.value;
-   if (!Number.isFinite(speed) || speed <= 0 || speed > 3.0) throw new Error('maxSpeed must be in (0, 3.0]'); >%
+   if (!Number.isFinite(speed) || speed <= 0 || speed > 6.0) throw new Error('maxSpeed must be in (0, 6.0]'); >%
 Robot {
   translation IS translation
   rotation IS rotation

@@ -2,7 +2,7 @@
 # Test-owned mock, or preconfigured real GPU over its authenticated SSH tunnel.
 set -euo pipefail
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
-[[ $# == 1 && ( $1 == mock || $1 == real ) ]] || { printf 'Usage: scripts/e2e.sh mock|real\n' >&2; exit 2; }
+[[ $# == 1 && ( $1 == mock || $1 == real || $1 == local ) ]] || { printf 'Usage: scripts/e2e.sh mock|real|local\n' >&2; exit 2; }
 export REFLEXGUARD_BRAIN_PROFILE="$1"
 source scripts/brain_profile.sh
 export PYTHONPATH="$PWD/src:$PWD"

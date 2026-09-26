@@ -1,0 +1,12 @@
+[Unit]
+Description=ReflexGuard signed MaleCNS local CPU simulation
+
+[Service]
+Type=simple
+ExecStart=@ROOT@/scripts/run_local_brain.sh
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=default.target

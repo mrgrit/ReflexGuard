@@ -33,8 +33,8 @@ export REFLEXGUARD_MODEL_DIR="$PWD/.local-models/malecns-v1-lif-v1"
 VPN에 접속하고 `.env.gpu`에 `REFLEXGUARD_GPU_HOST`, `REFLEXGUARD_GPU_USER`, `REFLEXGUARD_GPU_PORT`를 설정한다. 주소·계정·비밀번호를 Git에 넣지 않는다. 비밀번호는 이 파일에 저장할 필요가 없다. SSH 인증/호스트 키는 기존 운영 설정을 따른다.
 
 ```bash
-# 터널이 끊어진 경우 별도 터미널에서 실행하고 유지
-scripts/connect_gpu.sh
+# 설치된 자동 재연결 터널 시작
+systemctl --user start reflexguard-gpu-tunnel.service
 
 # 실제 GPU 모델 + Webots 화면 (VMware 데스크톱)
 REFLEXGUARD_BRAIN_PROFILE=real scripts/run_webots.sh corridor_basic
@@ -44,10 +44,12 @@ scripts/e2e.sh real
 scripts/e2e.sh mock
 ```
 
-이미 localhost:18443 터널이 살아 있으면 새 터널을 중복 실행하지 않는다. `REFLEXGUARD_BRAIN_PROFILE=real`은 `.env.brain-client`를 사용한다. 기본값은 mock이고 관제 CA는 별도로 유지한다. GUI 실행은 `.env.control`이 있으면 관제에 연결하므로 `scripts/run_control_server.sh`도 실행되어 있어야 한다.
+이미 localhost:18443 터널이 살아 있으면 새 터널을 중복 실행하지 않는다. `REFLEXGUARD_BRAIN_PROFILE=real`은 `.env.brain-client`를 사용한다. 배치 실행의 기본값은 mock이며 GUI의 기본값은 서명된 실제 MaleCNS NumPy 모델인 local이다. 관제 CA는 별도로 유지한다. GUI 실행은 `.env.control`이 있으면 관제에 연결하므로 `scripts/run_control_server.sh`도 실행되어 있어야 한다.
 
 연결 실패는 정지 상태로 고정한다. 복구했다고 운전을 자동 재개하지 않는다. mock으로 전환할 때는 정지한 시뮬레이션을 종료하고 mock 서버를 시작한 다음 `REFLEXGUARD_BRAIN_PROFILE=mock scripts/run_webots.sh corridor_basic`으로 새 세션을 연다. 실제 뇌의 모델·세션·침묵 상태를 mock에 이어붙이지 않는다.
 
 ## 보안 검사 범위
 
 `scripts/security_check.sh`는 VM 잠금과 GPU 애플리케이션 잠금을 모두 pip-audit한다. `docs/sbom-gpu.json`은 GPU 잠금 의존성 목록, `docs/logs/gpu-python-inventory.json`은 설치 메타데이터 목록(별도 공급되는 NVIDIA torch 포함)이다. `docs/gpu_provenance.json`은 이미지·잠금·모델·코드 해시를 연결한다. NVIDIA 기본 이미지 전체 OS와 vendor torch 개발 빌드의 취약점 0건을 입증하는 검사는 아니다. 외부 공개 운영 배포는 범위 밖이다.
+
+임시 터널이 종료되는 경우를 막기 위해 사용자 서비스 자동 재연결을 지원한다. 새 VM 설정과 BRAIN FAILURE 복구는 [연결 복구 안내](brain_connection.md)를 따른다.

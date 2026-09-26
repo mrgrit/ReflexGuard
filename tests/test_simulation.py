@@ -20,13 +20,27 @@ def test_wheel_speed_limit_and_turn_sign(forward, turn):
     assert math.isclose(left+right,0) if forward == 0 else (left+right)*forward > 0
     assert math.isclose(left,right) if turn == 0 else (right-left)*turn > 0
 
-@pytest.mark.parametrize("value", [float("nan"),float("inf"),-1,0,3.1])
+@pytest.mark.parametrize("value", [float("nan"),float("inf"),-1,0,6.1])
 def test_bad_max_speed_rejected(value):
     with pytest.raises(ValueError):
         wheel_speeds(0.5, 0, value)
 
 def test_releasing_keys_stops_motors():
     assert wheel_speeds(0,0,0.6) == (0,0)
+
+
+@pytest.mark.parametrize("speed", [4.0, 6.0])
+def test_fast_motor_command_survives_controller_telemetry_roundtrip(speed):
+    from reflexguard.control.arbiter import Command
+    from reflexguard.simulation.models import Telemetry
+    command = Command(forward=speed, turn=0.0)
+    left, right = wheel_speeds(command.forward, command.turn, 6.0)
+    status = Telemetry(requested_forward=speed, final_forward=command.forward,
+                       frames=1, width=160, height=120, pixel_range=120,
+                       left_rad_s=left, right_rad_s=right)
+    received = Telemetry.model_validate_json(status.model_dump_json())
+    assert received.final_forward == speed
+    assert max(abs(left), abs(right)) <= 6.0 / .24
 
 def test_camera_requires_complete_bgra_and_ignores_alpha():
     sink=FrameSink()
@@ -112,6 +126,9 @@ def test_runtime_uses_checkout_venv_without_resolving_symlink(tmp_path):
     layout.write_text(custom)
     module.configure(tmp_path)
     assert layout.read_text()==custom
+    layout.write_text('maximizedDockId: 0\n'+custom)
+    module.configure(tmp_path, reset_cameras=True)
+    assert layout.read_text()=='maximizedDockId: 0\n'+template.read_text()
     for name in ("wheelchair","scenario"):
         assert str(interpreter) in (tmp_path/"webots/controllers"/name/"runtime.ini").read_text()
 

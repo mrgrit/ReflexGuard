@@ -32,3 +32,20 @@
 - 3m/s 무제한 접근은 접촉해 거부했고, 장애물/측벽 6m 이내 2m/s 제한 후 3m/s 요청 시험은 통과했다. 기본 2m/s.
 - 실제 GPU 시험에서 간헐적 200ms 지연은 여전히 관측된다. 실패 시 정지 고정을 유지하고 성공·실패 모두 docs/demo_report.md에 남긴다.
 - Jev 선택 정책과 별도 Attack Lab은 이번 0.8.0에 구현하지 않았다.
+
+- 2026-09-26 BRAIN FAILURE 복구: GPU/VPN은 정상이나 localhost:18443 SSH master 터널이 종료되어 있었다. 전용 제한 SSH 키와 사용자 systemd 자동 재연결 서비스를 로컬에 설치했다. run_webots.sh는 인증 health 확인/서비스 시작/재확인 후에만 GUI를 연다. 키는 ~/.ssh에만 보관하고 Git에 넣지 않는다. 기존 정지 고정은 새 세션으로 해제한다.
+
+
+## 0.8.1 연결·속도·화면 보정 (2026-09-26)
+
+기본 요청 속도를 2→4m/s, 설정·시연 모터 상한을 3→6m/s로 올렸다. 기본 감속도에서는 열린 직선도 최대 4m/s이며 장애물 근처/회피 중에는 2m/s 이하로 낮춘다. 실제 로그의 최대 전진 명령은 4m/s다. 6m/s는 모든 구간의 실제 주행 속도를 뜻하지 않는다.
+
+기존 배치의 첫 4m/s 시험은 충돌 없이 약 19.677m에서 진행이 막혔다(`logs/v0.8.1-demo-stalled.json`). 후속 박스 B/C를 각각 y=-2m/+2m로 옮겨 우회 공간을 확보했다. 최종 60초 local 시험은 54.582m·장애물 7개·복귀 2회·접촉/뇌 오류 0이었다(`logs/v0.8.1-demo-local.json`). 두 보행자 최소 이동은 29.952m다. 최소 거리 추정 0은 거친 지표이며 실제 접촉 이벤트 0과 구별한다. 자유 조종이나 모든 설정 조합의 무충돌 보증은 아니다.
+
+SSH 터널 소멸은 사용자 서비스로 복구했으나 외부 GPU의 간헐적 200ms 초과는 남았다. GUI는 동일한 서명된 187개 MaleCNS 뉴런/185개 연결 LIF를 로컬 NumPy에서 실행한다. mock이나 실행 중 자동 대체가 아니다. 시작 전 mTLS health를 확인하고 화면에 LOCAL CPU/REMOTE GPU를 구분한다. 통신 실패 시 정지 고정은 유지한다. [연결 안내](brain_connection.md).
+
+전후방 카메라를 하단에 축소하고 상공 구간 영상 3개는 기본 숨김으로 바꿨다. 기존 배치는 `scripts/configure_webots.py --reset-camera-layout`으로 카메라 항목만 재설정할 수 있다.
+
+`scripts/e2e.sh local`은 복도 3종·무입력·통신 단절 후 정지 고정·인증 계약·실제 주행 중 서명 원격 정지·감사 체인까지 통과했다(`logs/v0.8.1-e2e-local.json`).
+
+0.8.1 최종 품질 게이트: Bandit·Semgrep(151규칙/68파일)·VM/GPU pip-audit 0건, pytest 356개 통과. 증거: `logs/v0.8.1-security.log`. Starlette/httpx의 기존 deprecation 경고 1건은 유지했다. GUI를 local로 다시 열어 인증된 MaleCNS 상태와 입력 대기를 확인했다.

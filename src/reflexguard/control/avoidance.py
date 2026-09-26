@@ -1,5 +1,6 @@
 """Bounded local trajectory selection from onboard range scans, not world positions."""
 import math
+import logging
 from typing import Annotated
 import numpy as np
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -10,13 +11,14 @@ Range = Annotated[float, Field(strict=True, ge=0.02)]
 BeamRow = Annotated[list[Range], Field(min_length=64, max_length=64)]
 MOUNTS = ((0.62, 0.0, 0.0), (0.0, 0.43, math.pi / 2),
           (-0.46, 0.0, math.pi), (0.0, -0.43, -math.pi / 2))
+LOGGER = logging.getLogger(__name__)
 
 
 class Surroundings(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True, frozen=True, revalidate_instances="always")
     t_ms: int = Field(ge=0)
-    forward_mps: float = Field(default=0.0, ge=-4.0, le=4.0, allow_inf_nan=False)
-    turn_rad_s: float = Field(default=0.0, ge=-4.0, le=4.0, allow_inf_nan=False)
+    forward_mps: float = Field(default=0.0, ge=-8.0, le=8.0, allow_inf_nan=False)
+    turn_rad_s: float = Field(default=0.0, ge=-8.0, le=8.0, allow_inf_nan=False)
     travel_m: float = Field(default=0.0, ge=-.35, le=.35, allow_inf_nan=False)
     heading: float = Field(ge=-math.pi, le=math.pi, allow_inf_nan=False)
     ranges: list[BeamRow] = Field(min_length=4, max_length=4)
@@ -67,6 +69,7 @@ class LocalAvoidance:
         self.tracks = []
         self.track_ms = None
         self.track_heading = 0.0
+        self.blocked_reported = False
 
     def motion(self, points, scan):
         """Track compact scan clusters after removing measured ego motion."""
@@ -125,8 +128,11 @@ class LocalAvoidance:
         horizon = 3.0
         # High demo speed is reserved for open space. Retain braking distance
         # before compact moving clusters can merge with other scan returns.
-        nearby = len(points) and float(np.linalg.norm(points, axis=1).min()) < 6.0
-        speed = min(requested, self.config.deceleration * 2, 2.0 if nearby else 3.0)
+        nearby = len(points) and np.any((points[:, 0] * direction > -1.0) &
+                                      (points[:, 0] * direction < 7.0) & (np.abs(points[:, 1]) < 3.0))
+        nearby = nearby or any(np.linalg.norm(center) < 8.0 for center, _, _ in self.tracks)
+        turning = self.active or abs(desired_heading) > .15 or abs(user.turn) > .15
+        speed = min(requested, self.config.deceleration * 2, 2.0 if nearby or turning else 6.0)
         speed *= 0.75 if escape >= self.config.stop_on else 1.0
         turn_limit = min(1.2, self.config.max_turn)
         restore_turn = max(-turn_limit, min(turn_limit, desired_heading * 1.5)) if self.active or abs(self.lateral_offset) > .2 else user.turn
@@ -149,17 +155,24 @@ class LocalAvoidance:
         x -= x[:, :1]
         y -= y[:, :1]
         clearance = np.full(len(commands), 8.0)
+        clearance_by_time = None
         if len(points):
             dx = points[:, 0] + motion[:, 0] * times[:, :, None] - x[:, :, None]
             dy = points[:, 1] + motion[:, 1] * times[:, :, None] - y[:, :, None]
             c, s = np.cos(theta)[:, :, None], np.sin(theta)[:, :, None]
             local_x, local_y = c * dx + s * dy, -s * dx + c * dy
             # Footrest/casters/wheels enclosed by an oriented rectangle plus margin.
-            bx = np.maximum(np.maximum(local_x - .65, -.45 - local_x), 0)
-            by = np.maximum(np.abs(local_y) - .40, 0)
+            raw_x = np.maximum(local_x - .65, -.45 - local_x)
+            raw_y = np.abs(local_y) - .40
+            bx = np.maximum(raw_x, 0)
+            by = np.maximum(raw_y, 0)
             uncertainty = .1 * times[:, :, None] * (np.linalg.norm(motion, axis=1) > .12)
-            clearance = (np.sqrt(bx * bx + by * by) - uncertainty).min(axis=(1, 2))
+            signed_distance = np.sqrt(bx * bx + by * by) + np.minimum(np.maximum(raw_x, raw_y), 0)
+            clearance_by_time = (signed_distance - uncertainty).min(axis=2)
+            clearance = clearance_by_time.min(axis=1)
         valid = clearance >= .15 + np.abs(commands[:, 0]) * .12
+        if np.any(valid):
+            self.blocked_reported = False
         if valid[0] and not self.active:
             command = Command(forward=float(commands[0, 0]), turn=float(commands[0, 1]))
             return command, "control_recovering" if abs(self.lateral_offset) > .2 else "risk_monitoring" if speed < requested else "user"
@@ -173,6 +186,21 @@ class LocalAvoidance:
                 return command, "control_recovered"
             return command, "control_recovering"
         if not np.any(valid):
+            if not self.blocked_reported and clearance_by_time is not None:
+                LOGGER.warning("Local path blocked: current clearance %.3fm, measured speed %.3fm/s, heading %.3frad",
+                               float(clearance_by_time[0, 0]), scan.forward_mps, scan.heading)
+                self.blocked_reported = True
+            if clearance_by_time is not None and abs(scan.forward_mps) < .4:
+                # Inside the preferred buffer, allow only a slow trajectory that
+                # never reduces current positive clearance and increases it.
+                initial = clearance_by_time[:, 0]
+                recovering = ((np.abs(commands[:, 0]) <= .3) & (np.abs(commands[:, 1]) <= .4)
+                              & (initial > .02) & (clearance >= initial - .002)
+                              & (clearance_by_time[:, -1] > initial + .05))
+                if np.any(recovering):
+                    scores = np.where(recovering, clearance_by_time[:, -1], -np.inf)
+                    selected = commands[int(np.argmax(scores))]
+                    return Command(forward=float(selected[0]), turn=float(selected[1])), "avoid_clearance_recovery"
             return Command(forward=0.0, turn=0.0), "path_blocked"
         preferred = 1 if signal == Signal.LEFT else -1 if signal == Signal.RIGHT else 0
         if not self.active:

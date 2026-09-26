@@ -1,0 +1,20 @@
+{
+  "health": {
+    "status": "ok",
+    "model_version": "malecns-v1.0-lplc2-gf-lif-v1",
+    "weights_sha256": "d85f0d90134bce60db49591e282ac8adcdadb4d83c5a98400e15feb5f3a9da10"
+  },
+  "steps": 100,
+  "dt_ms": 50,
+  "client_deadline_ms": 200,
+  "end_to_end_ms": {
+    "min": 2.596893988084048,
+    "median": 3.0602379993069917,
+    "p95": 4.541921021882445,
+    "max": 5.8496950077824295
+  },
+  "missing_client_certificate_rejected": true,
+  "missing_bearer_rejected": true,
+  "directional_response": "passed",
+  "output_silencing": "passed"
+}

@@ -1,8 +1,9 @@
 """Generate machine-local Webots interpreter paths without shell expansion."""
 from pathlib import Path
+import argparse
 
 
-def configure(root: Path) -> None:
+def configure(root: Path, reset_cameras: bool = False) -> None:
     python = root / ".venv/bin/python"
     if not python.is_file():
         raise ValueError("Create the project virtual environment first")
@@ -14,6 +15,11 @@ def configure(root: Path) -> None:
     layout = root / "webots/worlds/.corridor_demo.wbproj"
     template = root / "webots/worlds/corridor_demo.wbproj.in"
     if template.is_file():
+        if reset_cameras and layout.is_file():
+            saved = [line for line in layout.read_text().splitlines() if not line.startswith("renderingDevicePerspectives:")]
+            defaults = [line for line in template.read_text().splitlines() if line.startswith("renderingDevicePerspectives:")]
+            layout.write_text("\n".join(saved + defaults) + "\n", encoding="utf-8")
+            return
         overlays = [line for line in layout.read_text().splitlines() if line.startswith("renderingDevicePerspectives:")] if layout.is_file() else []
         # Initialize absent/default overlapping overlays; preserve user-arranged layouts.
         if not layout.exists() or overlays and all(line.endswith(";0;0") for line in overlays):
@@ -21,4 +27,6 @@ def configure(root: Path) -> None:
 
 
 if __name__ == "__main__":
-    configure(Path(__file__).resolve().parents[1])
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--reset-camera-layout", action="store_true")
+    configure(Path(__file__).resolve().parents[1], parser.parse_args().reset_camera_layout)

@@ -18,3 +18,6 @@
 출처: [Janelia MaleCNS v1.0](https://male-cns.janelia.org/download/), CC-BY-4.0. 원본 출처·뉴런 선정·LIF 가정은 neurons.md와 malecns.md에 기록되어 있다.
 
 검증된 실제 GPU 실행 화면: [MaleCNS LIVE 캡처](logs/malecns-live.png). Firefox에서 발화 뉴런 95개의 색 반영과 187개 노드·185개 간선을 검사했다. 전체 주행 및 실패 이력은 [시연 보고서](demo_report.md)에 기록한다.
+
+
+0.8.1 GUI 기본 연결은 같은 서명 회로의 로컬 NumPy LIF다. LIVE 시각화는 실제 모델 응답의 187개 뉴런 발화율을 그대로 사용한다. 실행 장비는 Webots HUD의 LOCAL CPU/REMOTE GPU로 구분한다.

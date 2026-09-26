@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 class Calibration(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, strict=True, allow_inf_nan=False)
-    drive_speed: float = Field(default=2.0, gt=0, le=3.0)
+    drive_speed: float = Field(default=4.0, gt=0, le=6.0)
     dark_threshold: int = Field(default=140, ge=1, le=254)
     area_floor: float = Field(default=0.008, gt=0, le=0.1)
     area_tau_s: float = Field(default=0.12, gt=0, le=1)

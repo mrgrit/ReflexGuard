@@ -11,7 +11,7 @@ ESCAPE = TypeAdapter(Annotated[float, Field(ge=0, le=1, allow_inf_nan=False)])
 
 class Command(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid", frozen=True, allow_inf_nan=False, revalidate_instances="always")
-    forward: float = Field(ge=-3.0, le=3.0)
+    forward: float = Field(ge=-6.0, le=6.0)
     turn: float = Field(ge=-2, le=2)
 
 

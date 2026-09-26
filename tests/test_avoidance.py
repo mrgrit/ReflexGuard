@@ -158,13 +158,32 @@ def test_either_sensor_height_failure_prevents_fused_frame(faulty_height):
 
 
 def test_high_speed_reduces_near_obstacles_but_remains_available_in_open_space():
-    config = Calibration(drive_speed=3.0)
-    user = Command(forward=3.0, turn=0.0)
+    config = Calibration(drive_speed=4.0)
+    user = Command(forward=4.0, turn=0.0)
     navigator = LocalAvoidance(config)
     clear = navigator.update(user, Signal.NONE, 0.0, 32, True, scan(32), 32)
-    assert clear.command.forward == 3.0
+    assert clear.command.forward == 4.0
     rows = [[math.inf] * 64 for _ in range(4)]
-    rows[1][32] = 4.0  # A nearby side obstacle leaves the forward path clear.
+    rows[0][20] = 5.0  # A near forward-side obstacle leaves the straight path clear.
     near = Surroundings(t_ms=64, heading=0.0, ranges=rows)
     limited = navigator.update(user, Signal.NONE, 0.0, 32, True, near, 64)
     assert limited.command.forward == 2.0 and limited.reason == 'risk_monitoring'
+
+
+def test_slow_clearance_recovery_moves_away_from_side_obstacle(monkeypatch):
+    import numpy as np
+    monkeypatch.setattr(Surroundings, "points", lambda _: np.array([[0., .45]]))
+    navigator = LocalAvoidance(Calibration())
+    result = navigator.update(Command(forward=4., turn=0.), Signal.NONE, 0., 32, True, scan(32), 32)
+    assert result.reason == "avoid_clearance_recovery"
+    assert 0 < result.command.forward <= .3
+    assert abs(result.command.turn) <= .4
+
+
+def test_clearance_recovery_cannot_move_through_body_obstacle(monkeypatch):
+    import numpy as np
+    monkeypatch.setattr(Surroundings, "points", lambda _: np.array([[.60, 0.]]))
+    navigator = LocalAvoidance(Calibration())
+    result = navigator.update(Command(forward=4., turn=0.), Signal.NONE, 0., 32, True, scan(32), 32)
+    assert result.reason == "path_blocked"
+    assert result.command == Command(forward=0., turn=0.)
