@@ -32,5 +32,6 @@ def evaluate(request: StepRequest, silenced: set[str]) -> StepResponse:
         escape=values[0], turn_left=values[1], turn_right=values[2],
         top_neurons=[NeuronActivity(id=neuron, type="mock", rate_hz=rate * 100.0)
                      for neuron, rate in zip(NEURON_IDS, values)],
+        neuron_activity=[NeuronActivity(id=neuron, type="mock", rate_hz=rate * 100.0) for neuron, rate in zip(NEURON_IDS, values)],
         model_version=MODEL_VERSION,
     )

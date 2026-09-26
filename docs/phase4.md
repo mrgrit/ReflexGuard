@@ -1,6 +1,6 @@
 # Phase 4 — 관제 서버와 보호자 대시보드
 
-FastAPI·Jinja2·SQLAlchemy·SQLite 관제를 구현했다. 현재 뇌는 `mock-rules-v1`이며 실제 MaleCNS 모델은 아직 연결 전이다.
+FastAPI·Jinja2·SQLAlchemy·SQLite 관제를 구현했다. Phase 4 최초 검증은 `mock-rules-v1`으로 수행했다. 현재는 실제 MaleCNS GPU도 연결되어 있으며 최신 통합 결과는 [시연 보고서](demo_report.md)에 기록한다.
 
 ## 로컬 실행
 
@@ -62,3 +62,7 @@ Bandit의 통합 시험용 subprocess import/호출 5곳은 고정 실행 파일
 프로젝트 루트에서 `scripts/reset_admin.sh`를 실행하면 새 무작위 비밀번호를 생성해 DB와 `.env.admin`(권한 0600)을 함께 갱신하고, admin 계정 잠금·기존 세션·로컬 접속 주소의 로그인 제한을 해제한다. 일반 사용자를 관리자로 승격시키지 않는다. 다른 휠체어 설정과 판단 로그는 유지한다. 실행 중인 서버 재시작은 필요하지 않다.
 새 비밀번호는 이 파일의 `REFLEXGUARD_ADMIN_PASSWORD=` 뒤 값만 복사한다. `https://localhost:8444/login`을 새로 열어 CSRF 쿠키를 갱신한 다음 로그인한다.
 직접 고른 비밀번호는 `REFLEXGUARD_ADMIN_PASSWORD` 환경변수로 전달할 수 있으며 UTF-8 12..72바이트를 검증한다. 명령행 인자나 로그에 비밀번호를 넣지 않는다. 로그인 화면에도 길이 조건을 표시한다.
+
+## 0.8.0 운영자 주행 설정
+
+`/settings/control`에서 속도·임계값·루밍 민감도를 저장/복원한다. 같은 VM 제어기의 재시작 때 적용하며, RBAC·CSRF·타입/범위·동시 편집 검증을 거친다. [설정 안내](control_settings.md)에 저장 경로와 검증 범위를 기록했다.

@@ -5,10 +5,11 @@ PROTO Wheelchair [
   field SFRotation rotation 0 0 1 0
   field SFFloat maxSpeed 0.6
   field SFFloat cameraFieldOfView 1.8
+  field SFBool enableAvoidance FALSE
   field SFString controller "wheelchair"
 ] {
 %< const speed = fields.maxSpeed.value;
-   if (!Number.isFinite(speed) || speed <= 0 || speed > 1.2) throw new Error('maxSpeed must be in (0, 1.2]'); >%
+   if (!Number.isFinite(speed) || speed <= 0 || speed > 3.0) throw new Error('maxSpeed must be in (0, 3.0]'); >%
 Robot {
   translation IS translation
   rotation IS rotation
@@ -28,9 +29,37 @@ Robot {
     } ] }
     Camera { translation 0.36 0 0.5
       name "front camera" width 160 height 120 fieldOfView IS cameraFieldOfView near 0.03 far 20 }
+    %< if (fields.enableAvoidance.value) { >%
+    InertialUnit { name "avoidance heading" }
+    Camera { name "rear camera" translation -0.35 0 0.75 rotation 0 0 1 3.14159265359 width 160 height 120 fieldOfView 1.8 near 0.03 far 30 }
+    Lidar { translation 0.62 0 0.24 rotation 0 0 1 0
+      name "range front" horizontalResolution 64 fieldOfView 2.09439510239
+      verticalFieldOfView 0.1 numberOfLayers 1 near 0.01 minRange 0.02 maxRange 8 }
+    Lidar { translation 0 0.43 0.24 rotation 0 0 1 1.57079632679
+      name "range left" horizontalResolution 64 fieldOfView 2.09439510239
+      verticalFieldOfView 0.1 numberOfLayers 1 near 0.01 minRange 0.02 maxRange 8 }
+    Lidar { translation -0.46 0 0.24 rotation 0 0 1 3.14159265359
+      name "range rear" horizontalResolution 64 fieldOfView 2.09439510239
+      verticalFieldOfView 0.1 numberOfLayers 1 near 0.01 minRange 0.02 maxRange 8 }
+    Lidar { translation 0 -0.43 0.24 rotation 0 0 1 -1.57079632679
+      name "range right" horizontalResolution 64 fieldOfView 2.09439510239
+      verticalFieldOfView 0.1 numberOfLayers 1 near 0.01 minRange 0.02 maxRange 8 }
+    Lidar { translation 0.62 0 0.9 rotation 0 0 1 0
+      name "range upper front" horizontalResolution 64 fieldOfView 2.09439510239
+      verticalFieldOfView 0.1 numberOfLayers 1 near 0.01 minRange 0.02 maxRange 8 }
+    Lidar { translation 0 0.43 0.9 rotation 0 0 1 1.57079632679
+      name "range upper left" horizontalResolution 64 fieldOfView 2.09439510239
+      verticalFieldOfView 0.1 numberOfLayers 1 near 0.01 minRange 0.02 maxRange 8 }
+    Lidar { translation -0.46 0 0.9 rotation 0 0 1 3.14159265359
+      name "range upper rear" horizontalResolution 64 fieldOfView 2.09439510239
+      verticalFieldOfView 0.1 numberOfLayers 1 near 0.01 minRange 0.02 maxRange 8 }
+    Lidar { translation 0 -0.43 0.9 rotation 0 0 1 -1.57079632679
+      name "range upper right" horizontalResolution 64 fieldOfView 2.09439510239
+      verticalFieldOfView 0.1 numberOfLayers 1 near 0.01 minRange 0.02 maxRange 8 }
+    %< } >%
     HingeJoint {
       jointParameters HingeJointParameters { axis 0 1 0 anchor -0.16 0.32 0 }
-      device [ RotationalMotor { name "left wheel motor" maxVelocity %<= speed / 0.24 >% maxTorque 40 } ]
+      device [ PositionSensor { name "left wheel position" } RotationalMotor { name "left wheel motor" maxVelocity %<= speed / 0.24 >% maxTorque 40 } ]
       endPoint Solid { translation -0.16 0.32 0 rotation 1 0 0 1.57079632679
         name "left rear wheel"
         children [ Shape { appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 1 metalness 0 }
@@ -41,7 +70,7 @@ Robot {
     }
     HingeJoint {
       jointParameters HingeJointParameters { axis 0 1 0 anchor -0.16 -0.32 0 }
-      device [ RotationalMotor { name "right wheel motor" maxVelocity %<= speed / 0.24 >% maxTorque 40 } ]
+      device [ PositionSensor { name "right wheel position" } RotationalMotor { name "right wheel motor" maxVelocity %<= speed / 0.24 >% maxTorque 40 } ]
       endPoint Solid { translation -0.16 -0.32 0 rotation 1 0 0 1.57079632679
         name "right rear wheel"
         children [ Shape { appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 1 metalness 0 }

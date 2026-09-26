@@ -1,0 +1,28 @@
+{
+  "model_version": "malecns-v1.0-lplc2-gf-lif-v1",
+  "weights_sha256": "d85f0d90134bce60db49591e282ac8adcdadb4d83c5a98400e15feb5f3a9da10",
+  "neurons": 187,
+  "edges": 185,
+  "steps": 120,
+  "dt_ms": [
+    32,
+    50,
+    7
+  ],
+  "parameters": {
+    "input_gain": 2.5,
+    "synaptic_gain": 25.0,
+    "tau_ms": 10.0,
+    "refractory_ms": 2,
+    "output_rate_hz": 200.0
+  },
+  "numpy_cuda_parity": "passed",
+  "session_isolation": "passed",
+  "expired_request": "rejected",
+  "compute_ms": {
+    "min": 2.441018004901707,
+    "median": 5.847142485436052,
+    "p95": 9.027639986015856,
+    "max": 77.02249696012586
+  }
+}

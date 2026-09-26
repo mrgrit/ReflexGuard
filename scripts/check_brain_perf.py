@@ -20,9 +20,12 @@ def main():
     pattern=[(0.,0.),(.2,.1),(.5,0.),(.8,0.),(0.,.8),(1.,1.)]
     # Warm up CUDA before taking timings; discard its state.
     gpu.step(gpu.state(),StepRequest(t_ms=0,dt_ms=50,left_looming=0.,right_looming=0.),set(),time.monotonic()+30)
+    elapsed_ms=0
     for index in range(120):
         left,right=pattern[index%len(pattern)]
-        request=StepRequest(t_ms=index*50,dt_ms=50,left_looming=left,right_looming=right)
+        duration=(32,50,7)[index%3]
+        request=StepRequest(t_ms=elapsed_ms,dt_ms=duration,left_looming=left,right_looming=right)
+        elapsed_ms+=duration
         silence=set() if index<100 else {'10001','10010'}
         started=time.perf_counter()
         gs,gr=gpu.step(gs,request,silence,time.monotonic()+.15)
@@ -32,9 +35,19 @@ def main():
             raise RuntimeError('GPU and reference spike outputs differ')
         if not np.allclose(gs.voltage.cpu().numpy(),cs.voltage,atol=1e-5,rtol=1e-5):
             raise RuntimeError('GPU and reference state differs')
+    saved=gs.voltage.clone()
+    gpu.step(gpu.state(),StepRequest(t_ms=0,dt_ms=32,left_looming=1.,right_looming=1.),set(),time.monotonic()+1)
+    if not gpu.torch.equal(saved,gs.voltage):
+        raise RuntimeError('Graph replay mutated another session')
+    try:
+        gpu.step(gs,StepRequest(t_ms=elapsed_ms,dt_ms=32,left_looming=1.,right_looming=1.),set(),time.monotonic()-1)
+    except TimeoutError:
+        pass
+    else:
+        raise RuntimeError('Expired simulation was accepted')
     print(json.dumps({'model_version':assets[0].model_version,'weights_sha256':assets[0].weights_sha256,
-        'neurons':gpu.size,'edges':len(assets[2]),'steps':len(timings),'dt_ms':50,
-        'parameters':assets[0].parameters.model_dump(),'numpy_cuda_parity':'passed',
+        'neurons':gpu.size,'edges':len(assets[2]),'steps':len(timings),'dt_ms':[32,50,7],
+        'parameters':assets[0].parameters.model_dump(),'numpy_cuda_parity':'passed','session_isolation':'passed','expired_request':'rejected',
         'compute_ms':{'min':min(timings),'median':statistics.median(timings),'p95':sorted(timings)[113],'max':max(timings)}},indent=2))
 
 

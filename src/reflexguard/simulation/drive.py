@@ -8,7 +8,7 @@ TRACK_WIDTH = 0.64
 
 def wheel_speeds(forward: float, turn: float, max_speed: float) -> tuple[float, float]:
     """Positive turn is left; scale both wheels to preserve curvature."""
-    if not all(math.isfinite(v) for v in (forward, turn, max_speed)) or not 0 < max_speed <= 1.2:
+    if not all(math.isfinite(v) for v in (forward, turn, max_speed)) or not 0 < max_speed <= 3.0:
         raise ValueError("Invalid drive parameters")
     left = forward - turn * TRACK_WIDTH / 2
     right = forward + turn * TRACK_WIDTH / 2

@@ -1,0 +1,1872 @@
+{
+  "source": "MaleCNS",
+  "release": "v1.0",
+  "model_version": "malecns-v1.0-lplc2-gf-lif-v1",
+  "weights_sha256": "d85f0d90134bce60db49591e282ac8adcdadb4d83c5a98400e15feb5f3a9da10",
+  "source_url": "https://male-cns.janelia.org/download/",
+  "license": "CC-BY-4.0",
+  "nodes": [
+    {
+      "id": "10001",
+      "cell_type": "DNp01",
+      "side": "R"
+    },
+    {
+      "id": "10010",
+      "cell_type": "DNp01",
+      "side": "L"
+    },
+    {
+      "id": "11498",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "12384",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "13132",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "13726",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "13764",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "14030",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "14102",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "14465",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "15804",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "17059",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "17544",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "17551",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "17774",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "17775",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "17880",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "17990",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "18672",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "18900",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "18929",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "18936",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "19034",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "19146",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "19229",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "19249",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "19549",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "19589",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "19608",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "19787",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "19830",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "19842",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "19911",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "20047",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "20103",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "20162",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "20182",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "20240",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "20269",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "20329",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "20334",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "20471",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "20535",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "20584",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "20694",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "20749",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "20799",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "21045",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "21299",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "21318",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "21361",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "21562",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "21703",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "21769",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "21808",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "21862",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "21899",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "22218",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "22253",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "22261",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "22557",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "22677",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "23247",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "23349",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "23497",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "23550",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "23590",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "23665",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "23878",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "23919",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "24118",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "24187",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "24268",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "24308",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "24401",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "24568",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "24605",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "24800",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "24840",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "25027",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "25136",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "25209",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "25253",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "25267",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "25286",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "25316",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "25497",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "25511",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "25524",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "25572",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "25575",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "25636",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "25854",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "26147",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "26393",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "26416",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "26528",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "26730",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "26915",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "27023",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "27355",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "27399",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "27471",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "27566",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "27716",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "27796",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "28003",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "28011",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "28044",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "28188",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "28741",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "28871",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "29014",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "29183",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "29216",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "29287",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "29319",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "29391",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "29598",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "29702",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "29753",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "29815",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "29873",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "29955",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "29986",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "30041",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "30207",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "30512",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "30893",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "30895",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "30938",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "31105",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "31257",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "31563",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "31964",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "31988",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "32223",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "32237",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "32507",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "32737",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "33185",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "33303",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "33396",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "33406",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "33439",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "33694",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "33965",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "34051",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "34110",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "34372",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "34407",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "34655",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "34681",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "35294",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "35632",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "35680",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "35838",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "35889",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "37431",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "37613",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "37925",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "38542",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "39620",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "40811",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "40841",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "41097",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "50287",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "55627",
+      "cell_type": "LPLC2",
+      "side": "R"
+    },
+    {
+      "id": "95241",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "100103",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "111903",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "112292",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "129687",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "134521",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "514670",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "515971",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "517078",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "517079",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "517819",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "518731",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "520764",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "521115",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "524366",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "525844",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "531014",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "533895",
+      "cell_type": "LPLC2",
+      "side": "L"
+    },
+    {
+      "id": "536444",
+      "cell_type": "LPLC2",
+      "side": "L"
+    }
+  ],
+  "edges": [
+    {
+      "source": "31563",
+      "target": "10010",
+      "synapses": 64
+    },
+    {
+      "source": "22253",
+      "target": "10010",
+      "synapses": 60
+    },
+    {
+      "source": "20182",
+      "target": "10001",
+      "synapses": 59
+    },
+    {
+      "source": "19787",
+      "target": "10010",
+      "synapses": 55
+    },
+    {
+      "source": "22557",
+      "target": "10010",
+      "synapses": 54
+    },
+    {
+      "source": "20269",
+      "target": "10001",
+      "synapses": 53
+    },
+    {
+      "source": "533895",
+      "target": "10010",
+      "synapses": 50
+    },
+    {
+      "source": "19608",
+      "target": "10001",
+      "synapses": 49
+    },
+    {
+      "source": "24187",
+      "target": "10001",
+      "synapses": 48
+    },
+    {
+      "source": "20103",
+      "target": "10001",
+      "synapses": 48
+    },
+    {
+      "source": "518731",
+      "target": "10010",
+      "synapses": 48
+    },
+    {
+      "source": "25854",
+      "target": "10010",
+      "synapses": 48
+    },
+    {
+      "source": "23919",
+      "target": "10010",
+      "synapses": 47
+    },
+    {
+      "source": "24401",
+      "target": "10001",
+      "synapses": 47
+    },
+    {
+      "source": "20047",
+      "target": "10001",
+      "synapses": 47
+    },
+    {
+      "source": "21562",
+      "target": "10001",
+      "synapses": 47
+    },
+    {
+      "source": "20799",
+      "target": "10010",
+      "synapses": 46
+    },
+    {
+      "source": "23878",
+      "target": "10001",
+      "synapses": 46
+    },
+    {
+      "source": "520764",
+      "target": "10010",
+      "synapses": 46
+    },
+    {
+      "source": "515971",
+      "target": "10010",
+      "synapses": 45
+    },
+    {
+      "source": "20162",
+      "target": "10001",
+      "synapses": 45
+    },
+    {
+      "source": "517819",
+      "target": "10010",
+      "synapses": 44
+    },
+    {
+      "source": "31964",
+      "target": "10001",
+      "synapses": 44
+    },
+    {
+      "source": "17775",
+      "target": "10010",
+      "synapses": 44
+    },
+    {
+      "source": "28044",
+      "target": "10001",
+      "synapses": 43
+    },
+    {
+      "source": "23665",
+      "target": "10010",
+      "synapses": 43
+    },
+    {
+      "source": "517079",
+      "target": "10010",
+      "synapses": 43
+    },
+    {
+      "source": "13726",
+      "target": "10010",
+      "synapses": 43
+    },
+    {
+      "source": "25524",
+      "target": "10010",
+      "synapses": 43
+    },
+    {
+      "source": "20471",
+      "target": "10001",
+      "synapses": 43
+    },
+    {
+      "source": "26147",
+      "target": "10001",
+      "synapses": 42
+    },
+    {
+      "source": "28871",
+      "target": "10001",
+      "synapses": 41
+    },
+    {
+      "source": "24800",
+      "target": "10001",
+      "synapses": 41
+    },
+    {
+      "source": "23497",
+      "target": "10001",
+      "synapses": 41
+    },
+    {
+      "source": "23349",
+      "target": "10010",
+      "synapses": 41
+    },
+    {
+      "source": "33185",
+      "target": "10001",
+      "synapses": 41
+    },
+    {
+      "source": "20240",
+      "target": "10010",
+      "synapses": 41
+    },
+    {
+      "source": "34407",
+      "target": "10010",
+      "synapses": 40
+    },
+    {
+      "source": "18936",
+      "target": "10010",
+      "synapses": 40
+    },
+    {
+      "source": "521115",
+      "target": "10010",
+      "synapses": 40
+    },
+    {
+      "source": "24568",
+      "target": "10010",
+      "synapses": 39
+    },
+    {
+      "source": "41097",
+      "target": "10010",
+      "synapses": 39
+    },
+    {
+      "source": "26528",
+      "target": "10010",
+      "synapses": 38
+    },
+    {
+      "source": "35889",
+      "target": "10001",
+      "synapses": 38
+    },
+    {
+      "source": "21808",
+      "target": "10001",
+      "synapses": 38
+    },
+    {
+      "source": "18900",
+      "target": "10010",
+      "synapses": 38
+    },
+    {
+      "source": "17990",
+      "target": "10010",
+      "synapses": 38
+    },
+    {
+      "source": "24840",
+      "target": "10010",
+      "synapses": 38
+    },
+    {
+      "source": "514670",
+      "target": "10010",
+      "synapses": 37
+    },
+    {
+      "source": "20535",
+      "target": "10001",
+      "synapses": 37
+    },
+    {
+      "source": "17551",
+      "target": "10001",
+      "synapses": 37
+    },
+    {
+      "source": "22261",
+      "target": "10001",
+      "synapses": 37
+    },
+    {
+      "source": "18672",
+      "target": "10001",
+      "synapses": 36
+    },
+    {
+      "source": "20329",
+      "target": "10010",
+      "synapses": 36
+    },
+    {
+      "source": "26393",
+      "target": "10001",
+      "synapses": 36
+    },
+    {
+      "source": "536444",
+      "target": "10010",
+      "synapses": 36
+    },
+    {
+      "source": "28188",
+      "target": "10010",
+      "synapses": 36
+    },
+    {
+      "source": "100103",
+      "target": "10010",
+      "synapses": 36
+    },
+    {
+      "source": "33406",
+      "target": "10010",
+      "synapses": 35
+    },
+    {
+      "source": "24118",
+      "target": "10001",
+      "synapses": 35
+    },
+    {
+      "source": "19146",
+      "target": "10001",
+      "synapses": 34
+    },
+    {
+      "source": "19229",
+      "target": "10001",
+      "synapses": 34
+    },
+    {
+      "source": "21361",
+      "target": "10010",
+      "synapses": 34
+    },
+    {
+      "source": "23590",
+      "target": "10001",
+      "synapses": 33
+    },
+    {
+      "source": "29702",
+      "target": "10010",
+      "synapses": 33
+    },
+    {
+      "source": "34655",
+      "target": "10010",
+      "synapses": 33
+    },
+    {
+      "source": "15804",
+      "target": "10010",
+      "synapses": 33
+    },
+    {
+      "source": "32737",
+      "target": "10010",
+      "synapses": 33
+    },
+    {
+      "source": "29391",
+      "target": "10001",
+      "synapses": 32
+    },
+    {
+      "source": "25497",
+      "target": "10001",
+      "synapses": 32
+    },
+    {
+      "source": "25253",
+      "target": "10001",
+      "synapses": 32
+    },
+    {
+      "source": "23550",
+      "target": "10010",
+      "synapses": 31
+    },
+    {
+      "source": "23247",
+      "target": "10010",
+      "synapses": 31
+    },
+    {
+      "source": "29014",
+      "target": "10001",
+      "synapses": 31
+    },
+    {
+      "source": "21862",
+      "target": "10001",
+      "synapses": 30
+    },
+    {
+      "source": "25572",
+      "target": "10010",
+      "synapses": 30
+    },
+    {
+      "source": "27355",
+      "target": "10010",
+      "synapses": 30
+    },
+    {
+      "source": "27716",
+      "target": "10010",
+      "synapses": 30
+    },
+    {
+      "source": "29955",
+      "target": "10010",
+      "synapses": 29
+    },
+    {
+      "source": "29753",
+      "target": "10010",
+      "synapses": 29
+    },
+    {
+      "source": "27796",
+      "target": "10010",
+      "synapses": 29
+    },
+    {
+      "source": "24268",
+      "target": "10001",
+      "synapses": 29
+    },
+    {
+      "source": "29287",
+      "target": "10001",
+      "synapses": 29
+    },
+    {
+      "source": "28741",
+      "target": "10001",
+      "synapses": 28
+    },
+    {
+      "source": "19034",
+      "target": "10001",
+      "synapses": 28
+    },
+    {
+      "source": "25209",
+      "target": "10010",
+      "synapses": 28
+    },
+    {
+      "source": "525844",
+      "target": "10010",
+      "synapses": 27
+    },
+    {
+      "source": "29815",
+      "target": "10010",
+      "synapses": 27
+    },
+    {
+      "source": "28011",
+      "target": "10010",
+      "synapses": 27
+    },
+    {
+      "source": "24308",
+      "target": "10010",
+      "synapses": 27
+    },
+    {
+      "source": "30895",
+      "target": "10010",
+      "synapses": 27
+    },
+    {
+      "source": "21045",
+      "target": "10001",
+      "synapses": 27
+    },
+    {
+      "source": "14102",
+      "target": "10010",
+      "synapses": 27
+    },
+    {
+      "source": "28003",
+      "target": "10001",
+      "synapses": 25
+    },
+    {
+      "source": "27399",
+      "target": "10010",
+      "synapses": 25
+    },
+    {
+      "source": "33303",
+      "target": "10010",
+      "synapses": 24
+    },
+    {
+      "source": "31988",
+      "target": "10001",
+      "synapses": 24
+    },
+    {
+      "source": "25575",
+      "target": "10010",
+      "synapses": 24
+    },
+    {
+      "source": "30938",
+      "target": "10001",
+      "synapses": 23
+    },
+    {
+      "source": "531014",
+      "target": "10010",
+      "synapses": 23
+    },
+    {
+      "source": "40841",
+      "target": "10010",
+      "synapses": 23
+    },
+    {
+      "source": "129687",
+      "target": "10010",
+      "synapses": 22
+    },
+    {
+      "source": "14465",
+      "target": "10001",
+      "synapses": 21
+    },
+    {
+      "source": "35680",
+      "target": "10001",
+      "synapses": 21
+    },
+    {
+      "source": "39620",
+      "target": "10001",
+      "synapses": 21
+    },
+    {
+      "source": "37431",
+      "target": "10001",
+      "synapses": 21
+    },
+    {
+      "source": "112292",
+      "target": "10010",
+      "synapses": 21
+    },
+    {
+      "source": "25511",
+      "target": "10001",
+      "synapses": 21
+    },
+    {
+      "source": "33396",
+      "target": "10001",
+      "synapses": 21
+    },
+    {
+      "source": "26915",
+      "target": "10001",
+      "synapses": 21
+    },
+    {
+      "source": "33439",
+      "target": "10001",
+      "synapses": 21
+    },
+    {
+      "source": "33965",
+      "target": "10010",
+      "synapses": 20
+    },
+    {
+      "source": "25636",
+      "target": "10001",
+      "synapses": 20
+    },
+    {
+      "source": "524366",
+      "target": "10010",
+      "synapses": 20
+    },
+    {
+      "source": "19589",
+      "target": "10001",
+      "synapses": 20
+    },
+    {
+      "source": "12384",
+      "target": "10010",
+      "synapses": 20
+    },
+    {
+      "source": "25027",
+      "target": "10010",
+      "synapses": 20
+    },
+    {
+      "source": "34681",
+      "target": "10001",
+      "synapses": 19
+    },
+    {
+      "source": "17774",
+      "target": "10010",
+      "synapses": 19
+    },
+    {
+      "source": "31257",
+      "target": "10001",
+      "synapses": 19
+    },
+    {
+      "source": "32507",
+      "target": "10001",
+      "synapses": 19
+    },
+    {
+      "source": "32237",
+      "target": "10010",
+      "synapses": 19
+    },
+    {
+      "source": "20694",
+      "target": "10001",
+      "synapses": 19
+    },
+    {
+      "source": "30512",
+      "target": "10010",
+      "synapses": 18
+    },
+    {
+      "source": "29986",
+      "target": "10001",
+      "synapses": 18
+    },
+    {
+      "source": "134521",
+      "target": "10010",
+      "synapses": 18
+    },
+    {
+      "source": "40811",
+      "target": "10010",
+      "synapses": 17
+    },
+    {
+      "source": "27471",
+      "target": "10001",
+      "synapses": 17
+    },
+    {
+      "source": "29319",
+      "target": "10010",
+      "synapses": 17
+    },
+    {
+      "source": "29216",
+      "target": "10001",
+      "synapses": 17
+    },
+    {
+      "source": "50287",
+      "target": "10001",
+      "synapses": 17
+    },
+    {
+      "source": "34051",
+      "target": "10010",
+      "synapses": 17
+    },
+    {
+      "source": "34110",
+      "target": "10001",
+      "synapses": 16
+    },
+    {
+      "source": "29873",
+      "target": "10001",
+      "synapses": 16
+    },
+    {
+      "source": "55627",
+      "target": "10001",
+      "synapses": 16
+    },
+    {
+      "source": "517078",
+      "target": "10010",
+      "synapses": 15
+    },
+    {
+      "source": "25136",
+      "target": "10010",
+      "synapses": 15
+    },
+    {
+      "source": "21899",
+      "target": "10001",
+      "synapses": 15
+    },
+    {
+      "source": "17880",
+      "target": "10010",
+      "synapses": 15
+    },
+    {
+      "source": "29598",
+      "target": "10001",
+      "synapses": 14
+    },
+    {
+      "source": "22218",
+      "target": "10001",
+      "synapses": 14
+    },
+    {
+      "source": "20334",
+      "target": "10001",
+      "synapses": 14
+    },
+    {
+      "source": "21703",
+      "target": "10001",
+      "synapses": 14
+    },
+    {
+      "source": "29183",
+      "target": "10001",
+      "synapses": 13
+    },
+    {
+      "source": "26416",
+      "target": "10010",
+      "synapses": 13
+    },
+    {
+      "source": "21769",
+      "target": "10001",
+      "synapses": 12
+    },
+    {
+      "source": "17059",
+      "target": "10010",
+      "synapses": 12
+    },
+    {
+      "source": "20749",
+      "target": "10001",
+      "synapses": 12
+    },
+    {
+      "source": "30041",
+      "target": "10001",
+      "synapses": 12
+    },
+    {
+      "source": "19830",
+      "target": "10010",
+      "synapses": 12
+    },
+    {
+      "source": "33694",
+      "target": "10001",
+      "synapses": 11
+    },
+    {
+      "source": "27023",
+      "target": "10010",
+      "synapses": 11
+    },
+    {
+      "source": "35294",
+      "target": "10010",
+      "synapses": 11
+    },
+    {
+      "source": "95241",
+      "target": "10010",
+      "synapses": 11
+    },
+    {
+      "source": "32223",
+      "target": "10010",
+      "synapses": 10
+    },
+    {
+      "source": "19911",
+      "target": "10010",
+      "synapses": 10
+    },
+    {
+      "source": "24605",
+      "target": "10010",
+      "synapses": 10
+    },
+    {
+      "source": "27566",
+      "target": "10001",
+      "synapses": 10
+    },
+    {
+      "source": "17544",
+      "target": "10010",
+      "synapses": 9
+    },
+    {
+      "source": "31105",
+      "target": "10010",
+      "synapses": 9
+    },
+    {
+      "source": "34372",
+      "target": "10001",
+      "synapses": 9
+    },
+    {
+      "source": "22677",
+      "target": "10001",
+      "synapses": 9
+    },
+    {
+      "source": "37925",
+      "target": "10001",
+      "synapses": 9
+    },
+    {
+      "source": "21299",
+      "target": "10010",
+      "synapses": 8
+    },
+    {
+      "source": "13132",
+      "target": "10010",
+      "synapses": 8
+    },
+    {
+      "source": "20584",
+      "target": "10001",
+      "synapses": 8
+    },
+    {
+      "source": "25267",
+      "target": "10001",
+      "synapses": 7
+    },
+    {
+      "source": "111903",
+      "target": "10010",
+      "synapses": 6
+    },
+    {
+      "source": "30893",
+      "target": "10010",
+      "synapses": 6
+    },
+    {
+      "source": "25316",
+      "target": "10001",
+      "synapses": 6
+    },
+    {
+      "source": "25286",
+      "target": "10010",
+      "synapses": 6
+    },
+    {
+      "source": "13764",
+      "target": "10010",
+      "synapses": 6
+    },
+    {
+      "source": "38542",
+      "target": "10001",
+      "synapses": 5
+    },
+    {
+      "source": "37613",
+      "target": "10001",
+      "synapses": 5
+    },
+    {
+      "source": "19842",
+      "target": "10001",
+      "synapses": 5
+    },
+    {
+      "source": "18929",
+      "target": "10001",
+      "synapses": 5
+    },
+    {
+      "source": "35632",
+      "target": "10001",
+      "synapses": 4
+    },
+    {
+      "source": "35838",
+      "target": "10001",
+      "synapses": 4
+    },
+    {
+      "source": "14030",
+      "target": "10010",
+      "synapses": 4
+    },
+    {
+      "source": "21318",
+      "target": "10001",
+      "synapses": 4
+    },
+    {
+      "source": "26730",
+      "target": "10001",
+      "synapses": 3
+    },
+    {
+      "source": "30207",
+      "target": "10001",
+      "synapses": 3
+    },
+    {
+      "source": "11498",
+      "target": "10010",
+      "synapses": 2
+    },
+    {
+      "source": "19549",
+      "target": "10001",
+      "synapses": 1
+    },
+    {
+      "source": "19249",
+      "target": "10001",
+      "synapses": 1
+    }
+  ]
+}

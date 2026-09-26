@@ -20,7 +20,7 @@ def test_wheel_speed_limit_and_turn_sign(forward, turn):
     assert math.isclose(left+right,0) if forward == 0 else (left+right)*forward > 0
     assert math.isclose(left,right) if turn == 0 else (right-left)*turn > 0
 
-@pytest.mark.parametrize("value", [float("nan"),float("inf"),-1,0,1.3])
+@pytest.mark.parametrize("value", [float("nan"),float("inf"),-1,0,3.1])
 def test_bad_max_speed_rejected(value):
     with pytest.raises(ValueError):
         wheel_speeds(0.5, 0, value)
@@ -98,7 +98,20 @@ def test_runtime_uses_checkout_venv_without_resolving_symlink(tmp_path):
         directory=tmp_path/"webots/controllers"/name
         directory.mkdir(parents=True)
         (directory/"runtime.ini.in").write_text("[python]\nCOMMAND = @PYTHON@\n")
+    worlds=tmp_path/'webots/worlds'
+    worlds.mkdir()
+    template=worlds/'corridor_demo.wbproj.in'
+    template.write_text('renderingDevicePerspectives: camera;1;1;0.2;0.5\n')
     module.configure(tmp_path)
+    layout=worlds/'.corridor_demo.wbproj'
+    assert layout.read_text()==template.read_text()
+    layout.write_text('renderingDevicePerspectives: camera;1;1;0;0\n')
+    module.configure(tmp_path)
+    assert layout.read_text()==template.read_text()
+    custom='renderingDevicePerspectives: camera;1;1;0.6;0.7\n'
+    layout.write_text(custom)
+    module.configure(tmp_path)
+    assert layout.read_text()==custom
     for name in ("wheelchair","scenario"):
         assert str(interpreter) in (tmp_path/"webots/controllers"/name/"runtime.ini").read_text()
 

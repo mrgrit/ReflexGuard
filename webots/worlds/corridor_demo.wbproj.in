@@ -1,0 +1,8 @@
+Webots Project File version R2025a
+maximizedDockId: 0
+centralWidgetVisible: 1
+renderingDevicePerspectives: ReflexGuard wheelchair:front camera;1;1;0.02;0.76
+renderingDevicePerspectives: ReflexGuard wheelchair:rear camera;1;1;0.22;0.76
+renderingDevicePerspectives: scenario observer:camera zone 1;1;0.7;0.78;0.2
+renderingDevicePerspectives: scenario observer:camera zone 2;1;0.7;0.78;0.43
+renderingDevicePerspectives: scenario observer:camera zone 3;1;0.7;0.78;0.66

@@ -1,0 +1,131 @@
+[main]	INFO	profile include tests: None
+[main]	INFO	profile exclude tests: None
+[main]	INFO	cli include tests: None
+[main]	INFO	cli exclude tests: None
+[main]	INFO	running on Python 3.10.12
+[manager]	WARNING	Test in comment: fixed is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: local is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: integration is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: commands is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: no is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: shell is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: or is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: request is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: input is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: fixed is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: certificate is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: script is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: temporary is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: directory is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: created is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: here is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: module is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: names is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: from is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: literal is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: tuple is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: current is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: venv is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: interpreter is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: fixed is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: repository is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: configuration is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: script is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: fixed is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: Webots is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: executable is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: flags is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: and is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: world is not a test name or id, ignoring
+[tester]	WARNING	nosec encountered (B603), but no failed test on file scripts/check_control.py:37
+[tester]	WARNING	nosec encountered (B603), but no failed test on file scripts/check_control.py:37
+[tester]	WARNING	nosec encountered (B603), but no failed test on file scripts/check_control.py:74
+[tester]	WARNING	nosec encountered (B603), but no failed test on file scripts/check_control.py:95
+[tester]	WARNING	nosec encountered (B603), but no failed test on file scripts/check_control.py:98
+Working... ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+Run started:2026-09-26 08:30:38.005174+00:00
+
+Test results:
+	No issues identified.
+
+Code scanned:
+	Total lines of code: 3599
+	Total lines skipped (#nosec): 0
+	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 5
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0
+		Low: 0
+		Medium: 0
+		High: 0
+	Total issues (by confidence):
+		Undefined: 0
+		Low: 0
+		Medium: 0
+		High: 0
+Files skipped (0):
+               
+               
+┌─────────────┐
+│ Scan Status │
+└─────────────┘
+  Scanning 234 files tracked by git with 151 Code rules:
+  Scanning 66 files with 151 python rules.
+                
+                
+┌──────────────┐
+│ Scan Summary │
+└──────────────┘
+✅ Scan completed successfully.
+ • Findings: 0 (0 blocking)
+ • Rules run: 151
+ • Targets scanned: 66
+ • Parsed lines: ~100.0%
+ • Scan skipped: 
+   ◦ Files matching .semgrepignore patterns: 20
+ • Scan was limited to files tracked by git
+ • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+Ran 151 rules on 66 files: 0 findings.
+(need more rules? `semgrep login` for additional free Semgrep Registry rules)
+
+If Semgrep missed a finding, please send us feedback to let us know!
+See https://semgrep.dev/docs/reporting-false-negatives/
+No known vulnerabilities found
+No known vulnerabilities found
+============================= test session starts ==============================
+platform linux -- Python 3.10.12, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/rg/work/reflexguard
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1
+collected 338 items
+
+tests/test_avoidance.py ......................                           [  6%]
+tests/test_bootstrap.py ........                                         [  8%]
+tests/test_brain_client.py ...................                           [ 14%]
+tests/test_brain_model.py ............................                   [ 22%]
+tests/test_calibration_settings.py ........                              [ 25%]
+tests/test_connectome_plan.py .........                                  [ 27%]
+tests/test_control_device.py ........                                    [ 30%]
+tests/test_control_server.py ........................................... [ 42%]
+.................                                                        [ 47%]
+tests/test_gpu_environment.py .                                          [ 48%]
+tests/test_gpu_inventory.py ..                                           [ 48%]
+tests/test_mock_brain.py .................                               [ 53%]
+tests/test_mtls_integration.py .........                                 [ 56%]
+tests/test_pipeline.py ...................................               [ 66%]
+tests/test_pipeline_tls.py .                                             [ 67%]
+tests/test_repository_safety.py ............                             [ 70%]
+tests/test_schemas.py .......................                            [ 77%]
+tests/test_security_docs.py ...............................              [ 86%]
+tests/test_security_evidence.py .........                                [ 89%]
+tests/test_simulation.py ....................................            [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.10/site-packages/fastapi/testclient.py:1
+  /home/rg/work/reflexguard/.venv/lib/python3.10/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 338 passed, 1 warning in 36.79s ========================

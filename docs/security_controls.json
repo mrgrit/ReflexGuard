@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "application_version": "0.7.0",
+  "application_version": "0.8.0",
   "source": {
     "title": "Python 시큐어코딩 가이드 (2023년 개정본)",
     "official": "https://www.kisa.or.kr/2060204/form?postSeq=13",
@@ -35,13 +35,15 @@
       "printed_page": 18,
       "code": [
         "src/reflexguard/control_server/app.py:create_app.export",
-        "src/reflexguard/brain_client/client.py:BrainClient.step"
+        "src/reflexguard/brain_client/client.py:BrainClient.step",
+        "src/reflexguard/control/settings_store.py:CalibrationStore.save"
       ],
       "tests": [
         "tests/test_control_server.py::test_guardian_scope_and_remote_roles",
-        "tests/test_brain_client.py::test_invalid_session_id_is_rejected_before_network"
+        "tests/test_brain_client.py::test_invalid_session_id_is_rejected_before_network",
+        "tests/test_calibration_settings.py::test_symlinks_and_special_files_rejected"
       ],
-      "approach": "내보내기는 소유권을 확인한 ID의 DB 행으로 생성한다. 세션 ID 형식도 검증한다.",
+      "approach": "내보내기는 소유권을 확인한 ID의 DB 행으로 생성한다. 세션 ID 형식도 검증한다. 주행 설정은 고정 경로에서 크기·파일 유형을 검사하고 원자적으로 저장한다.",
       "limit": "운영자가 지정하는 로컬 설정·인증서 경로는 별도 신뢰 경계다.",
       "status": "implemented"
     },
@@ -149,12 +151,14 @@
       "code": [
         "src/reflexguard/control_server/app.py:create_app.chair_for",
         "src/reflexguard/control_server/app.py:create_app.silence",
-        "brain_server/service.py:SimulationService.silence"
+        "brain_server/service.py:SimulationService.silence",
+        "src/reflexguard/control_server/app.py:create_app.activity_data"
       ],
       "tests": [
         "tests/test_control_server.py::test_guardian_scope_and_remote_roles",
         "tests/test_control_server.py::test_admin_session_revocation_and_assignment",
-        "tests/test_brain_model.py::test_real_api_contract_auth_owner_replay_silence"
+        "tests/test_brain_model.py::test_real_api_contract_auth_owner_replay_silence",
+        "tests/test_control_server.py::test_neural_activity_authorization"
       ],
       "approach": "보호자는 지정 휠체어만 접근하며 속도 제한·침묵·사용자 관리에 서버 측 역할을 적용한다.",
       "limit": "",
@@ -381,7 +385,9 @@
       ],
       "tests": [
         "tests/test_pipeline_tls.py::test_real_mtls_disconnect_causes_latched_gradual_stop",
-        "tests/test_control_device.py::test_poll_failure_stops_and_latches"
+        "tests/test_control_device.py::test_poll_failure_stops_and_latches",
+        "tests/test_control_server.py::test_activity_cache_bounds_and_mock_never_lights_real_nodes",
+        "tests/test_pipeline.py::test_demo_success_requires_passing_obstacles_and_recovery"
       ],
       "approach": "뇌 연결 오류는 감속 후 정지 고정, 관제 연결 오류는 모터 정지 고정으로 처리한다.",
       "limit": "실제 하드웨어 실시간성·제동 거리는 검증 전이다.",

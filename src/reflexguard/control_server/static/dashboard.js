@@ -20,4 +20,4 @@ bind(".silence", "submit", async form => { await send("/chairs/"+encodeURICompon
 bind("#create-user", "submit", async form => {const r=await send("/admin/users",{username:form.elements.username.value,password:form.elements.password.value,role:form.elements.role.value});form.reset();feedback.textContent="생성된 사용자 ID: "+r.id;});
 bind("#assign", "submit", async form => {await send("/admin/chairs/"+encodeURIComponent(form.elements.chair.value),{guardian_id:Number(form.elements.guardian.value)},"PATCH");feedback.textContent="보호자 지정 완료";});
 bind("#update-user", "submit", async form => {await send("/admin/users/"+Number(form.elements.id.value),{role:form.elements.role.value,active:form.elements.active.checked},"PATCH");feedback.textContent="사용자 변경 완료";});
-if (document.getElementById("dashboard")) setTimeout(() => {if (!document.activeElement.matches("input,select")) location.reload();}, 10000);
+if (document.getElementById("dashboard")) setTimeout(() => {if (!document.activeElement.matches("input,select")) location.reload();}, 1000);

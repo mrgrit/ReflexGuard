@@ -151,7 +151,10 @@ class FakeBrain:
         self.requests=[]
         self.fail_at=fail_at
         self.closed=False
-    async def health(self): pass
+    async def health(self):
+        from reflexguard.common.schemas import HealthResponse
+        from reflexguard.mock_brain.rules import RULES_SHA256
+        return HealthResponse(status="ok", model_version="mock-rules-v1", weights_sha256=RULES_SHA256)
     async def create_session(self): return SessionResponse(session_id="test-session")
     async def step(self,session,request):
         if self.fail_at==len(self.requests): raise BrainClientError("Unavailable")
@@ -202,7 +205,7 @@ def test_idle_pipeline_receives_risk_but_never_moves():
     asyncio.run(run())
 
 
-@pytest.mark.parametrize("fault", ["collision","brain_failure","no_brain","idle_intervention"])
+@pytest.mark.parametrize("fault", ["collision","brain_failure","control_failure","no_brain","idle_intervention"])
 def test_completion_check_cannot_pass_without_real_safe_pipeline(fault):
     from reflexguard.simulation.models import Result
     from reflexguard.simulation.verify import verify
@@ -211,6 +214,7 @@ def test_completion_check_cannot_pass_without_real_safe_pipeline(fault):
               camera_frames=90,camera_pixel_range=100,camera_width=160,camera_height=120,brain_steps=90)
     if fault=="collision": data.update(collision=True,collision_events=1)
     if fault=="brain_failure": data["brain_failures"]=1
+    if fault=="control_failure": data["control_failures"]=1
     if fault=="no_brain": data["brain_steps"]=0
     if fault=="idle_intervention": data["interventions"]=1
     with pytest.raises(ValueError): verify(Result(**data))
@@ -220,3 +224,14 @@ def test_constructed_invalid_command_is_revalidated():
     bad=Command.model_construct(forward=float("nan"),turn=0.0)
     with pytest.raises(ValueError):
         Arbiter(Calibration()).update(bad,Signal.NONE,0.0,32)
+
+
+def test_demo_success_requires_passing_obstacles_and_recovery():
+    from reflexguard.simulation.models import Result
+    from reflexguard.simulation.verify import verify
+    base=dict(world='corridor_demo',drive='forward',duration_s=60.0,collision=False,collision_events=0,
+        min_clearance_estimate_m=.05,displacement_m=54.,yaw_change_rad=0.,camera_frames=1874,
+        camera_pixel_range=190,camera_width=160,camera_height=120,brain_steps=1874,passed_obstacles=7,recoveries=2,min_pedestrian_travel_m=30.)
+    verify(Result(**base))
+    for key,value in [('passed_obstacles',6),('displacement_m',49.),('recoveries',0),('min_pedestrian_travel_m',0.)]:
+        with pytest.raises(ValueError): verify(Result(**dict(base,**{key:value})))

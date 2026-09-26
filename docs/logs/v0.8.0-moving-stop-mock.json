@@ -1,0 +1,37 @@
+{
+  "brain_profile": "mock",
+  "dashboard_remote_stop": true,
+  "signed_command_acknowledged": true,
+  "audit": {
+    "valid": true,
+    "records": 16
+  },
+  "remote_stop_records": 11,
+  "world": {
+    "min_pedestrian_travel_m": 0.0,
+    "world": "corridor_basic",
+    "drive": "forward",
+    "duration_s": 6.016,
+    "collision": false,
+    "collision_events": 0,
+    "min_clearance_estimate_m": 0.8199999999997417,
+    "displacement_m": 0.4647444827366045,
+    "yaw_change_rad": -2.7653733822335957e-14,
+    "camera_frames": 187,
+    "camera_pixel_range": 190,
+    "camera_width": 160,
+    "camera_height": 120,
+    "remote_stop_steps": 162,
+    "remote_interventions": 136,
+    "control_failures": 0,
+    "navigation_steps": 0,
+    "recoveries": 0,
+    "passed_obstacles": 0,
+    "brain_steps": 187,
+    "interventions": 35,
+    "stop_steps": 35,
+    "brain_failures": 0,
+    "max_looming": 0.6445392497749789,
+    "final_forward": 0.0
+  }
+}

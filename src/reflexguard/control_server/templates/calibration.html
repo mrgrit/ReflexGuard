@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<title>주행 설정 · ReflexGuard</title><link rel="stylesheet" href="/assets/style.css">
+<script src="/assets/calibration.js" defer></script></head>
+<body><main id="calibration" data-csrf="{{ csrf }}" data-revision="{{ snapshot.revision }}">
+<header><h1>주행 설정</h1><a href="/">관제로 돌아가기</a><span>{{ user.username }} · {{ user.role }}</span></header>
+<section><h2>다음 시작에 적용할 값</h2>
+<p>저장 후 이 VM의 Webots 시뮬레이션을 다시 시작하면 적용됩니다. 현재 주행 중인 설정은 바뀌지 않습니다.</p>
+<p class="alert">사용자 설정은 주행 검증 전 값입니다. 범위 검사 통과가 충돌 회피 성능을 보장하지 않습니다. 기본값은 기존 복도 3종 시험의 기준값입니다.</p>
+<p>정지 진입은 거리가 아닌 뇌 출력 기준입니다. 정지 임계값만 높이면 보행자와 충돌할 수 있습니다.</p>
+<p>마지막 저장자: <span id="actor">{{ snapshot.actor }}</span> · 저장 시각: <span id="changed" data-ms="{{ snapshot.changed_ms }}">{{ snapshot.changed_ms }}</span></p>
+<p id="feedback" role="status" aria-live="polite"></p>
+<form id="calibration-form"><div class="parameter-grid">
+{% for field in fields %}<label for="p-{{ field.name }}">{{ field.label }}
+<input id="p-{{ field.name }}" name="{{ field.name }}" type="number" min="{{ field.minimum }}" max="{{ field.maximum }}" step="{{ field.step }}" value="{{ field.value }}" required aria-describedby="help-{{ field.name }}">
+<small id="help-{{ field.name }}">{{ field.help }} 기본값: {{ field.default }}</small></label>{% endfor %}
+</div><div class="actions"><button type="submit">다음 시작에 적용하도록 저장</button><button type="button" id="reset-calibration">기본값 복원 및 저장</button></div></form></section>
+<section><h2>넓은 공간에서 시연하기</h2><p>기본 실행 월드는 길이 60m · 폭 10m의 시연 복도입니다. 박스 3개·횡단 보행자 2명·좁은 통로가 있습니다. 기본 2.0m/s, 설정 상한 3.0m/s입니다. 전후방 및 구간별 상단 카메라를 볼 수 있습니다.</p>
+<p>데스크톱 터미널에서 <code>REFLEXGUARD_BRAIN_PROFILE=real scripts/run_webots.sh</code>를 실행하세요. 3D 화면을 클릭하고 방향키를 누르면 움직입니다. 위험이 사라진 뒤 방향키를 놓아 중립을 유지하면 다시 출발할 수 있습니다.</p></section>
+</main></body></html>

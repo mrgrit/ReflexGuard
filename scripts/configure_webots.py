@@ -11,6 +11,13 @@ def configure(root: Path) -> None:
         directory = root / "webots/controllers" / name
         template = (directory / "runtime.ini.in").read_text(encoding="utf-8")
         (directory / "runtime.ini").write_text(template.replace("@PYTHON@", str(python)), encoding="utf-8")
+    layout = root / "webots/worlds/.corridor_demo.wbproj"
+    template = root / "webots/worlds/corridor_demo.wbproj.in"
+    if template.is_file():
+        overlays = [line for line in layout.read_text().splitlines() if line.startswith("renderingDevicePerspectives:")] if layout.is_file() else []
+        # Initialize absent/default overlapping overlays; preserve user-arranged layouts.
+        if not layout.exists() or overlays and all(line.endswith(";0;0") for line in overlays):
+            layout.write_text(template.read_text(), encoding="utf-8")
 
 
 if __name__ == "__main__":

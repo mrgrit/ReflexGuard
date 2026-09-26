@@ -47,6 +47,7 @@ class StepResponse(ContractModel):
     escape: UnitFloat
     turn_left: UnitFloat
     turn_right: UnitFloat
+    neuron_activity: Annotated[list[NeuronActivity], Field(max_length=2048)] = []
     top_neurons: Annotated[list[NeuronActivity], Field(max_length=64)]
     model_version: Annotated[str, Field(min_length=1, max_length=128)]
 

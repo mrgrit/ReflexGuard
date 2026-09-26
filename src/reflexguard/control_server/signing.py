@@ -4,6 +4,8 @@ import hmac
 import json
 import secrets
 import time
+from typing import Annotated
+from pydantic import Field, TypeAdapter
 from reflexguard.control_server.schemas import RemoteBody, SignedRemote, RemoteRequest
 
 def canonical(value):
@@ -17,13 +19,14 @@ def sign_command(request: RemoteRequest, boot_id: str, key: str, now_ms: int):
     return SignedRemote(body=body, signature=mac(key, body.model_dump()))
 
 class RemoteGuard:
-    def __init__(self, chair_id, key, boot_id):
+    def __init__(self, chair_id, key, boot_id, max_speed=0.6):
+        self.max_speed=TypeAdapter(Annotated[float, Field(strict=True, gt=0, le=3.0, allow_inf_nan=False)]).validate_python(max_speed)
         self.chair_id=chair_id
         self.key=key
         self.boot_id=boot_id
         self.used={}
         self.stopped=False
-        self.speed_limit=0.6
+        self.speed_limit=self.max_speed
         self.acknowledged=None
 
     def accept(self, envelope: SignedRemote, now_ms=None):
@@ -41,7 +44,7 @@ class RemoteGuard:
         if body.action=="stop":
             self.stopped=True
         else:
-            self.speed_limit=body.speed_limit
+            self.speed_limit=min(self.max_speed, body.speed_limit)
         self.acknowledged=body.nonce
 
     def apply(self, command):

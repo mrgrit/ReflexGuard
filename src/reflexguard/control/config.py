@@ -4,7 +4,8 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class Calibration(BaseModel):
-    model_config = ConfigDict(extra="forbid", frozen=True, allow_inf_nan=False)
+    model_config = ConfigDict(extra="forbid", frozen=True, strict=True, allow_inf_nan=False)
+    drive_speed: float = Field(default=2.0, gt=0, le=3.0)
     dark_threshold: int = Field(default=140, ge=1, le=254)
     area_floor: float = Field(default=0.008, gt=0, le=0.1)
     area_tau_s: float = Field(default=0.12, gt=0, le=1)
@@ -27,5 +28,5 @@ class Calibration(BaseModel):
 
     @classmethod
     def load(cls):
-        path = Path(__file__).resolve().parents[3] / "config/control.json"
-        return cls.model_validate_json(path.read_text(encoding="utf-8"))
+        from reflexguard.control.settings_store import CalibrationStore
+        return CalibrationStore().snapshot().calibration

@@ -46,7 +46,10 @@
 - 앱 버전 또는 Python 의존성 변경 시 `scripts/generate_sbom.sh`를 실행하고 SBOM·provenance·외부 고지를 갱신한다. 보안 매핑은 docs/security_controls.json을 편집한 뒤 scripts/render_security_docs.py로 재생성한다.
 - 버전 또는 개발 단계 완료 시 README.md, CHANGELOG.md, docs/development_plan.md와 관련 내부 문서를 같은 커밋에서 갱신한다. 변경 내용·실행 방법·검증 결과·남은 제한을 기록하고 실제 구현 상태와 일치시킨다.
 - 작업은 SSH 세션에서 한다. 화면이 필요한 명령(Webots, glxinfo)은 `xvfb-run -a`로 가상 화면에서 실행하거나, 데스크톱에 로그인된 세션이 있으면 `DISPLAY=:0`을 붙인다.
-- sudo, 패키지 설치, 파일 삭제, 네트워크 포트 개방은 실행 전에 명령을 보여주고 승인을 받는다.
+- 사용자 상시 승인: 이 프로젝트에 필요한 sudo·패키지 설치·네트워크 접근·프로그램/스크립트 실행·테스트·개발 서비스 재시작·파일 수정·작업 중 생성한 임시 파일 정리·git add/commit/push는 재확인 없이 수행한다. 일반 작업마다 실행 여부를 질문하거나 답변 대기 상태로 멈추지 않는다.
+- 세션 시작 시 `docs/working_memory.md`를 읽고 사용자 상시 승인과 진행 상태를 이어받는다.
+- 플랫폼의 필수 샌드박스/실행 승인은 별도 제약이다. 이미 승인된 명령 범위를 사용하며, 필수 승인이 필요하면 해당 도구로만 요청하고 같은 허락을 대화로 중복 요청하지 않는다. 제약을 우회하거나 사용자 선호만으로 해제됐다고 주장하지 않는다.
+- 목표와 무관한 파괴적 작업, 비밀값 공개, 외부인에게 메시지 보내기는 위 개발 작업 승인에 포함되지 않는다.
 - 모르는 버전·URL·뉴런 ID는 추측하지 말고 공식 문서나 저장소에서 확인한 뒤 출처를 남긴다.
 - 줄바꿈은 LF. 커밋 메시지는 한국어로 "무엇을, 왜"를 쓴다.
 - 오픈소스 라이선스(MIT, Apache-2.0, CC-BY 4.0)는 THIRD_PARTY_NOTICES.md에 기록한다.
@@ -61,7 +64,10 @@
 - POST /v1/sessions/{id}/step
   요청: {"t_ms":int>=0, "dt_ms":int 1..100, "left_looming":float 0..1, "right_looming":float 0..1}
   응답: {"escape":float 0..1, "turn_left":float 0..1, "turn_right":float 0..1,
-         "top_neurons":[{"id":str,"type":str,"rate_hz":float}], "model_version":str}
+         "top_neurons":[{"id":str,"type":str,"rate_hz":float}], "model_version":str,
+         "neuron_activity":[{"id":str,"type":str,"rate_hz":float}]}
 - POST /v1/sessions/{id}/silence (operator 이상, 허용목록 뉴런만, 최대 10개)
   요청: {"neuron_ids":[str]} → {"accepted":[str]}
 - 모든 요청은 mTLS + API 토큰 헤더(Authorization: Bearer)를 요구한다.
+
+- 0.8.0 확장: `neuron_activity`는 전체 발화율의 약 500ms 간격 샘플이며 비샘플 step에서는 빈 배열이다. 위험 출력·상위 뉴런은 매 step 반환한다. UI/소유권/지연 처리는 docs/neural_activity.md를 따른다.

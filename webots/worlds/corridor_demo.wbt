@@ -1,0 +1,63 @@
+#VRML_SIM R2025a utf8
+EXTERNPROTO "../protos/Wheelchair.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/humans/pedestrian/protos/Pedestrian.proto"
+WorldInfo { basicTimeStep 32 }
+Viewpoint { orientation -0.2083586969674776 0.6250760909024328 0.7522410079091331 0.8342362755414127 position -38 -30 32 }
+Background { skyColor [ 0.75 0.83 0.9 ] }
+DirectionalLight { direction 0.3 0.2 -1 intensity 1 ambientIntensity 0.5 castShadows FALSE }
+DEF FLOOR Solid { translation 0 0 -0.1 name "FLOOR"
+  children [ Shape { appearance PBRAppearance { baseColor 0.68 0.7 0.68 roughness 1 metalness 0 } geometry Box { size 60 14 0.2 } } ]
+  boundingObject Box { size 60 14 0.2 }
+}
+DEF WALL_SOUTH Solid { translation 0 -5 1 name "WALL_SOUTH"
+  children [ Shape { appearance PBRAppearance { baseColor 0.82 0.9 0.92 roughness 1 metalness 0 } geometry Box { size 60 0.2 2 } } ]
+  boundingObject Box { size 60 0.2 2 }
+}
+DEF WALL_NW Solid { translation -11.5 5 1 name "WALL_NW"
+  children [ Shape { appearance PBRAppearance { baseColor 0.82 0.9 0.92 roughness 1 metalness 0 } geometry Box { size 37 0.2 2 } } ]
+  boundingObject Box { size 37 0.2 2 }
+}
+DEF WALL_NE Solid { translation 19.5 5 1 name "WALL_NE"
+  children [ Shape { appearance PBRAppearance { baseColor 0.82 0.9 0.92 roughness 1 metalness 0 } geometry Box { size 21 0.2 2 } } ]
+  boundingObject Box { size 21 0.2 2 }
+}
+DEF WALL_WEST Solid { translation -30 0 1 name "WALL_WEST"
+  children [ Shape { appearance PBRAppearance { baseColor 0.82 0.9 0.92 roughness 1 metalness 0 } geometry Box { size 0.2 10 2 } } ]
+  boundingObject Box { size 0.2 10 2 }
+}
+DEF WALL_EAST Solid { translation 30 0 1 name "WALL_EAST"
+  children [ Shape { appearance PBRAppearance { baseColor 0.82 0.9 0.92 roughness 1 metalness 0 } geometry Box { size 0.2 10 2 } } ]
+  boundingObject Box { size 0.2 10 2 }
+}
+DEF CHAIR Wheelchair { translation -26 0 0.26 maxSpeed 3.0 enableAvoidance TRUE }
+DEF OBSTACLE Pedestrian { name "crossing pedestrian A" translation 8 4.5 1.27 enableBoundingObject TRUE
+  controllerArgs [ "--trajectory=8 4.5, 8 -4.5" "--speed=0.6" ]
+  shirtColor 0.8 0.18 0.12
+}
+DEF BOX_A Solid { translation -14 0 0.4 name "BOX_A"
+ children [ Shape { appearance PBRAppearance { baseColor 0.6 0.3 0.08 roughness 1 metalness 0 } geometry Box { size 1 1 0.8 } } ]
+ boundingObject Box { size 1 1 0.8 }
+}
+DEF BOX_B Solid { translation -5 1.3 0.325 name "BOX_B"
+ children [ Shape { appearance PBRAppearance { baseColor 0.8 0.45 0.1 roughness 1 metalness 0 } geometry Box { size 1.5 0.9 0.65 } } ]
+ boundingObject Box { size 1.5 0.9 0.65 }
+}
+DEF BOX_C Solid { translation 3 -1.3 0.65 name "BOX_C"
+ children [ Shape { appearance PBRAppearance { baseColor 0.1 0.4 0.6 roughness 1 metalness 0 } geometry Box { size 0.7 1.2 1.3 } } ]
+ boundingObject Box { size 0.7 1.2 1.3 }
+}
+DEF GATE_N Solid { translation 18 3.25 0.75 name "GATE_N"
+ children [ Shape { appearance PBRAppearance { baseColor 0.7 0.7 0.75 roughness 1 metalness 0 } geometry Box { size 0.4 3.5 1.5 } } ]
+ boundingObject Box { size 0.4 3.5 1.5 }
+}
+DEF GATE_S Solid { translation 18 -3.25 0.75 name "GATE_S"
+ children [ Shape { appearance PBRAppearance { baseColor 0.7 0.7 0.75 roughness 1 metalness 0 } geometry Box { size 0.4 3.5 1.5 } } ]
+ boundingObject Box { size 0.4 3.5 1.5 }
+}
+DEF PERSON_B Pedestrian { name "crossing pedestrian B" translation 24 -4.5 1.27 enableBoundingObject TRUE
+ controllerArgs [ "--trajectory=24 -4.5, 24 4.5" "--speed=0.5" ] shirtColor 0.2 0.6 0.2 }
+Robot { name "scenario observer" controller "scenario" supervisor TRUE customData "corridor_demo" children [
+ Camera { name "camera zone 1" translation -18 0 14 rotation 0 1 0 1.57079632679 width 240 height 160 fieldOfView 1.8 near 0.1 far 60 }
+ Camera { name "camera zone 2" translation 2 0 14 rotation 0 1 0 1.57079632679 width 240 height 160 fieldOfView 1.8 near 0.1 far 60 }
+ Camera { name "camera zone 3" translation 22 0 14 rotation 0 1 0 1.57079632679 width 240 height 160 fieldOfView 1.8 near 0.1 far 60 }
+] }

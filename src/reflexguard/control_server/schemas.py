@@ -52,6 +52,9 @@ class Hello(ContractModel):
     boot_id: Nonce
 
 class DecisionInput(ContractModel):
+    neuron_activity: Annotated[list[NeuronActivity], Field(max_length=256)] = []
+    weights_sha256: Annotated[str, Field(pattern=r"^([0-9a-f]{64})?$")] = ""
+    navigation_mode: Literal["reflex_stop", "range_assisted"] = "reflex_stop"
     boot_id: Nonce
     sequence: Annotated[int, Field(ge=1)]
     t_ms: Annotated[int, Field(ge=0)]
@@ -61,7 +64,7 @@ class DecisionInput(ContractModel):
     top_neurons: Annotated[list[NeuronActivity], Field(max_length=64)]
     model_version: Annotated[str, Field(min_length=1, max_length=128)]
     reason: Annotated[str, Field(min_length=1, max_length=128)]
-    forward: Annotated[float, Field(ge=-1.2, le=1.2, allow_inf_nan=False)]
+    forward: Annotated[float, Field(ge=-3.0, le=3.0, allow_inf_nan=False)]
     turn: Annotated[float, Field(ge=-2, le=2, allow_inf_nan=False)]
     remote_stopped: bool
 

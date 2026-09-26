@@ -1,6 +1,6 @@
 # ReflexGuard
 
-**현재 개발 버전: 0.7.0 — MaleCNS GPU 모델과 통합 리허설 완료**
+**현재 개발 버전: 0.8.0 — MaleCNS 실시간 회로·회피 주행·통합 설정**
 
 초파리 신경회로에서 배운 충돌 회피 기술을 전동휠체어의 생체모방 안전 보조에 적용하는 프로젝트입니다. 사용자가 운전하고 위험 상황에서만 시스템이 개입합니다. 이 저장소는 대회 제출용 보안판입니다.
 
@@ -14,6 +14,16 @@
 - HTTPS 보호자 대시보드, bcrypt 로그인·잠금·세션·역할별 접근
 - HMAC 원격 정지/속도 제한·재전송 방어, 판단 로그 체인 검증·권한별 내보내기
 - 뇌 통신 단절 시 감속 정지 고정, 관제 실패 시 정지 고정
+
+## 주행 설정과 시연
+
+운영자·관리자는 관제의 **주행 설정** (`/settings/control`)에서 속도, 정지·조향 임계값, 루밍 민감도와 평활 시간을 저장·복원할 수 있습니다. 저장값은 같은 VM의 Webots를 다시 시작할 때 적용됩니다. 사용자 설정은 별도 주행 검증이 필요합니다.
+
+인자 없이 `scripts/run_webots.sh`를 실행하면 **60m × 10m 시연 복도**가 열립니다. 기본 요청 속도는 **2.0m/s**, 시연 월드 상한은 3.0m/s입니다. 장애물·측벽 6m 이내에서는 2.0m/s 이하로 제한합니다. 기존 시험 월드 3종은 0.6m/s 상한을 유지합니다. 박스 3종·횡단 보행자 2명·3m 통로를 배치하고 전후방 및 구간별 관람 카메라를 추가했습니다. 4방향·두 높이 거리 센서와 휠 오도메트리로 빈 공간을 찾아 우회합니다. 신경회로는 위험 출력을, 로컬 회피기는 조향을 맡습니다. [설정·시연 안내](docs/control_settings.md)를 참고하세요.
+
+## MaleCNS 실시간 시각화
+
+관제의 **MaleCNS 실시간 신경회로 보기**를 누릅니다. 기본 장치에서는 `https://localhost:8444/activity/seat-a`입니다. 실제 뉴런 ID·연결, 187개 계산 발화율, 좌우 루밍, DNp01 출력, 최종 주행 판단과 최근 이력을 함께 표시합니다. 모델/가중치가 일치할 때만 실제 회로를 켜며 mock·수신 지연은 구분합니다. [시각화 안내](docs/neural_activity.md) · [실제 GPU 실행 화면](docs/logs/malecns-live.png).
 
 ## 설치
 
@@ -41,14 +51,14 @@ scripts/run_control_server.sh
 scripts/connect_gpu.sh
 
 # 터미널 3: VMware 데스크톱에서 실제 뇌 연결 Webots
-REFLEXGUARD_BRAIN_PROFILE=real scripts/run_webots.sh corridor_basic
+REFLEXGUARD_BRAIN_PROFILE=real scripts/run_webots.sh
 ```
 
-터널 접속 값은 Git에서 제외된 `.env.gpu`, 실제 뇌 토큰·인증서는 `.env.brain-client`에 있습니다. 이미 localhost:18443 터널이나 관제가 실행 중이면 중복 실행하지 않습니다. 방향키로 조종하고 위험 정지 후에는 키를 놓아 중립으로 돌아갑니다. 통신 실패·원격 정지는 문제를 해결한 뒤 시뮬레이션을 다시 시작해야 합니다.
+터널 접속 값은 Git에서 제외된 `.env.gpu`, 실제 뇌 토큰·인증서는 `.env.brain-client`에 있습니다. 이미 localhost:18443 터널이나 관제가 실행 중이면 중복 실행하지 않습니다. 3D 화면을 클릭하고 방향키로 조종합니다. 시연 월드는 가능한 경로로 우회 후 사용자 진행 방향으로 돌아오며, 공간이 없으면 정지합니다. 기존 3개 회귀 월드는 위험 정지 후 키를 놓아 중립으로 돌아갑니다. 통신 실패·원격 정지는 문제를 해결한 뒤 시뮬레이션을 다시 시작해야 합니다.
 
 대시보드는 `https://localhost:8444/login`입니다. 개발 CA를 신뢰 등록한 브라우저에서 접속합니다. 초기 관리자 계정은 `.env.admin`에 있으며 **이 파일을 편집해도 DB 비밀번호는 바뀌지 않습니다**. 복구는 `scripts/reset_admin.sh`를 실행합니다. 비밀번호는 UTF-8 12..72바이트입니다. 보호자 연결과 운영 절차는 [Phase 4](docs/phase4.md)를 참고하세요.
 
-GPU 없이 mock으로 실행하려면 별도 터미널에서 다음을 실행한 뒤 `REFLEXGUARD_BRAIN_PROFILE=mock scripts/run_webots.sh corridor_basic`을 실행합니다.
+GPU 없이 mock으로 실행하려면 별도 터미널에서 다음을 실행한 뒤 `REFLEXGUARD_BRAIN_PROFILE=mock scripts/run_webots.sh`을 실행합니다.
 
 ```bash
 set -a
@@ -67,7 +77,9 @@ scripts/e2e.sh mock  # 시험 전용 mock을 직접 시작/종료하므로 기�
 scripts/security_check.sh  # 정적 검사 + VM/GPU 잠금 감사 + pytest
 ```
 
-실제 모델과 mock 모두 복도 3종에서 충돌 0회, 의미 있는 주행, 통신 오류 0회로 통합 시험을 통과했습니다. 무조작 시험은 개입 0회, 원격 정지는 약 0.31m 주행 후 모터 출력 0과 감사 체인 유효를 확인했습니다. GPU 계산과 CPU 기준 발화 결과도 일치했습니다. 실패했던 초기 보정 및 VPN 시간 초과도 기록했습니다.
+0.7.0 기준 실제 모델과 mock 모두 복도 3종에서 충돌 0회, 의미 있는 주행, 통신 오류 0회로 통합 시험을 통과했습니다. 무조작 시험은 개입 0회, 원격 정지는 약 0.31m 주행 후 모터 출력 0과 감사 체인 유효를 확인했습니다. GPU 계산과 CPU 기준 발화 결과도 일치했습니다. 실패했던 초기 보정 및 VPN 시간 초과도 기록했습니다.
+
+0.8.0의 회피·시각화 시험과 통신 실패 기록은 [시연 시험 보고서](docs/demo_report.md)에 별도로 기록합니다.
 
 결과는 제한된 시뮬레이션 조건의 재현 기록이며 실제 휠체어 안전·제동 거리 보증이 아닙니다. [통합 시험 보고서](docs/test_report.md), [보정 기록](docs/calibration.md), [뉴런 근거](docs/neurons.md), [성능](docs/brain_perf.md)을 확인하세요.
 

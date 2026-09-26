@@ -15,11 +15,15 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import JSONResponse, Response
 from starlette.templating import Jinja2Templates
 from reflexguard.common.schemas import Identifier, SilenceRequest
+from reflexguard.control_server.activity import ActivityMonitor
 from reflexguard.control_server.config import ControlSettings
 from reflexguard.control_server.database import Database, users, sessions, chairs, audit, digest, password_hash
 from reflexguard.control_server.schemas import (Login, UserCreate, UserUpdate, Assignment, RemoteRequest,
     SignedRemote, Hello, DevicePoll, DecisionInput, Nonce)
 from reflexguard.control_server.signing import sign_command
+
+from reflexguard.control.settings_store import CalibrationStore, SaveRequest, RevisionRequest, StaleSettings
+from reflexguard.control_server.calibration_fields import fields_for
 
 LOGGER=logging.getLogger(__name__)
 ChairPath=Annotated[str, Path(min_length=1,max_length=128,pattern=r"^[A-Za-z0-9_-][A-Za-z0-9_.:-]*$")]
@@ -65,7 +69,8 @@ class Boundary:
         await self.app(scope,bounded_receive,secure_send)
 
 
-def create_app(settings=None):
+def create_app(settings=None, calibration_store=None):
+    calibration_store = calibration_store or CalibrationStore()
     settings=settings or ControlSettings.from_env()
     app=FastAPI(debug=False,docs_url=None,redoc_url=None,openapi_url=None)
     app.add_middleware(Boundary,origin=settings.origin)
@@ -73,6 +78,8 @@ def create_app(settings=None):
     app.state.db=db
     templates=Jinja2Templates(directory=str(FilePath(__file__).parent/"templates"))
     devices={device.chair_id:device for device in settings.devices}
+    monitor=ActivityMonitor(devices)
+    app.state.activity=monitor
 
     @app.exception_handler(RequestValidationError)
     async def invalid(request,exc):
@@ -168,12 +175,54 @@ def create_app(settings=None):
                 row["status"]=json.loads(row["status"]) if row["status"] else None
                 logs=conn.execute(select(audit).where(audit.c.chair_id==row["id"]).order_by(audit.c.id.desc()).limit(20)).mappings()
                 row["logs"]=[json.loads(log["payload"]) for log in logs]
-            return templates.TemplateResponse(request=request,name="dashboard.html",context={"user":user,"chairs":rows,"csrf":user["csrf"]})
+            return templates.TemplateResponse(request=request,name="dashboard.html",context={"user":user,"chairs":rows,"csrf":user["csrf"],"states":{'user': '사용자 조종', 'idle': '입력 대기', 'risk_monitoring': '위험 감지 · 거리 확인하며 감속', 'avoid_left': '왼쪽으로 회피 중', 'avoid_right': '오른쪽으로 회피 중', 'avoid_passing': '장애물 옆 통과 중', 'control_recovering': '원래 진행 방향으로 복귀 중', 'control_recovered': '회피 완료 · 사용자 조종 복귀', 'path_blocked': '회피 공간 없음 · 정지', 'sensor_failure': '거리 센서 오류 · 정지 고정', 'brain_failure': '뇌 통신 오류 · 정지 고정', 'control_failure': '관제 연결 오류 · 정지 고정', 'remote_stop': '원격 정지', 'hazard_stop': '위험 감지 · 정지', 'avoid_turn': '회피 조향', 'remote_speed_limit': '원격 속도 제한'}})
+
+    def settings_operator(request, conn, write=False):
+        user = principal(request, conn, write)
+        if user["role"] not in ("operator", "admin"):
+            raise HTTPException(403)
+        return user
+
+    @app.get("/settings/control")
+    def calibration_page(request: Request):
+        with db.tx() as conn:
+            user = settings_operator(request, conn)
+            snapshot = calibration_store.snapshot()
+            return templates.TemplateResponse(request=request, name="calibration.html", context={
+                "user": user, "csrf": user["csrf"], "snapshot": snapshot,
+                "fields": fields_for(snapshot.calibration, calibration_store.defaults())})
+
+    @app.get("/api/settings/control")
+    def calibration_get(request: Request):
+        with db.tx() as conn:
+            settings_operator(request, conn)
+            return calibration_store.snapshot()
+
+    def save_calibration(request, body, reset=False):
+        with db.tx() as conn:
+            user = settings_operator(request, conn, True)
+            calibration = calibration_store.defaults() if reset else body.calibration
+            if not reset and calibration.model_fields_set != set(type(calibration).model_fields):
+                raise HTTPException(422)
+            try:
+                snapshot = calibration_store.save(body.expected_revision, calibration, user["username"])
+            except StaleSettings:
+                raise HTTPException(409) from None
+            LOGGER.info("Calibration saved by user ID %s, revision %s, restart required", user["id"], snapshot.revision)
+            return snapshot
+
+    @app.post("/api/settings/control")
+    def calibration_save(body: SaveRequest, request: Request):
+        return save_calibration(request, body)
+
+    @app.post("/api/settings/control/reset")
+    def calibration_reset(body: RevisionRequest, request: Request):
+        return save_calibration(request, body, reset=True)
 
     @app.get("/assets/{asset}")
     def asset(asset: LiteralAsset):
         # Closed ID mapping only; request text is never appended to a path.
-        mapping={"dashboard.js":("dashboard.js","text/javascript"),"style.css":("style.css","text/css")}
+        mapping={"dashboard.js":("dashboard.js","text/javascript"),"style.css":("style.css","text/css"),"calibration.js":("calibration.js","text/javascript"),"activity.js":("activity.js","text/javascript"),"malecns-circuit.json":("malecns-circuit.json","application/json")}
         name,kind=mapping[asset]
         return Response((FilePath(__file__).parent/"static"/name).read_text(),media_type=kind)
 
@@ -187,6 +236,20 @@ def create_app(settings=None):
             return [{"id":row["id"],"online":time.time()-row["last_seen"]<=2,
                      "status":json.loads(row["status"]) if row["status"] else None}
                     for row in conn.execute(query).mappings()]
+
+    @app.get("/activity/{chair_id}")
+    def activity_page(chair_id: ChairPath, request: Request):
+        with db.tx() as conn:
+            user=principal(request,conn)
+            chair_for(conn,user,chair_id)
+        return templates.TemplateResponse(request=request,name="activity.html",context={"chair_id":chair_id})
+
+    @app.get("/api/chairs/{chair_id}/activity")
+    def activity_data(chair_id: ChairPath, request: Request):
+        with db.tx() as conn:
+            user=principal(request,conn)
+            chair_for(conn,user,chair_id)
+            return monitor.snapshot(chair_id)
 
     @app.post("/remote")
     def remote(body: RemoteRequest,request: Request):
@@ -280,6 +343,7 @@ def create_app(settings=None):
         with db.tx() as conn:
             conn.execute(update(chairs).where(chairs.c.id==chair_id).values(boot_id=body.boot_id,sequence=0,status=None,
                          pending=None,silence=None,last_seen=time.time()))
+            monitor.clear(chair_id)
             db.append(conn,chair_id,{"event":"device_started","at_ms":int(time.time()*1000)})
         return {"ok":True}
 
@@ -307,11 +371,12 @@ def create_app(settings=None):
             chair=current_boot(conn,chair_id,body.boot_id)
             if body.sequence!=chair["sequence"]+1:
                 raise HTTPException(409)
-            payload={"event":"decision","at_ms":int(time.time()*1000),**body.model_dump(exclude={"boot_id"})}
+            payload={"event":"decision","at_ms":int(time.time()*1000),**body.model_dump(exclude={"boot_id", "neuron_activity"})}
             db.append(conn,chair_id,payload)
             conn.execute(update(chairs).where(chairs.c.id==chair_id).values(sequence=body.sequence,status=json.dumps(payload),last_seen=time.time()))
+            monitor.record(chair_id,body)
         return {"ok":True}
     return app
 
 from typing import Literal
-LiteralAsset=Literal["dashboard.js","style.css"]
+LiteralAsset=Literal["dashboard.js","style.css","calibration.js","activity.js","malecns-circuit.json"]

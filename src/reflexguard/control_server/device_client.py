@@ -36,10 +36,10 @@ class DeviceSettings(BaseModel):
                    ca_cert=os.environ.get("REFLEXGUARD_CONTROL_TLS_CA") or os.environ["REFLEXGUARD_TLS_CA"])
 
 class DeviceClient:
-    def __init__(self, settings):
+    def __init__(self, settings, max_speed=0.6):
         self.boot_id=secrets.token_urlsafe(32)
         self.settings=settings
-        self.guard=RemoteGuard(settings.chair_id,settings.hmac_key.get_secret_value(),self.boot_id)
+        self.guard=RemoteGuard(settings.chair_id,settings.hmac_key.get_secret_value(),self.boot_id,max_speed=max_speed)
         context=ssl.create_default_context(cafile=str(settings.ca_cert))
         context.minimum_version=ssl.TLSVersion.TLSv1_2
         self.client=httpx.AsyncClient(base_url=str(settings.url),verify=context,timeout=.2,trust_env=False,
@@ -86,14 +86,15 @@ class DeviceClient:
         except (httpx.HTTPError,ValueError,asyncio.TimeoutError,RuntimeError):
             self.fail()
 
-    async def report(self, *, t_ms, result, command, reason, top_neurons, model_version):
+    async def report(self, *, t_ms, result, command, reason, top_neurons, model_version, navigation_mode="reflex_stop", neuron_activity=None, weights_sha256=""):
         if self.failed:
             return
         self.sequence+=1
         body=DecisionInput(boot_id=self.boot_id,sequence=self.sequence,t_ms=t_ms,
             left_looming=result.looming.left,right_looming=result.looming.right,escape=result.escape,
             top_neurons=top_neurons,model_version=model_version,reason=reason,
-            forward=command.forward,turn=command.turn,remote_stopped=self.guard.stopped)
+            neuron_activity=neuron_activity or [],weights_sha256=weights_sha256,
+            forward=command.forward,turn=command.turn,remote_stopped=self.guard.stopped,navigation_mode=navigation_mode)
         try:
             await self.request("decisions",body.model_dump())
         except (httpx.HTTPError,ValueError,asyncio.TimeoutError):

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "application_version": "0.7.0",
+  "application_version": "0.8.0",
   "scope": "Project Python virtual environment including test/build dependencies; excludes OS, Webots, pipx tools, GPU environment and MaleCNS assets (separate inventories)",
   "format": "CycloneDX 1.6 JSON",
   "generator": "cyclonedx-py 7.4.0",
@@ -9,8 +9,8 @@
   "inputs_sha256": {
     "requirements.in": "d845093418a7bf9e65ca43c3dbb1a1acbab9d7fd1b43f4f7f2964ea6b8dea6c3",
     "requirements.txt": "fa075f20766e157d2563bbf810883ae9dbbc3cf0d6998fc2a775edaa71e24813",
-    "pyproject.toml": "adde2517ac4aad6b0a6fa28ef6533dccd3bb8b839562f893e9ef238ca7f0358e"
+    "pyproject.toml": "37e2bba4dd854b4f904c02196081aae08b0a7a773cc153d88a4a73c409740f49"
   },
-  "sbom_sha256": "256ee6154ca1ad012667bb5acb099588f9a9d2970039adf5dc81d23eacc3a620",
+  "sbom_sha256": "c4f64ac3be1a07d660e99924dabed05c871be804d7e38a222c39d00a63bb3b70",
   "hash_scope": "Input manifests and SBOM file only. requirements.txt contains allowed artifact hashes; installed package files are not attested."
 }

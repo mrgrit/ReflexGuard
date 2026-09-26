@@ -11,5 +11,6 @@
   "turn_gain": 0.3,
   "max_turn": 1.2,
   "deceleration": 2.0,
-  "release_ms": 500
+  "release_ms": 500,
+  "drive_speed": 2.0
 }

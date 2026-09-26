@@ -262,3 +262,36 @@ def test_control_ca_stays_separate_from_brain_ca(monkeypatch,certificates,untrus
     assert DeviceSettings.from_env().ca_cert==certificates/'ca.crt'
     monkeypatch.delenv('REFLEXGUARD_CONTROL_TLS_CA')
     assert DeviceSettings.from_env().ca_cert==untrusted_certificates/'ca.crt'
+
+
+def test_full_activity_reports_all_simulated_neurons_and_matches_top(signed_assets):
+    circuit=Circuit(load_fixture(signed_assets))
+    _, response=circuit.step(circuit.state(),StepRequest(t_ms=0,dt_ms=50,left_looming=1.,right_looming=0.),set(),time.monotonic()+1)
+    assert len(response.neuron_activity)==4
+    rates={n.id:n.rate_hz for n in response.neuron_activity}
+    assert set(rates)=={n.id for n in circuit.neurons}
+    assert all(rates[n.id]==n.rate_hz for n in response.top_neurons)
+    assert rates['2']==0 and rates['1']>0
+
+
+def test_public_graph_export_requires_independent_signer_and_exact_arrays(signed_assets):
+    import base64
+    from scripts.export_circuit_graph import ExportSettings, export
+    directory,key=signed_assets
+    public=base64.b64encode(key.public_key().public_bytes_raw()).decode()
+    graph=export(ExportSettings(model_dir=directory,public_key=public))
+    assert graph['edges']==[{'source':'1','target':'3','synapses':10},{'source':'2','target':'4','synapses':20}]
+    assert len(graph['nodes'])==4
+    other=base64.b64encode(Ed25519PrivateKey.generate().public_key().public_bytes_raw()).decode()
+    with pytest.raises(InvalidSignature): export(ExportSettings(model_dir=directory,public_key=other))
+
+
+def test_full_visual_telemetry_is_sampled_without_dropping_safety_outputs(signed_assets):
+    circuit=Circuit(load_fixture(signed_assets))
+    state=circuit.state()
+    snapshots=[]
+    for t in range(0,1056,32):
+        state,response=circuit.step(state,StepRequest(t_ms=t,dt_ms=32,left_looming=1.,right_looming=0.),set(),time.monotonic()+1)
+        assert response.escape>0 and len(response.top_neurons)==4
+        if response.neuron_activity: snapshots.append(t)
+    assert snapshots==[0,512,1024]

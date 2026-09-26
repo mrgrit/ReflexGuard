@@ -49,7 +49,7 @@ def main():
                 "REFLEXGUARD_CONTROL_DEVICES":json.dumps([{"chair_id":"seat-a","token":device_token,"hmac_key":remote_key}]),
                 "REFLEXGUARD_AUDIT_KEY":secrets.token_urlsafe(32),"REFLEXGUARD_CHAIR_ID":"seat-a",
                 "REFLEXGUARD_DEVICE_TOKEN":device_token,"REFLEXGUARD_REMOTE_KEY":remote_key,
-                "REFLEXGUARD_SCENARIO":Settings(world="corridor_static",duration_s=6,drive="forward",batch=True).model_dump_json()})
+                "REFLEXGUARD_SCENARIO":Settings(world="corridor_basic",duration_s=6,drive="forward",batch=True).model_dump_json()})
             for var,file in [("CA","ca.crt"),("SERVER_CERT","server.crt"),("SERVER_KEY","server.key"),("CLIENT_CERT","client.crt"),("CLIENT_KEY","client.key")]:
                 env["REFLEXGUARD_TLS_"+var]=str(certs/file)
             env["REFLEXGUARD_CONTROL_TLS_CA"]=str(certs/"ca.crt")
@@ -95,7 +95,7 @@ def main():
                 subprocess.run([sys.executable,str(ROOT/"scripts/configure_webots.py")],check=True,cwd=ROOT,env=env,capture_output=True,timeout=10)  # nosec B603 - fixed repository configuration script
                 log=(directory/"webots.log").open("w")
                 handles.append(log)
-                sim=subprocess.Popen(["/usr/bin/xvfb-run","-a","/usr/local/webots/webots","--batch","--mode=fast","--no-rendering","--minimize","--stdout","--stderr",str(ROOT/"webots/worlds/corridor_static.wbt")],cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT)  # nosec B603 - fixed Webots executable, flags and world
+                sim=subprocess.Popen(["/usr/bin/xvfb-run","-a","/usr/local/webots/webots","--batch","--mode=fast","--no-rendering","--minimize","--stdout","--stderr",str(ROOT/"webots/worlds/corridor_basic.wbt")],cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT)  # nosec B603 - fixed Webots executable, flags and world
                 processes.append(sim)
                 deadline=time.monotonic()+90
                 sent=False
@@ -124,7 +124,7 @@ def main():
                 stopped=[row for row in records if row["event"]=="decision" and row["reason"]=="remote_stop"]
                 applied=[row for row in records if row["event"]=="remote_applied"]
                 verification=browser.get("/logs/seat-a/verify").json()
-                if not stopped or not applied or not verification["valid"] or result.final_forward!=0 or result.collision or result.displacement_m<0.1:
+                if not stopped or not applied or not verification["valid"] or result.final_forward!=0 or result.collision or result.displacement_m<0.1 or result.remote_interventions<1:
                     raise RuntimeError("Remote stop or audit verification failed")
                 if any(row["forward"]!=0 or row["turn"]!=0 for row in stopped):raise RuntimeError("Nonzero motor command after stop")
                 print(json.dumps({"brain_profile":profile,"dashboard_remote_stop":True,"signed_command_acknowledged":True,"audit":verification,

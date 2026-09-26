@@ -21,7 +21,11 @@ def control(tmp_path):
     settings=ControlSettings(database=tmp_path/"control.db",devices=[
         {"chair_id":"seat-a","token":secret(),"hmac_key":secret()},
         {"chair_id":"seat-b","token":secret(),"hmac_key":secret()}],audit_key=secret())
-    app=create_app(settings)
+    from reflexguard.control.settings_store import CalibrationStore
+    from pathlib import Path
+    (tmp_path/"config").mkdir()
+    (tmp_path/"config/control.json").write_bytes((Path(__file__).resolve().parents[1]/"config/control.json").read_bytes())
+    app=create_app(settings, calibration_store=CalibrationStore(tmp_path))
     password=secret()
     hashed=password_hash(password)
     with app.state.db.tx() as conn:
@@ -285,3 +289,144 @@ def test_admin_recovery_rejects_short_password(control):
     from pydantic import ValidationError
     from reflexguard.control_server.schemas import Login
     with pytest.raises(ValidationError):Login(username="admin",password=secrets.token_hex(1))
+
+
+@pytest.mark.parametrize("role", ["operator", "admin"])
+def test_calibration_save_reset_and_stale_edit(control, role):
+    client, _, _, password = control
+    login(client, password, role)
+    page = client.get("/settings/control")
+    assert page.status_code == 200 and "다음 시작에 적용" in page.text
+    initial = client.get("/api/settings/control").json()
+    changed = dict(initial["calibration"], stop_on=0.4)
+    body = {"expected_revision": initial["revision"], "calibration": changed}
+    result = client.post("/api/settings/control", json=body)
+    assert result.status_code == 200 and result.json()["calibration"]["stop_on"] == .4
+    assert client.post("/api/settings/control", json=body).status_code == 409
+    reset = client.post("/api/settings/control/reset", json={"expected_revision": result.json()["revision"]})
+    assert reset.status_code == 200 and reset.json()["calibration"] == initial["calibration"]
+    assert reset.json()["actor"] == role
+
+
+def test_calibration_permissions_and_csrf(control):
+    client, _, _, password = control
+    assert client.get("/settings/control").status_code == 401
+    assert client.get("/api/settings/control").status_code == 401
+    login(client, password, "admin")
+    snapshot = client.get("/api/settings/control").json()
+    body = {"expected_revision": snapshot["revision"], "calibration": snapshot["calibration"]}
+    assert client.post("/api/settings/control", json=body, headers={"X-CSRF-Token": "invalid"}).status_code == 403
+    assert client.post("/api/settings/control/reset", json={"expected_revision": snapshot["revision"]}, headers={"Origin": "https://evil.invalid"}).status_code == 403
+    login(client, password, "guardian")
+    assert client.get("/settings/control").status_code == 403
+    assert client.get("/api/settings/control").status_code == 403
+    assert client.post("/api/settings/control", json=body).status_code == 403
+    assert client.post("/api/settings/control/reset", json={"expected_revision": snapshot["revision"]}).status_code == 403
+    assert '/settings/control' not in client.get("/").text
+
+
+@pytest.mark.parametrize("update", [{"stop_on": 1.1}, {"stop_on": .1}, {"turn_off": .9},
+    {"stop_on": True}, {"stop_on": "0.4"}, {"unknown": 1}, {"deceleration": 0}, {"release_ms": 1.5}])
+def test_calibration_invalid_save_preserves_state(control, update):
+    client, _, _, password = control
+    login(client, password)
+    initial = client.get("/api/settings/control").json()
+    body = {"expected_revision": initial["revision"], "calibration": dict(initial["calibration"], **update)}
+    assert client.post("/api/settings/control", json=body).status_code == 422
+    assert client.get("/api/settings/control").json() == initial
+
+
+def test_calibration_partial_and_path_inputs_rejected(control):
+    client, _, _, password = control
+    login(client, password)
+    initial = client.get("/api/settings/control").json()
+    body = {"expected_revision": initial["revision"], "calibration": {"stop_on": .4}}
+    assert client.post("/api/settings/control", json=body).status_code == 422
+    body["calibration"] = initial["calibration"]
+    body["path"] = "../../etc/passwd"
+    assert client.post("/api/settings/control", json=body).status_code == 422
+    assert client.get("/assets/calibration.js").status_code == 200
+
+
+@pytest.mark.parametrize("speed", [3.1, 0, -1, float("nan"), True])
+def test_remote_guard_rejects_invalid_local_speed(speed):
+    with pytest.raises(ValueError):
+        RemoteGuard("seat-a", secrets.token_urlsafe(32), secrets.token_urlsafe(32), max_speed=speed)
+
+
+def test_demo_speed_still_obeys_signed_limits_and_stop():
+    key, boot = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
+    guard = RemoteGuard("seat-a", key, boot, max_speed=1.0)
+    assert guard.apply(Command(forward=1.0, turn=0.0)).forward == 1.0
+    assert guard.apply(Command(forward=1.2, turn=0.0)).forward == 1.0
+    guard.accept(sign_command(RemoteRequest(chair_id="seat-a", action="speed_limit", speed_limit=.3), boot, key, 1000), 1000)
+    assert guard.apply(Command(forward=1.0, turn=0.0)).forward == .3
+    guard.accept(sign_command(RemoteRequest(chair_id="seat-a", action="stop"), boot, key, 1000), 1000)
+    assert guard.apply(Command(forward=1.0, turn=0.0)).forward == 0
+
+
+@pytest.mark.parametrize('path',['/activity/seat-a','/api/chairs/seat-a/activity'])
+def test_neural_activity_authorization(control,path):
+    client,_,settings,password=control
+    assert client.get(path).status_code==401
+    login(client,password,'outsider')
+    assert client.get(path).status_code==404
+    login(client,password,'guardian')
+    assert client.get(path).status_code==200
+    assert client.get('/assets/activity.js').status_code==200
+
+
+def test_neural_activity_real_identity_stale_boot_and_audit(control):
+    from pathlib import Path
+    client,db,settings,password=control
+    graph=json.loads((Path(__file__).resolve().parents[1]/'src/reflexguard/control_server/static/malecns-circuit.json').read_text())
+    boot,headers=hello(client,settings)
+    login(client,password,'guardian')
+    path='/api/chairs/seat-a/activity'
+    assert client.get(path).json()['state']=='waiting'
+    body=decision(boot)
+    body.update(model_version=graph['model_version'],weights_sha256=graph['weights_sha256'],
+        neuron_activity=[{'id':n['id'],'type':n['cell_type'],'rate_hz':float(i)} for i,n in enumerate(graph['nodes'])])
+    assert len(json.dumps(body).encode())<32768
+    assert client.post('/device/seat-a/decisions',json=body,headers=headers).status_code==200
+    result=client.get(path).json()
+    assert result['state']=='malecns' and len(result['frame']['neuron_activity'])==187
+    assert result['frame']['neuron_activity'][10]['rate_hz']==10
+    assert client.post('/device/seat-a/decisions',json=body,headers=headers).status_code==409
+    assert len(client.get(path).json()['history'])==1
+    with db.tx() as conn:
+        latest=conn.execute(select(audit.c.payload).where(audit.c.chair_id=='seat-a').order_by(audit.c.id.desc())).first()[0]
+        assert 'neuron_activity' not in json.loads(latest)
+    body.update(sequence=2,weights_sha256='0'*64)
+    assert client.post('/device/seat-a/decisions',json=body,headers=headers).status_code==200
+    assert client.get(path).json()['state']=='unverified'
+    assert client.get(path).json()['frame']['neuron_activity']==[]
+    hello(client,settings)
+    assert client.get(path).json()['state']=='waiting'
+
+
+def test_activity_cache_bounds_and_mock_never_lights_real_nodes():
+    from reflexguard.control_server.activity import ActivityMonitor
+    monitor=ActivityMonitor(['seat-a'])
+    boot=secrets.token_urlsafe(32)
+    for i in range(80): monitor.record('seat-a',DecisionInput.model_validate(decision(boot,i+1)))
+    assert len(monitor.snapshot('seat-a')['history'])==60
+    assert monitor.snapshot('seat-a')['state']=='mock'
+    assert monitor.snapshot('seat-a')['frame']['neuron_activity']==[]
+    monitor.frames['seat-a']['received_at']-=3
+    assert monitor.snapshot('seat-a')['state']=='stale'
+    monitor.clear('seat-a')
+    assert monitor.snapshot('seat-a')['history']==[]
+
+
+def test_visual_graph_matches_committed_model_manifest():
+    from pathlib import Path
+    root=Path(__file__).resolve().parents[1]
+    graph=json.loads((root/'src/reflexguard/control_server/static/malecns-circuit.json').read_text())
+    manifest=json.loads((root/'brain_server/assets.lock').read_text())
+    assert graph['weights_sha256']==manifest['weights_sha256']
+    assert graph['nodes']==manifest['neurons']
+    assert len(graph['nodes'])==187 and len(graph['edges'])==185
+    assert sum(e['synapses'] for e in graph['edges'])==4862
+    ids={n['id'] for n in graph['nodes']}
+    assert all(e['source'] in ids and e['target'] in ids for e in graph['edges'])

@@ -24,3 +24,6 @@ webots/worlds/.*.wbproj
 
 # Local signed model assets are distributed separately.
 .local-models/
+
+# Operator calibration, applied at controller restart.
+.local-control/

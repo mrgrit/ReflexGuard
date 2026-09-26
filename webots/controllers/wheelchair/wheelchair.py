@@ -1,12 +1,15 @@
 """Shared control from camera pixels and authenticated brain responses."""
 import asyncio
 import json
+import math
 import os
+import time
 from pathlib import Path
 from typing import Annotated
 from controller import Robot, Keyboard
 from pydantic import TypeAdapter, Field
 from reflexguard.control.arbiter import Command
+from reflexguard.control.avoidance import Surroundings
 from reflexguard.control.config import Calibration
 from reflexguard.control.pipeline import Pipeline
 from reflexguard.control_server.device_client import DeviceClient, DeviceSettings
@@ -19,7 +22,7 @@ async def main():
     os.chdir(Path(__file__).resolve().parents[3])
     dt = int(robot.getBasicTimeStep())
     settings = Settings.model_validate_json(os.environ.get("REFLEXGUARD_SCENARIO", "{}"))
-    max_speed = TypeAdapter(Annotated[float, Field(gt=0, le=1.2)]).validate_json(robot.getCustomData())
+    max_speed = TypeAdapter(Annotated[float, Field(gt=0, le=3.0)]).validate_json(robot.getCustomData())
     left = robot.getDevice("left wheel motor")
     right = robot.getDevice("right wheel motor")
     for motor in (left, right):
@@ -30,8 +33,32 @@ async def main():
     keyboard = robot.getKeyboard()
     keyboard.enable(dt)
     sink = FrameSink()
-    pipeline = Pipeline(Calibration.load())
-    device = DeviceClient(DeviceSettings.from_env()) if os.environ.get("REFLEXGUARD_CONTROL_URL") else None
+    calibration = Calibration.load()
+    print("REFLEXGUARD_CALIBRATION=" + calibration.model_dump_json(), flush=True)
+    max_speed = min(max_speed, calibration.drive_speed)
+    devices = {robot.getDeviceByIndex(i).getName(): robot.getDeviceByIndex(i) for i in range(robot.getNumberOfDevices())}
+    heading = devices.get("avoidance heading")
+    range_devices = [devices.get("range " + name) for name in ("front", "left", "rear", "right")]
+    upper_devices = [devices.get("range upper " + name) for name in ("front", "left", "rear", "right")]
+    rear_camera = devices.get("rear camera")
+    if rear_camera is not None and not settings.batch:
+        rear_camera.enable(128)
+    avoidance = heading is not None
+    encoders = [devices.get(name + " wheel position") for name in ("left", "right")]
+    last_wheel_distance = None
+    last_heading = None
+    if avoidance:
+        if any(device is None for device in encoders):
+            raise ValueError("Wheel odometry missing")
+        for encoder in encoders:
+            encoder.enable(dt)
+        if any(device is None for device in range_devices + upper_devices):
+            raise ValueError("Incomplete range sensor set")
+        heading.enable(dt)
+        for sensor in range_devices + upper_devices:
+            sensor.enable(dt)
+    pipeline = Pipeline(calibration, avoidance=avoidance)
+    device = DeviceClient(DeviceSettings.from_env(), max_speed=max_speed) if os.environ.get("REFLEXGUARD_CONTROL_URL") else None
     presets = {"idle": (0.0, 0.0), "forward": (max_speed, 0.0),
                "reverse": (-max_speed, 0.0), "left": (0.0, 0.8), "right": (0.0, -0.8)}
     maximum = 0.0
@@ -39,6 +66,7 @@ async def main():
     remote_interventions = 0
     last_reason = None
     next_log_ms = 0
+    next_poll_at = 0.0
     try:
         await pipeline.start()
         if device is not None:
@@ -61,11 +89,32 @@ async def main():
             frame = None if raw is None else CameraFrame(now_ms, camera.getWidth(), camera.getHeight(), bytes(raw))
             if frame is not None:
                 sink.consume(frame)
-            result = await pipeline.step(frame, Command(forward=forward, turn=turn), dt)
+            surroundings = None
+            if avoidance:
+                try:
+                    wheel_distance = sum(encoder.getValue() for encoder in encoders) * .12
+                    travel = 0.0 if last_wheel_distance is None else wheel_distance - last_wheel_distance
+                    last_wheel_distance = wheel_distance
+                    yaw = heading.getRollPitchYaw()[2]
+                    rotation = 0.0 if last_heading is None else math.atan2(math.sin(yaw-last_heading), math.cos(yaw-last_heading)) * 1000 / dt
+                    last_heading = yaw
+                    surroundings = Surroundings.from_heights(
+                        [sensor.getRangeImage() for sensor in range_devices],
+                        [sensor.getRangeImage() for sensor in upper_devices],
+                        t_ms=now_ms, travel_m=travel, forward_mps=travel * 1000 / dt,
+                        turn_rad_s=rotation, heading=yaw)
+                except ValueError:
+                    surroundings = None  # Either faulty height latches a stop in the pipeline.
+            if surroundings is not None and sink.frames == 1:
+                print("REFLEXGUARD_RANGES=" + json.dumps({"heading": surroundings.heading,
+                    "nearest": [min(row) for row in surroundings.ranges]}), flush=True)
+            result = await pipeline.step(frame, Command(forward=forward, turn=turn), dt, surroundings)
             command = result.decision.command
             reason = result.decision.reason
             if device is not None:
-                await device.poll(pipeline)
+                if time.monotonic() >= next_poll_at:
+                    await device.poll(pipeline)
+                    next_poll_at = time.monotonic() + .1
                 command = device.guard.apply(command)
                 if device.guard.stopped:
                     reason = "control_failure" if device.failed else "remote_stop"
@@ -78,16 +127,22 @@ async def main():
             right.setVelocity(rv)
             maximum = max(maximum, result.looming.left, result.looming.right)
             robot.setCustomData(Telemetry(
+                model_version=pipeline.model_version, escape=result.escape,
+                reason=reason, requested_forward=forward,
                 frames=sink.frames, width=camera.getWidth(), height=camera.getHeight(),
                 pixel_range=sink.pixel_range, left_rad_s=lv, right_rad_s=rv,
                 remote_stop_steps=remote_stops, remote_interventions=remote_interventions,
                 control_failures=int(device is not None and device.failed), brain_steps=pipeline.brain_steps, interventions=pipeline.interventions,
+                navigation_steps=pipeline.navigation_steps, recoveries=pipeline.recoveries,
                 stop_steps=pipeline.stop_steps, brain_failures=pipeline.failures,
                 max_looming=maximum, final_forward=command.forward).model_dump_json())
-            if now_ms >= next_log_ms or reason != last_reason:
+            urgent = reason in ("brain_failure", "sensor_failure", "control_failure", "remote_stop", "hazard_stop")
+            if now_ms >= next_log_ms or urgent and reason != last_reason:
                 if device is not None:
                     await device.report(t_ms=now_ms, result=result, command=command, reason=reason,
-                                        top_neurons=pipeline.top_neurons, model_version=pipeline.model_version)
+                                        top_neurons=pipeline.top_neurons, model_version=pipeline.model_version,
+                                        navigation_mode="range_assisted" if avoidance else "reflex_stop",
+                                        neuron_activity=pipeline.neuron_activity, weights_sha256=pipeline.weights_sha256)
                     if device.failed:
                         left.setVelocity(0.0)
                         right.setVelocity(0.0)

@@ -1,0 +1,32 @@
+[
+  {
+    "stop_on": 0.5,
+    "turn_on": 0.35,
+    "looming_tau_s": 0.15,
+    "profile": "real",
+    "world": "corridor_side",
+    "collision_events": 4,
+    "result": "rejected",
+    "source": "observed trial summary; raw log overwritten by next trial"
+  },
+  {
+    "stop_on": 0.5,
+    "turn_on": 0.6,
+    "looming_tau_s": 0.15,
+    "profile": "real",
+    "world": "corridor_basic",
+    "collision_events": 1,
+    "result": "rejected",
+    "source": "/tmp/reflexguard-e2e-uMvDq91X/corridor_basic.json"
+  },
+  {
+    "stop_on": 0.4,
+    "turn_on": 0.5,
+    "looming_tau_s": 0.2,
+    "profile": "real",
+    "world": "corridor_basic",
+    "collision_events": 1,
+    "result": "rejected",
+    "source": "corridor_basic-400.json"
+  }
+]
