@@ -49,3 +49,5 @@ SSH 터널 소멸은 사용자 서비스로 복구했으나 외부 GPU의 간헐
 `scripts/e2e.sh local`은 복도 3종·무입력·통신 단절 후 정지 고정·인증 계약·실제 주행 중 서명 원격 정지·감사 체인까지 통과했다(`logs/v0.8.1-e2e-local.json`).
 
 0.8.1 최종 품질 게이트: Bandit·Semgrep(151규칙/68파일)·VM/GPU pip-audit 0건, pytest 356개 통과. 증거: `logs/v0.8.1-security.log`. Starlette/httpx의 기존 deprecation 경고 1건은 유지했다. GUI를 local로 다시 열어 인증된 MaleCNS 상태와 입력 대기를 확인했다.
+
+2026-09-26 접속 안내 정리: README와 docs/access.md에 사이트 주소, Windows SSH 터널, 공개 CA 등록, 초기 admin 무작위 비밀번호 확인·복구, 역할별 권한을 기록했다. 실제 자격증명은 Git 제외 .env.admin에 유지한다. 문서만 변경하며 앱 버전은 0.8.1이다.

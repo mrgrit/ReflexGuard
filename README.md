@@ -15,6 +15,26 @@
 - HMAC 원격 정지/속도 제한·재전송 방어, 판단 로그 체인 검증·권한별 내보내기
 - 뇌 통신 단절 시 감속 정지 고정, 관제 실패 시 정지 고정
 
+## 사이트 접속과 초기 계정
+
+아래 화면은 하나의 관제 사이트이며 같은 계정으로 로그인합니다. Ubuntu VM의 브라우저에서 접속합니다. 다른 PC에서는 [Windows SSH 터널·인증서·계정 안내](docs/access.md)를 먼저 따르세요.
+
+| 화면 | 주소 | 주요 기능 |
+|---|---|---|
+| 로그인 | https://localhost:8444/login | 계정 로그인 |
+| 관제 대시보드 | https://localhost:8444/ | 상태·원격 정지·속도 제한·판단 로그·사용자 관리 |
+| 주행 설정 | https://localhost:8444/settings/control | 속도·루밍 민감도·정지/조향 임계값 |
+| MaleCNS LIVE | https://localhost:8444/activity/seat-a | 뉴런 187개 발화·연결·위험 출력·주행 판단 |
+
+초기 아이디는 **`admin`**, 비밀번호는 초기화할 때 **설치별로 무작위 생성**됩니다. 고정 공통 비밀번호는 없습니다. 서버에서 프로젝트 루트의 `.env.admin`을 열어 `REFLEXGUARD_ADMIN_PASSWORD` 값을 확인하세요. 이 파일과 실제 비밀번호는 Git에 포함하지 않습니다.
+
+```bash
+cd ~/work/reflexguard
+cat .env.admin  # 본인 터미널에서만 확인; 출력 공유 금지
+```
+
+비밀번호 분실·잠금 복구가 필요할 때는 `scripts/reset_admin.sh` 실행 후 `.env.admin`을 다시 확인합니다. 파일만 편집해도 DB 비밀번호는 바뀌지 않습니다. 최초 설치·역할별 권한·SSH 계정과의 차이는 [접속 안내](docs/access.md)에 정리했습니다.
+
 ## 주행 설정과 시연
 
 운영자·관리자는 관제의 **주행 설정** (`/settings/control`)에서 속도, 정지·조향 임계값, 루밍 민감도와 평활 시간을 저장·복원할 수 있습니다. 저장값은 같은 VM의 Webots를 다시 시작할 때 적용됩니다. 사용자 설정은 별도 주행 검증이 필요합니다.
@@ -69,7 +89,7 @@ set +a
 scripts/run_mock_brain.sh
 ```
 
-기본 프로필은 mock입니다. 실제 뇌 연결 실패를 자동으로 mock 성공 응답으로 대체하지 않습니다. 정지 후 명시적으로 프로필을 선택하고 새 세션으로 시작합니다.
+GUI 기본 프로필은 local이며, 프로필을 지정하지 않은 배치 실행은 mock입니다. 실제 뇌 연결 실패를 자동으로 mock 성공 응답으로 대체하지 않습니다. 정지 후 명시적으로 프로필을 선택하고 새 세션으로 시작합니다.
 
 ## 검증 결과와 재실행
 
@@ -88,6 +108,7 @@ scripts/security_check.sh  # 정적 검사 + VM/GPU 잠금 감사 + pytest
 ## 문서와 다음 버전
 
 - [변경 이력](CHANGELOG.md), [현재 계획](docs/development_plan.md), [MaleCNS 출처](docs/malecns.md)
+- [사이트 접속·Windows SSH 터널·초기 계정](docs/access.md)
 - [위협 모델](docs/threat_model.md), [KISA 27항목 매핑](docs/kisa_mapping.md), [서비스 개요](docs/service_overview.md)
 - [VM SBOM](docs/sbom.json), [GPU 잠금 SBOM](docs/sbom-gpu.json), [라이선스 고지](THIRD_PARTY_NOTICES.md)
 
