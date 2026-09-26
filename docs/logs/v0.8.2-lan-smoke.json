@@ -1,0 +1,12 @@
+{
+  "origin": "https://192.168.0.149:8444",
+  "tls_verified": true,
+  "measurement_location": "development VM via its LAN IP; other PC not directly tested",
+  "pages": {
+    "/": 200,
+    "/settings/control": 200,
+    "/activity/seat-a": 200
+  },
+  "foreign_origin_status": 403,
+  "foreign_host_status": 400
+}

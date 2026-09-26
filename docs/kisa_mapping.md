@@ -1,6 +1,6 @@
 # KISA Python 시큐어코딩 매핑
 
-기준 애플리케이션: **0.8.1**. 이 표는 현재 구현의 검증 범위를 설명하며 KISA 인증이나 전체 가이드 준수를 선언하지 않는다.
+기준 애플리케이션: **0.8.2**. 이 표는 현재 구현의 검증 범위를 설명하며 KISA 인증이나 전체 가이드 준수를 선언하지 않는다.
 
 출처: [KISA 공식 게시물](https://www.kisa.or.kr/2060204/form?postSeq=13) · [공식 보호나라 게시물](https://www.krcert.or.kr/kr/bbs/view.do?bbsId=B0000127&menuNo=205021&nttId=71002&pageIndex=1). 항목명과 인쇄 쪽수는 2023 개정본을 기준으로 했다.
 

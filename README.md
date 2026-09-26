@@ -1,6 +1,6 @@
 # ReflexGuard
 
-**현재 개발 버전: 0.8.1 — MaleCNS 실시간 회로·회피 주행·통합 설정**
+**현재 개발 버전: 0.8.2 — MaleCNS 실시간 회로·회피 주행·통합 설정**
 
 초파리 신경회로에서 배운 충돌 회피 기술을 전동휠체어의 생체모방 안전 보조에 적용하는 프로젝트입니다. 사용자가 운전하고 위험 상황에서만 시스템이 개입합니다. 이 저장소는 대회 제출용 보안판입니다.
 
@@ -17,14 +17,14 @@
 
 ## 사이트 접속과 초기 계정
 
-아래 화면은 하나의 관제 사이트이며 같은 계정으로 로그인합니다. Ubuntu VM의 브라우저에서 접속합니다. 다른 PC에서는 [Windows SSH 터널·인증서·계정 안내](docs/access.md)를 먼저 따르세요.
+아래 화면은 하나의 관제 사이트이며 같은 계정으로 로그인합니다. 관제는 `0.0.0.0:8444`에서 수신합니다. 아래는 현재 개발 VM 주소이며 같은 네트워크의 다른 PC에서도 접속합니다. 새 설치에서는 `.env.control`의 접속 주소와 해당 IP/DNS의 인증서를 설정하세요. [외부 접속·인증서·계정 안내](docs/access.md).
 
 | 화면 | 주소 | 주요 기능 |
 |---|---|---|
-| 로그인 | https://localhost:8444/login | 계정 로그인 |
-| 관제 대시보드 | https://localhost:8444/ | 상태·원격 정지·속도 제한·판단 로그·사용자 관리 |
-| 주행 설정 | https://localhost:8444/settings/control | 속도·루밍 민감도·정지/조향 임계값 |
-| MaleCNS LIVE | https://localhost:8444/activity/seat-a | 뉴런 187개 발화·연결·위험 출력·주행 판단 |
+| 로그인 | https://192.168.0.149:8444/login | 계정 로그인 |
+| 관제 대시보드 | https://192.168.0.149:8444/ | 상태·원격 정지·속도 제한·판단 로그·사용자 관리 |
+| 주행 설정 | https://192.168.0.149:8444/settings/control | 속도·루밍 민감도·정지/조향 임계값 |
+| MaleCNS LIVE | https://192.168.0.149:8444/activity/seat-a | 뉴런 187개 발화·연결·위험 출력·주행 판단 |
 
 초기 아이디는 **`admin`**, 비밀번호는 초기화할 때 **설치별로 무작위 생성**됩니다. 고정 공통 비밀번호는 없습니다. 서버에서 프로젝트 루트의 `.env.admin`을 열어 `REFLEXGUARD_ADMIN_PASSWORD` 값을 확인하세요. 이 파일과 실제 비밀번호는 Git에 포함하지 않습니다.
 
@@ -43,7 +43,7 @@ cat .env.admin  # 본인 터미널에서만 확인; 출력 공유 금지
 
 ## MaleCNS 실시간 시각화
 
-관제의 **MaleCNS 실시간 신경회로 보기**를 누릅니다. 기본 장치에서는 `https://localhost:8444/activity/seat-a`입니다. 실제 뉴런 ID·연결, 187개 계산 발화율, 좌우 루밍, DNp01 출력, 최종 주행 판단과 최근 이력을 함께 표시합니다. 모델/가중치가 일치할 때만 실제 회로를 켜며 mock·수신 지연은 구분합니다. [시각화 안내](docs/neural_activity.md) · [실제 GPU 실행 화면](docs/logs/malecns-live.png).
+관제의 **MaleCNS 실시간 신경회로 보기**를 누릅니다. 기본 장치에서는 `https://192.168.0.149:8444/activity/seat-a`입니다. 실제 뉴런 ID·연결, 187개 계산 발화율, 좌우 루밍, DNp01 출력, 최종 주행 판단과 최근 이력을 함께 표시합니다. 모델/가중치가 일치할 때만 실제 회로를 켜며 mock·수신 지연은 구분합니다. [시각화 안내](docs/neural_activity.md) · [실제 GPU 실행 화면](docs/logs/malecns-live.png).
 
 ## 설치
 
@@ -78,7 +78,7 @@ GUI 기본 프로필은 `local`이며 mock이 아닙니다. 같은 서명 MaleCN
 
 터널 접속 값은 Git에서 제외된 `.env.gpu`, 실제 뇌 토큰·인증서는 `.env.brain-client`에 있습니다. 이미 localhost:18443 터널이나 관제가 실행 중이면 중복 실행하지 않습니다. 3D 화면을 클릭하고 방향키로 조종합니다. 시연 월드는 가능한 경로로 우회 후 사용자 진행 방향으로 돌아오며, 공간이 없으면 정지합니다. 기존 3개 회귀 월드는 위험 정지 후 키를 놓아 중립으로 돌아갑니다. 통신 실패·원격 정지는 문제를 해결한 뒤 시뮬레이션을 다시 시작해야 합니다. 시작 스크립트는 mTLS 상태를 확인하고, 실제 뇌 연결이 없으면 설치된 터널 서비스를 시작한 뒤 재확인합니다. 실패하면 멈춘 Webots 창을 열지 않고 종료합니다. 터널 설치와 `BRAIN FAILURE` 복구는 [연결 복구 안내](docs/brain_connection.md)를 참고하세요.
 
-대시보드는 `https://localhost:8444/login`입니다. 개발 CA를 신뢰 등록한 브라우저에서 접속합니다. 초기 관리자 계정은 `.env.admin`에 있으며 **이 파일을 편집해도 DB 비밀번호는 바뀌지 않습니다**. 복구는 `scripts/reset_admin.sh`를 실행합니다. 비밀번호는 UTF-8 12..72바이트입니다. 보호자 연결과 운영 절차는 [Phase 4](docs/phase4.md)를 참고하세요.
+대시보드는 `https://192.168.0.149:8444/login`입니다. 개발 CA를 신뢰 등록한 브라우저에서 접속합니다. 초기 관리자 계정은 `.env.admin`에 있으며 **이 파일을 편집해도 DB 비밀번호는 바뀌지 않습니다**. 복구는 `scripts/reset_admin.sh`를 실행합니다. 비밀번호는 UTF-8 12..72바이트입니다. 보호자 연결과 운영 절차는 [Phase 4](docs/phase4.md)를 참고하세요.
 
 GPU 없이 mock으로 실행하려면 별도 터미널에서 다음을 실행한 뒤 `REFLEXGUARD_BRAIN_PROFILE=mock scripts/run_webots.sh`을 실행합니다.
 
@@ -108,7 +108,7 @@ scripts/security_check.sh  # 정적 검사 + VM/GPU 잠금 감사 + pytest
 ## 문서와 다음 버전
 
 - [변경 이력](CHANGELOG.md), [현재 계획](docs/development_plan.md), [MaleCNS 출처](docs/malecns.md)
-- [사이트 접속·Windows SSH 터널·초기 계정](docs/access.md)
+- [사이트 외부 접속·인증서·초기 계정](docs/access.md)
 - [위협 모델](docs/threat_model.md), [KISA 27항목 매핑](docs/kisa_mapping.md), [서비스 개요](docs/service_overview.md)
 - [VM SBOM](docs/sbom.json), [GPU 잠금 SBOM](docs/sbom-gpu.json), [라이선스 고지](THIRD_PARTY_NOTICES.md)
 

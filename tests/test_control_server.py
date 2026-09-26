@@ -206,6 +206,33 @@ def test_transport_and_body_boundary(control):
     assert client.post("/login",content="x"*32769).status_code==413
     assert client.post("/login",json={"username":"a","password":"short"}).json()=={"detail":"Invalid request"}
 
+def test_lan_origin_login_keeps_host_and_csrf_boundaries(control, tmp_path):
+    _, _, settings, password = control
+    origin = "https://192.0.2.10:8444"
+    settings = ControlSettings.model_validate({**settings.model_dump(), "origin": origin})
+    from reflexguard.control.settings_store import CalibrationStore
+    app = create_app(settings, calibration_store=CalibrationStore(tmp_path))
+    try:
+        with TestClient(app, base_url=origin) as client:
+            assert client.get("/login").status_code == 200
+            csrf = client.cookies.get(LOGIN_COOKIE)
+            body = {"username": "admin", "password": password}
+            assert client.post("/login", json=body, headers={"Origin": ORIGIN, "X-CSRF-Token": csrf}).status_code == 403
+            assert client.get("/login", headers={"Host": "evil.invalid"}).status_code == 400
+            response = client.post("/login", json=body, headers={"Origin": origin, "X-CSRF-Token": csrf})
+            assert response.status_code == 200
+            assert client.get("/").status_code == 200
+            assert client.get("/settings/control").status_code == 200
+            assert client.get("/activity/seat-a").status_code == 200
+            snapshot = client.get("/api/settings/control").json()
+            save = {"expected_revision": snapshot["revision"], "calibration": snapshot["calibration"]}
+            headers = {"Origin": origin, "X-CSRF-Token": response.json()["csrf"]}
+            assert client.post("/api/settings/control", json=save, headers=headers).status_code == 200
+            assert client.post("/logout", json={}, headers={"Origin": ORIGIN, "X-CSRF-Token": response.json()["csrf"]}).status_code == 403
+            assert client.post("/logout", json={}, headers={"Origin": origin, "X-CSRF-Token": response.json()["csrf"]}).status_code == 200
+    finally:
+        app.state.db.engine.dispose()
+
 def test_operator_silence_and_pending_stop_priority(control):
     client,db,settings,password=control
     boot,headers=hello(client,settings)

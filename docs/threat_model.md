@@ -28,7 +28,7 @@ flowchart LR
   Secrets -. 배포 신뢰 경계 .-> Pipeline
 ```
 
-VM 관제/mock은 127.0.0.1, GPU 뇌는 internal Docker 주소에만 바인딩하고 호스트 포트를 공개하지 않는다. SSH 포워딩·개발 CA를 사용하는 시연 구성이며 인터넷 운영 배포가 아니다. 브라우저/장치의 HTTPS와 뇌 API의 필수 mTLS를 구분한다. Webots 접촉 센서는 결과 측정용이고 회피 파이프라인의 입력으로 사용하지 않는다.
+0.8.2 VM 관제는 0.0.0.0:8444로 LAN에 공개하고 HTTPS·고정 Host/Origin·인증·RBAC·CSRF·로그인 제한을 유지한다. mock/로컬 뇌는 127.0.0.1, GPU 뇌는 internal Docker 주소로 제한한다. 관제용 IP SAN 인증서는 뇌 mTLS와 분리한다. 개발 CA를 사용하는 LAN 시연 구성으로 공인 인터넷 운영 배포는 아니다. 브라우저/장치의 HTTPS와 뇌 API의 필수 mTLS를 구분한다. Webots 접촉 센서는 결과 측정용이고 회피 파이프라인의 입력으로 사용하지 않는다.
 
 ## 구성요소별 STRIDE
 

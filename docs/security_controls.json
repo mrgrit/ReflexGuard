@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "application_version": "0.8.1",
+  "application_version": "0.8.2",
   "source": {
     "title": "Python 시큐어코딩 가이드 (2023년 개정본)",
     "official": "https://www.kisa.or.kr/2060204/form?postSeq=13",

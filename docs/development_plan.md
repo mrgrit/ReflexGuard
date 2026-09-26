@@ -59,3 +59,12 @@
 GUI 기본 local은 서명된 MaleCNS NumPy 실모델이다. real 외부 CUDA와 mock은 명시적으로 선택하며 주행 중 자동 전환하지 않는다. 기본 요청 속도 4m/s·상한 6m/s, 제동/주변 물체/조향에 따른 감속, 하단 축소 카메라와 상공 오버레이 숨김을 추가했다. 최종 검증은 brain_connection.md와 test_report.md에 기록한다.
 
 0.8.1 최종 품질 게이트: Bandit·Semgrep(151규칙/68파일)·VM/GPU pip-audit 0건, pytest 356개 통과. 증거: `logs/v0.8.1-security.log`. Starlette/httpx의 기존 deprecation 경고 1건은 유지했다. GUI를 local로 다시 열어 인증된 MaleCNS 상태와 입력 대기를 확인했다.
+
+
+## 0.8.2 관제 LAN 접속
+
+관제는 0.0.0.0:8444에서 수신하고 현재 개발 VM의 canonical Origin은 https://192.168.0.149:8444다. 기존 localhost 북마크는 새 주소로 변경한다. 관제 전용 IP SAN 인증서를 기존 개발 CA로 발급하고 뇌 mTLS는 유지했다. 로그인 계정/DB를 변경하지 않았다. UFW는 비활성이며 공유기 포트 전달은 구성하지 않았다. 다른 네트워크에서의 실제 접근은 해당 네트워크의 라우팅에 달려 있다.
+
+VM에서 LAN IP를 통한 실제 TLS 검증·관리자 로그인·관제/설정/LIVE HTTP 200 및 잘못된 Host 400/Origin 403을 확인했다. 별도 PC 브라우저에서 직접 확인한 결과는 아니다. 단위/통합 테스트는 바인딩 검증, TLS/프록시 정책과 LAN Origin에서 설정 저장·로그아웃을 확인한다. 접속·재현 절차는 docs/access.md(같은 docs 폴더에서는 access.md)를 따른다.
+
+0.8.2 최종 보안 게이트는 Bandit·Semgrep·VM/GPU pip-audit 0건, pytest 362개 통과다. 원문(행 끝 공백만 정리)은 `logs/v0.8.2-security.log`이며 기존 Starlette/httpx deprecation 경고 1건은 유지한다.

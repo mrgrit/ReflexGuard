@@ -124,3 +124,5 @@ KISA Python 시큐어코딩 가이드(2023년 개정본)는 보안 항목의 참
 전체 실제 설치 파일 경로는 docs/logs/gpu-python-inventory.json, 해시 잠금 목록은 docs/sbom-gpu.json에 분리했다. NVIDIA vendor torch는 PyPI 해시 잠금 대신 컨테이너 manifest 다이제스트로 출처를 고정한다. 모델 구현은 이 저장소에서 작성했고 원안에 있던 타 데이터셋 모델 코드를 복사하지 않았다. 문헌은 docs/neurons.md에서 인용한다.
 
 0.8.1 로컬 시연은 이미 고지한 NumPy 백엔드와 동일한 MaleCNS v1.0 서명 파생 가중치를 사용한다. 새 외부 데이터셋이나 라이선스 의존성을 추가하지 않았다.
+
+0.8.2 관제 LAN 접속은 기존 Uvicorn/Pydantic/cryptography를 사용하며 새 의존성·외부 자산은 추가하지 않았다.
